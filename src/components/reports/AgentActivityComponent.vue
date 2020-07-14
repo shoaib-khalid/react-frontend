@@ -117,7 +117,7 @@
             <td>{{ props.item.transactionDetails?( props.item.transactionDetails.parentDetails ? props.item.transactionDetails.parentDetails.msisdn : "-" ):"-" }}</td>
             <td>{{props.item.transactionDetails?( props.item.transactionDetails.childDetails ? props.item.transactionDetails.childDetails.msisdn : "-"):"-" }}</td>
             <td>{{props.item.eventData? props.item.eventData :"-" }}</td>
-            <td>{{IsParentOpCode(props.item.transactionDetails?( props.item.transactionDetails.opcodeDetails ? props.item.transactionDetails.opcodeDetails.opcode:""):"" ) ? 'PARENT': 'CHILD'}}</td>
+            <td>{{props.item.transactionDetails?IsParentOpCode(props.item.transactionDetails.opcodeDetails ? props.item.transactionDetails.opcodeDetails.opcode : "")?'PARENT': 'CHILD':"_"}}</td>
             <td>{{ props.item.transactionDetails?(props.item.transactionDetails.opcodeDetails ? props.item.transactionDetails.opcodeDetails .description :"-"):"-" }}</td>
             <td>{{ props.item.eventDetails ? props.item.eventDetails.eventDescription:"-" }}</td>
             <td>{{ props.item.created ? props.item.created :"-" }}</td>
