@@ -5,8 +5,8 @@ import router from "../routes";
 
 const token = sessionStorage.getItem('token');
 
-window.baseApiURL = " http://10.248.84.168:8090";
-window.ReportBaseURL_CONST = "http://209.58.160.107:9090";
+window.baseApiURL = "http:"+window.location.origin.split(":")[1] + ":" + process.env.VUE_APP_CORE_PORT;//" http://10.13.60.191:8090";
+window.ReportBaseURL_CONST = "http:"+window.location.origin.split(":")[1] + ":" + process.env.VUE_APP_REPORT_PORT;//"http://10.13.60.191:9090";
 
 
 let baseURL = window.baseApiURL;
@@ -20,7 +20,7 @@ if (sessionStorage.getItem("ReportBaseURL")) {
 }
 
 if (process.env.NODE_ENV == "development") {
-  baseURL = "http://209.58.160.107:8090/";
+  baseURL = "http:"+window.location.origin.split(":")[1] + ":" + process.env.VUE_APP_CORE_PORT;//"http://10.13.60.191:8090/";
   window.baseApiURL = baseURL;
 }
 

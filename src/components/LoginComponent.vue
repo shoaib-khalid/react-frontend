@@ -178,8 +178,14 @@ export default {
         if (sessionStorage.getItem("ReportBaseURL")) {
           sessionStorage.removeItem("ReportBaseURL");
         }
-        this.$http.defaults.baseURL = window.baseApiURL;
-        window.ReportBaseURL = window.ReportBaseURL_CONST;
+        //this.$http.defaults.baseURL = window.baseApiURL;
+        this.$http.defaults.baseURL = "http:"+window.location.origin.split(":")[1] + ":" + process.env.VUE_APP_CORE_PORT;
+        //console.log(this.$http.defaults.baseURL);
+        //alert(this.$http.defaults.baseURL);
+        //window.ReportBaseURL = window.ReportBaseURL_CONST;
+        window.ReportBaseURL = "http:"+window.location.origin.split(":")[1] + ":" + process.env.VUE_APP_REPORT_PORT;
+        //console.log(window.ReportBaseURL);
+       // alert(window.ReportBaseURL);
       }
       return this.$http.post("/user/login", {
         username: this.username,
