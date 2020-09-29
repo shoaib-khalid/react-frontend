@@ -49,10 +49,12 @@
                               v-for="(product, i) in familyPlan.productList"
                             >
                               <span v-if="product.isShareable!=2">
-                                {{ (product.productInfo.quotaUnit=='BYTE' ? formatBytes(product.amount): product.amount) +' '+ product.productInfo.productName.replace("Internet", "MBs") }}
                                 <span
-                                  v-if="i+1 < familyPlan.productList.length"
+                                  v-if="i!=0"
                                 >,</span>
+                                <!-- {{ (product.productInfo.quotaUnit=='BYTE' ? formatBytes(product.amount): product.amount) +' '+ product.productInfo.productName.replace("Internet", "MBs") }} -->
+                                {{getProductValue(product) +' '+ product.productInfo.productName.replace("Internet", "MBs")}}
+                                
                               </span>
                             </span>
                           </span>
@@ -88,51 +90,60 @@ export default {
   data: () => ({
     fpAccount: {
       parentMsisdn: "",
-      pricePlanId: undefined
+      pricePlanId: undefined,
     },
     familyPlans: [],
     loading: false,
-    submitted: false
+    submitted: false,
   }),
   methods: {
     handleFpCreateUser() {
       this.submitted = true;
       let _this = this;
 
-      this.$validator.validateAll().then(status => {
+      this.$validator.validateAll().then((status) => {
         if (status) {
           Vue.$http
             .post("/parent/provisionParent", this.fpAccount)
-            .then(result => {
+            .then((result) => {
               if (result.errorCode == "00") {
                 this.$store.commit("notis/setAlert", {
                   type: "success",
                   title: result.errorMsg,
-                  time: "4"
+                  time: "4",
                 });
                 _this.$router.push({ name: "parentProfile" });
               } else {
                 this.$store.commit("notis/setAlert", {
                   type: "error",
                   title: result.errorMsg,
-                  time: "4"
+                  time: "4",
                 });
               }
             });
         }
       });
     },
-    getFPPricePlan: function() {
-      Vue.$http.post("/general/getFPPricePlan", {}).then(result => {
+    getFPPricePlan: function () {
+      Vue.$http.post("/general/getFPPricePlan", {}).then((result) => {
         if (result.errorCode == "00") {
           this.familyPlans = result.data;
           this.fpAccount.pricePlanId = this.familyPlans[0].id;
         }
       });
     },
+    getProductValue(product) {
+      if (product.productInfo.quotaUnit == "BYTE") {
+        return this.formatBytes(product.amount);
+      } else if (product.productInfo.quotaUnit == "SECOND") {
+        return utils.convertSecondsToMins(product.amount);
+      } else {
+        return product.amount;
+      }
+    },
     formatBytes(bytes) {
       return utils.formatBytes(bytes);
-    }
+    },
   },
   created() {},
   computed: {},
@@ -142,7 +153,7 @@ export default {
       : undefined;
     this.getFPPricePlan();
     this.$nextTick(() => this.$refs.refTosubmit.$el.focus());
-  }
+  },
 };
 </script>
 <style scoped>

@@ -243,7 +243,6 @@ export default {
             childMsisdn: this.childMsisdn
           };
           Vue.$http.post("/child/unsubChild", _childToUnsub).then(result => {
-            debugger;
             if (result.errorCode == "00") {
               this.$store.commit("notis/setAlert", {
                 type: "success",
@@ -275,7 +274,7 @@ export default {
         cancelButtonText: "CANCEL",
         inputValidator: value => {
           return new Promise(resolve => {
-            debugger;
+
             let _childToUnsub = undefined;
             if (value) {
               _childToUnsub = {
@@ -290,7 +289,7 @@ export default {
               };
             }
             Vue.$http.post("/child/unsubChild", _childToUnsub).then(result => {
-              debugger;
+
               if (result.errorCode == "00") {
                 this.$store.commit("notis/setAlert", {
                   type: "success",

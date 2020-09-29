@@ -77,7 +77,6 @@ export const auth = {
             console.log(state);
         },
         logout: function (state) {
-            debugger;
             state.is_auth = 0;
             state.is_admin = 0;
             state.is_superadmin = 0;

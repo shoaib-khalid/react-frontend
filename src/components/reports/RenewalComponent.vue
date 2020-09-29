@@ -338,7 +338,6 @@ export default {
           }
         })
         .catch(error => {
-          debugger;
           this.$router.push("/");
           this.$router.push({
             name: "report.renewal",

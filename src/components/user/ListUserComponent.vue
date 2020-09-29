@@ -120,7 +120,6 @@ export default {
       };
       Vue.$http.post("/user/getUserList", obj).then(result => {
         if (result.errorCode == "00") {
-          debugger;
           this.users = result.data;
         } else if (result.errorCode == "53") {
           this.users = undefined;

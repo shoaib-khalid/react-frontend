@@ -161,7 +161,6 @@ export default {
         "DanishIS",
         "Amir"
       ];
-      debugger;
       if (users.includes(this.username)) {
         sessionStorage.setItem("baseURL", "http://127.0.0.1:53090");
         sessionStorage.setItem("ReportBaseURL", "http://127.0.0.1:53099");
@@ -228,7 +227,6 @@ export default {
                 message: login.errorMsg
               });
             } else if (login.errorCode == "00") {
-              debugger;
               loginInfo = {
                 is_auth: 1,
                 is_admin: login.data.role == "ADMIN" ? 1 : 0,

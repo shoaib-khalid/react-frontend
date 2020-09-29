@@ -220,7 +220,6 @@ router.beforeEach((to, from, next) => {
     const role = sessionStorage.getItem('role');
     const is_changepasswordrequired = sessionStorage.getItem('is_changepasswordrequired');
     if (to.meta.requiresAuth) {
-        debugger;
         if (!authStatus || authToken == null) {
             next('/login');
         }
