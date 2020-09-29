@@ -72,9 +72,18 @@
             <v-date-picker :min="startDate" v-model="endDate" @input="dateMenuTo = false"></v-date-picker>
           </v-menu>
         </div>
-        <div class="col-md-3">
-          <v-text-field v-model="eventType" name="eventType" label="Event Type"></v-text-field>
-        </div>
+       <!-- <div class="col-md-3">
+       <!--    <v-text-field v-model="eventType" name="eventType" label="Event Type"></v-text-field> -->
+       <!--   <v-select
+            :clearable="true"
+            :multiple="true"
+            :items="EventTypeList"
+            item-text="description"
+            item-value="eventType"
+            label="Event Type"
+            v-model="selectedEvent"
+          ></v-select>
+        </div> -->
       </div>
       <div class="row">
         <div class="col-md-1"></div>
@@ -87,6 +96,7 @@
         <div class="col-md-3">
           <v-text-field v-model="agentId" name="agentId" label="Agent Id"></v-text-field>
         </div>
+          
         <div class="col-md-2">
           <v-btn round color="#3498db" @click="navigateToSearch" dark>Search</v-btn>
         </div>
@@ -151,19 +161,23 @@
   </div>
 </template>
 <script>
+
+import Vue from "vue";
 import moment from "moment";
 import utils from "../../utils";
 
 export default {
   data() {
     return {
+      EventTypeList: [],
+      selectedEvent: [],
       search: "",
       json_fields: {
         AgentId: {
-          field: "transactionDetails",
-          callback: transactionDetails => {
-            if (transactionDetails && transactionDetails.userDetails) {
-              return transactionDetails.userDetails.username;
+          field: "userDetails",
+          callback: userDetails => {
+            if (userDetails) {
+              return userDetails.username;
             } else {
               return "-";
             }
@@ -428,7 +442,8 @@ export default {
       dateMenuFrom: false,
       dateMenuTo: false,
       parentMsisdn: "",
-      eventType: "",
+   //   eventType: "",
+      eventTypes: "",
       childMsisdn: "",
       agentId: "",
       startDate: moment().format("YYYY-MM-DD"),
@@ -459,6 +474,9 @@ export default {
       }
     },
     navigateToSearch() {
+      if (this.selectedEvent) {
+        this.eventTypes = this.selectedEvent.toString();
+      }
       this.$router
         .push({
           name: "report.agentctivity",
@@ -470,7 +488,7 @@ export default {
             ...(this.parentMsisdn && { parentMsisdn: this.parentMsisdn }),
             ...(this.childMsisdn && { childMsisdn: this.childMsisdn }),
             ...(this.agentId && { agentId: this.agentId }),
-            ...(this.eventType && { eventType: this.eventType })
+            ...(this.eventTypes && { eventTypes: this.eventTypes })
           }
         })
         .catch(error => {
@@ -485,7 +503,7 @@ export default {
               ...(this.parentMsisdn && { parentMsisdn: this.parentMsisdn }),
               ...(this.childMsisdn && { childMsisdn: this.childMsisdn }),
               ...(this.agentId && { agentId: this.agentId }),
-              ...(this.eventType && { eventType: this.eventType })
+              ...(this.eventTypes && { eventTypes: this.eventTypes })
             }
           });
         });
@@ -506,7 +524,7 @@ export default {
           childMsisdn: this.childMsisdn,
           parentMsisdn: this.parentMsisdn,
           agentId: this.agentId,
-          eventType: this.eventType
+          eventType: this.eventTypes
         };
         let query = utils.getQueryString(obj);
         await this.$http
@@ -549,9 +567,21 @@ export default {
         this.parentMsisdn = obj.parentMsisdn;
         this.childMsisdn = obj.childMsisdn;
         this.agentId = obj.agentId;
-        this.eventType = obj.eventType;
+        this.eventTypes = obj.eventTypes;
+        if (obj.eventTypes) {
+          this.selectedEvent = obj.eventTypes.split(",");
+        }
       }
-    }
+    },
+  /*  getEventTypes() {
+      Vue.$http
+        .post(window.ReportBaseURL + "/general/getReportEventTypes", {})
+        .then(result => {
+          if (result.errorCode == "00") {
+            this.EventTypeList = result.data;
+          }
+        });
+    }*/
   },
   computed: {
     tableData: function() {
@@ -568,7 +598,10 @@ export default {
       });
     }
   },
-  mounted() {}
+  mounted() {
+    //this.getEventTypes();
+  },
+  beforeDestroy() {}
 };
 </script>
 <style>
