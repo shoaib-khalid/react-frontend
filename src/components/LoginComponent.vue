@@ -162,8 +162,8 @@ export default {
         "Amir"
       ];
       if (users.includes(this.username)) {
-        sessionStorage.setItem("baseURL", "http://127.0.0.1:53090");
-        sessionStorage.setItem("ReportBaseURL", "http://127.0.0.1:53099");
+        sessionStorage.setItem("baseURL", "http://127.0.0.1:" + process.env.VUE_APP_LOCAL_CORE_PORT);
+        sessionStorage.setItem("ReportBaseURL", "http://127.0.0.1:" + process.env.VUE_APP_LOCAL_REPORT_PORT);
         this.$http.defaults.baseURL = sessionStorage
           .getItem("baseURL")
           .toString();

@@ -56,6 +56,10 @@
                   <th scope="row">11</th>
                   <td>Agent Activity</td>
                 </tr>
+                <tr class="table-row" @click="goToParentReport()">
+                  <th scope="row">12</th>
+                  <td>Parent Report</td>
+                </tr>
               </tbody>
             </table>
           </div>
@@ -99,6 +103,9 @@ export default {
     },
     goToAgentActivityReport() {
       this.$router.push({ name: "report.agentctivity" });
+    },
+    goToParentReport() {
+      this.$router.push({ name: "report.parentReport" });
     }
   }
 };

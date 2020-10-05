@@ -30,6 +30,7 @@ import EditUserComponent from './components/user/EditUserComponent'
 import AddUserComponent from './components/user/AddUserComponent'
 import UserProfileComponent from './components/user/UserProfileComponent'
 
+import ParentReportComponent from './components/reports/ParentReportComponent'
 
 const router = new VueRouter({
     base: __dirname,
@@ -153,6 +154,12 @@ const router = new VueRouter({
                     path: 'agentctivity',
                     name: 'report.agentctivity',
                     component: AgentActivityComponent,
+                    meta: { description: '', requiresAuth: true }
+                },
+                {
+                    path: 'parentReport',
+                    name: 'report.parentReport',
+                    component: ParentReportComponent,
                     meta: { description: '', requiresAuth: true }
                 }
 

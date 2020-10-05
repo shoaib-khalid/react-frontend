@@ -217,11 +217,7 @@ export default {
           field: "transactionDetails",
           callback: transactionDetails => {
             if (transactionDetails && transactionDetails.opcodeDetails) {
-              return this.IsParentOpCode(
-                transactionDetails.opcodeDetails.opcode
-              )
-                ? "PARENT"
-                : "CHILD";
+              return this.IsParentOpCode(transactionDetails.opcodeDetails.opcode)?"PARENT":"CHILD";
             } else {
               return "-";
             }
