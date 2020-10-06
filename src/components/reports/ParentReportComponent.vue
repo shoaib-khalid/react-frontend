@@ -100,66 +100,33 @@
                   :pagination.sync="pagination"
                   :total-items="pagination.totalItems"
                   :rows-per-page-items="[10]"
-                >
-                <!--    <thead>
-                        <tr>
-                            <th rowspan="2">Date</th>
-                            <th rowspan="2">Parent Msisdn</th>
-                            <th rowspan="2">Price Plan</th>
-                            <th rowspan="2">Children(s)</th>
-                            <th colspan="4">ONE TIME Shared Plan</th>
-                            <th colspan="4">Monthly Shared Plan</th>
-                            <th colspan="4">ONE TIME Shared Plan Bundle</th>
-                            <th rowspan="2">Billing Cycle</th>
-                        </tr>
-                        <tr>
-                            <th>Telenor Mins</th>
-                            <th>Other Mins</th>
-                            <th>Data</th>
-                            <th>SMS</th>
-                            <th>Telenor Mins</th>
-                            <th>Other Mins</th>
-                            <th>Data</th>
-                            <th>SMS</th>
-                            <th>Telenor Mins</th>
-                            <th>Other Mins</th>
-                            <th>Data</th>
-                            <th>SMS</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr
-                  :key="'prop' + i"
-                  v-for="(prop, i) in props"
-                > -->
-                        <template v-slot:items="props">
-                            <td>{{ props.item.date ? props.item.date : "-"}}</td>
-                            <td>{{ props.item.parentMsisdn ? props.item.parentMsisdn : "-" }}</td>
-                            <td>{{ props.item.pricePlan ? props.item.pricePlan : "-" }}</td>
-                            <td>{{ props.item.currentChildern? props.item.currentChildern :"-" }}</td>
-                            <td>{{ props.item.otOnnetMins? props.item.otOnnetMins :"_"}}</td>
-                            <td>{{ props.item.otOffnetMins? props.item.otOffnetMins:"-" }}</td>
-                            <td>{{ props.item.otData ? props.item.otData :"-" }}</td>
-                            <td>{{ props.item.otSms ? props.item.otSms :"-" }}</td>
-                            <td>{{ props.item.mthlyOnnetMins ? props.item.mthlyOnnetMins :"-" }}</td>
-                            <td>{{ props.item.mthlyOffnetMins?props.item.mthlyOffnetMins:"-" }}</td>
-                            <td>{{ props.item.mthlyData ? props.item.mthlyData:"-" }}</td>
-                            <td>{{ props.item.mthlySms ? props.item.mthlySms:"-" }}</td>
-                            <td>{{ props.item.addOnOnnetMins ? props.item.addOnOnnetMins:"-" }}</td>
-                            <td>{{ props.item.addOnOffnetMins ? props.item.addOnOffnetMins:"-" }}</td>
-                            <td>{{ props.item.addOnData ? props.item.addOnData:"-" }}</td>
-                            <td>{{ props.item.addOnSms ? props.item.addOnSms:"-" }}</td>
-                            <td>{{ props.item.billingCycle?props.item.billingCycle :"-" }}</td>
+                >   
+                    <template v-slot:items="props">
+                        <td>{{ props.item.date ? props.item.date : "-"}}</td>
+                        <td>{{ props.item.parentMsisdn ? props.item.parentMsisdn : "-" }}</td>
+                        <td>{{ props.item.pricePlan ? props.item.pricePlan : "-" }}</td>
+                        <td>{{ props.item.currentChildern? props.item.currentChildern :"-" }}</td>
+                        <td>{{ props.item.otOnnetMins? props.item.otOnnetMins :"_"}}</td>
+                        <td>{{ props.item.otOffnetMins? props.item.otOffnetMins:"-" }}</td>
+                        <td>{{ props.item.otData ? props.item.otData :"-" }}</td>
+                        <td>{{ props.item.otSms ? props.item.otSms :"-" }}</td>
+                        <td>{{ props.item.mthlyOnnetMins ? props.item.mthlyOnnetMins :"-" }}</td>
+                        <td>{{ props.item.mthlyOffnetMins?props.item.mthlyOffnetMins:"-" }}</td>
+                        <td>{{ props.item.mthlyData ? props.item.mthlyData:"-" }}</td>
+                        <td>{{ props.item.mthlySms ? props.item.mthlySms:"-" }}</td>
+                        <td>{{ props.item.addOnOnnetMins ? props.item.addOnOnnetMins:"-" }}</td>
+                        <td>{{ props.item.addOnOffnetMins ? props.item.addOnOffnetMins:"-" }}</td>
+                        <td>{{ props.item.addOnData ? props.item.addOnData:"-" }}</td>
+                        <td>{{ props.item.addOnSms ? props.item.addOnSms:"-" }}</td>
+                        <td>{{ props.item.billingCycle?props.item.billingCycle :"-" }}</td>
                     </template> 
-                        <template v-slot:no-results>
-                            <v-alert
-                              :value="true"
-                              color="error"
-                              icon="warning"
-                            >Your search for "{{ search }}" found no results.</v-alert>
-                        </template>
-                    <!--    </tr> 
-                    </tbody>-->
+                    <template v-slot:no-results>
+                        <v-alert
+                          :value="true"
+                          color="error"
+                          icon="warning"
+                        >Your search for "{{ search }}" found no results.</v-alert>
+                    </template>
                 </v-data-table>
             </div>
         </div>
@@ -509,49 +476,9 @@ export default {
     }
   },
   methods: {
-    processTableHeaders(headers) {
-        const nested = headers.some(h => h.children)
-        if (nested) {
-            let children = []
-            const h = headers.map(h => {
-                if (h.children && h.children.length > 0) {
-                    children.push(...h.children)
-                    return {
-                        rowspan: 1,
-                        colspan: h.children.length,
-                        text: h.text
-                    }
-                }
-                return {
-                    rowspan: 2,
-                    colspan: 1,
-                    text: h.text
-                }
-            });
-
-            return {
-                children: children,
-                parents: h
-            }
-        }
-        return {
-            parents: headers
-        }
-    },
-
     async fetchData() {
       let data = await this.getReport(true);
       return data;
-    },
-
-    IsParentOpCode(opcode) {
-      if (
-        ["ADD_PARENT", "REMOVE_PARENT", "CHANGE_PRICE_PLAN"].includes(opcode)
-      ) {
-        return true;
-      } else {
-        return false;
-      }
     },
     navigateToSearch() {
       
@@ -575,8 +502,7 @@ export default {
               rowsPerPage: this.pagination.rowsPerPage,
               startDate: this.startDate,
               endDate: this.endDate,
-              ...(this.parentMsisdn && { parentMsisdn: this.parentMsisdn }),
-              
+              ...(this.parentMsisdn && { parentMsisdn: this.parentMsisdn })
             }
           });
         });
@@ -624,19 +550,10 @@ export default {
       let obj = this.$route.query;
       if (obj) {
         this.pagination.page = obj.page ? obj.page : this.pagination.page;
-        this.pagination.rowsPerPage = obj.rowsPerPage
-          ? obj.rowsPerPage
-          : this.pagination.rowsPerPage;
-        this.startDate = obj.startDate
-          ? obj.startDate
-          : moment()
-              .subtract(1, "months")
-              .format("YYYY-MM-DD");
-        this.endDate = obj.endDate
-          ? obj.endDate
-          : moment().format("YYYY-MM-DD");
+        this.pagination.rowsPerPage = obj.rowsPerPage ? obj.rowsPerPage : this.pagination.rowsPerPage;
+        this.startDate = obj.startDate ? obj.startDate : moment().subtract(1, "months").format("YYYY-MM-DD");
+        this.endDate = obj.endDate ? obj.endDate : moment().format("YYYY-MM-DD");
         this.parentMsisdn = obj.parentMsisdn;
-        
       }
     },
     //format date
