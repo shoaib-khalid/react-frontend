@@ -86,7 +86,7 @@
                         <download-excel
                           :fetch="fetchData"
                           :fields="json_fields"
-                          type="csv"
+                          type="xlsx"
                           name="Parent Report.xls"
                         >Download Excel</download-excel>
                     </v-btn>
