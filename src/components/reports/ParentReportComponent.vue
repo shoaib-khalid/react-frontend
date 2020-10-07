@@ -102,7 +102,7 @@
                   :rows-per-page-items="[10]"
                 >   
                     <template v-slot:items="props">
-                        <td>{{ props.item.date ? props.item.date : "-"}}</td>
+                        <td>{{ props.item.subscriptionDate ? props.item.subscriptionDate : "-"}}</td>
                         <td>{{ props.item.parentMsisdn ? props.item.parentMsisdn : "-" }}</td>
                         <td>{{ props.item.pricePlan ? props.item.pricePlan : "-" }}</td>
                         <td>{{ props.item.currentChildern? props.item.currentChildern :"-" }}</td>
@@ -149,11 +149,11 @@ export default {
     return {
       search: "",
       json_fields: {
-        "Date": {
-          field: "date",
-          callback: date => {
-            if (date) {
-              return date;
+        "Subscription Date": {
+          field: "subscriptionDate",
+          callback: subscriptionDate => {
+            if (subscriptionDate) {
+              return subscriptionDate;
             } else {
               return "-";
             }
@@ -341,8 +341,8 @@ export default {
       errorMsg: "",
       headers: [
         {
-          text: "Date",
-          value: "date",
+          text: "Subscription Date",
+          value: "subscriptionDate",
           sortable: false,
           align: 'center'
         },
