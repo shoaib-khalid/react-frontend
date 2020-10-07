@@ -23,7 +23,7 @@
     "vee-validate": "^2.2.15",
     "vue": "^2.6.12",
     "vue-feather": "^1.0.1",
-    "vue-json-excel": "^0.2.99",
+    "vue-json-excel": "^0.3.0",
     "vue-moment": "^4.1.0",
     "vue-plugin-axios": "^1.0.14",
     "vue-router": "^3.4.5",

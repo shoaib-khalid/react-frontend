@@ -84,10 +84,11 @@
                 <div class="col-md-2">
                     <v-btn round color="#3498db" dark>
                         <download-excel
+                          :escapeCsv=false
                           :fetch="fetchData"
                           :fields="json_fields"
-                          type="xlsx"
-                          name="Parent Report.xls"
+                          type="csv"
+                          name="ParentReport.xls"
                         >Download Excel</download-excel>
                     </v-btn>
                 </div>
