@@ -104,6 +104,7 @@
                 >   
                     <template v-slot:items="props">
                         <td>{{ props.item.subscriptionDate ? props.item.subscriptionDate : "-"}}</td>
+                        <td>{{ props.item.subscriberFranchise ? props.item.subscriberFranchise : "-"}}</td>
                         <td>{{ props.item.parentMsisdn ? props.item.parentMsisdn : "-" }}</td>
                         <td>{{ props.item.pricePlan ? props.item.pricePlan : "-" }}</td>
                         <td>{{ props.item.currentChildern? props.item.currentChildern :"-" }}</td>
@@ -155,6 +156,16 @@ export default {
           callback: subscriptionDate => {
             if (subscriptionDate) {
               return subscriptionDate;
+            } else {
+              return "-";
+            }
+          }
+        },
+        "Franchise Id": {
+          field: "subscriberFranchise",
+          callback: subscriberFranchise => {
+            if (subscriberFranchise) {
+              return subscriberFranchise;
             } else {
               return "-";
             }
@@ -348,6 +359,12 @@ export default {
           align: 'center'
         },
         {
+          text: "Franchise Id",
+          value: "subscriberFranchise",
+          sortable: false,
+          align: 'center'
+        },
+        {
           text: "Parent Msisdn",
           value: "parentMsisdn",
           sortable: false,
@@ -519,7 +536,7 @@ export default {
         let obj = {
           startDate: this.startDate,
           endDate: this.endDate,
-          pageNumber: this.pagination.page,
+          pageNumber: isExport ? 1 :this.pagination.page,
           pageSize: isExport ? 999999 : this.pagination.rowsPerPage,
           parentMsisdn: this.parentMsisdn,
           
