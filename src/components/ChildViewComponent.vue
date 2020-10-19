@@ -29,12 +29,22 @@
                   </div>
                   <div class="col-md-12 mt-3">
                     <v-btn
+                      v-if="childAccount.childProfile.status=='ACTIVE'"
                       type="button"
                       round
                       :disabled="loading"
                       @click="UnsubscribeChild(childAccount)"
                       color="rgb(254,173,33)"
                     >Unsubscribe</v-btn>
+                    
+                    <v-btn
+                      v-if="childAccount.childProfile.status=='PENDING_CBS'"
+                      type="button"
+                      round
+                      :disabled="loading"
+                      @click="terminateChild(childAccount)"
+                      color="rgb(254,173,33)"
+                    >Terminate</v-btn>
                   </div>
                 </div>
                 <div class="col-md-8">
@@ -224,6 +234,40 @@ export default {
       } else {
         this.unsubpostpaid(child);
       }
+    },
+
+    terminateChild(child) {
+      Swal.fire({
+        text: "ARE YOU SURE YOU WANT TO TERMINATE?",
+        showCancelButton: true,
+        confirmButtonColor: "#feae23",
+        cancelButtonColor: "#e74c3c",
+        customClass: "swal-wide",
+        confirmButtonText: "YES",
+        reverseButtons: true,
+        cancelButtonText: "NO"
+      }).then(result => {
+        if (result.value) {
+          let _childToUnsub = {
+            parentMsisdn: this.parentMsisdn,
+            childMsisdn: this.childMsisdn
+          };
+          Vue.$http.post("/child/terminateCrmPendingChild", _childToUnsub).then(result => {
+            if (result.errorCode == "00") {
+              this.$store.commit("notis/setAlert", {
+                type: "success",
+                title: result.errorMsg,
+                time: "4"
+              });
+            } else
+              this.$store.commit("notis/setAlert", {
+                type: "error",
+                title: result.errorMsg,
+                time: "4"
+              });
+          });
+        }
+      });
     },
 
     unsubprepaid(child) {

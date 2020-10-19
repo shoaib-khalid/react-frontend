@@ -21,13 +21,20 @@
             <span title="Delete" class="cursor-pointer pl-2" @click="DeleteChild(child)">
               <i class="material-icons">delete_forever</i>
             </span>
-            <span
-              v-if="0>1"
+            <span 
+              v-if="child.childProfile.status=='ACTIVE'"
               title="Unsubscribe"
               class="cursor-pointer pl-2"
               @click="UnsubscribeChild(child)"
             >
               <i class="material-icons">link_off</i>
+            </span>
+            <span v-if="child.childProfile.status=='PENDING_CBS'"
+              title="terminate"
+              class="cursor-pointer pl-2"
+              @click="terminateChild(child)"
+            >
+                <i class="material-icons">link_off</i>
             </span>
           </div>
           <div class="col-md-5">
@@ -503,6 +510,43 @@ export default {
         }
       });
     },
+
+    terminateChild(child) {
+      Swal.fire({
+        text: "ARE YOU SURE YOU WANT TO TERMINATE?",
+        showCancelButton: true,
+        confirmButtonColor: "#feae23",
+        cancelButtonColor: "#fd2222",
+        customClass: "swal-wide",
+        confirmButtonText: "YES",
+        reverseButtons: true,
+        cancelButtonText: "NO"
+      }).then(result => {
+        if (result.value) {
+          if (child.childProfile.id) {
+            let _childToUnsub = {
+              parentMsisdn: this.parentMsisdn,
+              childMsisdn: child.childProfile.msisdn
+            };
+            Vue.$http.post("/child/terminateCrmPendingChild", _childToUnsub).then(result => {
+              if (result.errorCode == "00") {
+                this.$store.commit("notis/setAlert", {
+                  type: "success",
+                  title: result.errorMsg,
+                  time: "4"
+                });
+              } else
+                this.$store.commit("notis/setAlert", {
+                  type: "error",
+                  title: result.errorMsg,
+                  time: "4"
+                });
+            });
+          }
+        }
+      });
+    },
+
     handleFpChileUser(child, index) {
       let _this = this;
       this.validateForm(child, index).then(status => {

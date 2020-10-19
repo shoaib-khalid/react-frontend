@@ -174,6 +174,14 @@
                   @click="Resume()"
                   color="rgb(254,173,33)"
                 >Resume</v-btn>
+                <v-btn
+                  v-if="parentProfile.status=='PENDING_CBS'"
+                  type="button"
+                  round
+                  :disabled="loading"
+                  @click="terminate()"
+                  color="rgb(254,173,33)"
+                >Terminate</v-btn>
               </v-flex>
             </div>
           </div>
@@ -433,6 +441,23 @@ export default {
       });
     },
 
+    terminate() {
+      Swal.fire({
+        title: "ARE YOU SURE YOU WANT TO TERMINATE ?",
+        showCancelButton: true,
+        confirmButtonColor: "#feae23",
+        cancelButtonColor: "#fd2222",
+        customClass: "swal-wide",
+        confirmButtonText: "RESUME",
+        reverseButtons: true,
+        cancelButtonText: "CANCEL"
+      }).then(result => {
+        if (result.value) {
+          this.terminateParent();
+        }
+      });
+    },
+
     editParentProfile() {
       this.parentProfileEditing = true;
     },
@@ -632,6 +657,31 @@ export default {
         });
       });
     },
+
+    terminateParent() {
+      let obj = {
+        parentMsisdn: this.parentMsisdn
+      };
+      return new Promise(() => {
+        Vue.$http.post("/parent/terminateParent", obj).then(result => {
+          if (result.errorCode == "00") {
+            this.$store.commit("notis/setAlert", {
+              type: "success",
+              title: result.errorMsg,
+              time: "4"
+            });
+            this.getParentProfile();
+          } else {
+            this.$store.commit("notis/setAlert", {
+              type: "error",
+              title: result.errorMsg,
+              time: "4"
+            });
+          }
+        });
+      });
+    },
+
     onChildAdded() {
       this.totalChildCount = this.totalChildCount + 1;
     },
