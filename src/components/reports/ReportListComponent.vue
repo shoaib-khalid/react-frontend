@@ -62,7 +62,7 @@
                 </tr>
                 <tr class="table-row" @click="goToParentRenewalSummary()">
                   <th scope="row">13</th>
-                  <td>Parent Renewal Summary</td>
+                  <td>Parent Summary Report</td>
                 </tr>
               </tbody>
             </table>

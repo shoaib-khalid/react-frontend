@@ -10,7 +10,7 @@
                         <router-link to="/report/list">Reports</router-link>
                     </li>
                     <li class="activePage">
-                      <p href title="Parent Renewal Summary" class="animation">Parent Renewal Summary</p>
+                      <p href title="Parent Summary Report" class="animation">Parent Renewal Summary</p>
                     </li>
                     <div class="clear"></div>
                 </ul>
@@ -101,14 +101,14 @@
                 >   
                     <template v-slot:items="props">
                         <td>{{ props.item.date ? props.item.date : "-"}}</td>
-                        <td>{{ props.item.twoLinesRenewalCount ? props.item.twoLinesRenewalCount : "-"}}</td>
-                        <td>{{ props.item.threeLinesRenewalCount ? props.item.threeLinesRenewalCount : "-" }}</td>
-                        <td>{{ props.item.fourLinesRenewalCount ? props.item.fourLinesRenewalCount : "-" }}</td>
-                        <td>{{ props.item.fiveLinesRenewalCount? props.item.fiveLinesRenewalCount :"-" }}</td>
                         <td>{{ props.item.twoLinesNewSubscriptions? props.item.twoLinesNewSubscriptions :"_"}}</td>
                         <td>{{ props.item.threeLinesNewSubscriptions? props.item.threeLinesNewSubscriptions:"-" }}</td>
                         <td>{{ props.item.fourLinesNewSubscriptions ? props.item.fourLinesNewSubscriptions :"-" }}</td>
                         <td>{{ props.item.fiveLinesNewSubscriptions ? props.item.fiveLinesNewSubscriptions :"-" }}</td>
+                        <td>{{ props.item.twoLinesTotalActive ? props.item.twoLinesTotalActive:"-" }}</td>
+                        <td>{{ props.item.threeLinesTotalActive ? props.item.threeLinesTotalActive:"-" }}</td>
+                        <td>{{ props.item.fourLinesTotalActive ? props.item.fourLinesTotalActive:"-" }}</td>
+                        <td>{{ props.item.fiveLinesTotalActive ? props.item.fiveLinesTotalActive:"-" }}</td>
                         <td>{{ props.item.twoLinesUnSubscriptions ? props.item.twoLinesUnSubscriptions :"-" }}</td>
                         <td>{{ props.item.threeLinesUnSubscriptions?props.item.threeLinesUnSubscriptions:"-" }}</td>
                         <td>{{ props.item.fourLinesUnSubscriptions ? props.item.fourLinesUnSubscriptions:"-" }}</td>
@@ -121,10 +121,10 @@
                         <td>{{ props.item.threeLinesDowngrade?props.item.threeLinesDowngrade:"-" }}</td>
                         <td>{{ props.item.fourLinesDowngrade ? props.item.fourLinesDowngrade:"-" }}</td>
                         <td>{{ props.item.fiveLinesDowngrade ? props.item.fiveLinesDowngrade:"-" }}</td>
-                        <td>{{ props.item.twoLinesTotalActive ? props.item.twoLinesTotalActive:"-" }}</td>
-                        <td>{{ props.item.threeLinesTotalActive ? props.item.threeLinesTotalActive:"-" }}</td>
-                        <td>{{ props.item.fourLinesTotalActive ? props.item.fourLinesTotalActive:"-" }}</td>
-                        <td>{{ props.item.fiveLinesTotalActive ? props.item.fiveLinesTotalActive:"-" }}</td>
+                        <td>{{ props.item.twoLinesRenewalCount ? props.item.twoLinesRenewalCount : "-"}}</td>
+                        <td>{{ props.item.threeLinesRenewalCount ? props.item.threeLinesRenewalCount : "-" }}</td>
+                        <td>{{ props.item.fourLinesRenewalCount ? props.item.fourLinesRenewalCount : "-" }}</td>
+                        <td>{{ props.item.fiveLinesRenewalCount? props.item.fiveLinesRenewalCount :"-" }}</td>
                     </template> 
                     <template v-slot:no-results>
                         <v-alert
@@ -161,47 +161,7 @@ export default {
             if (date) {
               return date;
             } else {
-              return "-";
-            }
-          }
-        },
-        "2L Renewal": {
-          field: "twoLinesRenewalCount",
-          callback: twoLinesRenewalCount => {
-            if (twoLinesRenewalCount) {
-              return twoLinesRenewalCount;
-            } else {
-              return "-";
-            }
-          }
-        },
-        "3L Renewal": {
-          field: "threeLinesRenewalCount",
-          callback: threeLinesRenewalCount => {
-            if (threeLinesRenewalCount) {
-              return threeLinesRenewalCount;
-            } else {
-              return "-";
-            }
-          }
-        },
-        "4L Renewal": {
-          field: "fourLinesRenewalCount",
-          callback: fourLinesRenewalCount => {
-            if (fourLinesRenewalCount) {
-              return fourLinesRenewalCount;
-            } else {
-              return "-";
-            }
-          }
-        },
-       "5L Renewal": {
-          field: "fiveLinesRenewalCount",
-          callback: fiveLinesRenewalCount => {
-            if (fiveLinesRenewalCount) {
-              return fiveLinesRenewalCount;
-            } else {
-              return "-";
+              return "0";
             }
           }
         },
@@ -211,7 +171,7 @@ export default {
             if (twoLinesNewSubscriptions) {
               return twoLinesNewSubscriptions;
             } else {
-              return "-";
+              return "0";
             }
           }
         },
@@ -221,7 +181,7 @@ export default {
             if (threeLinesNewSubscriptions) {
               return threeLinesNewSubscriptions;
             } else {
-              return "-";
+              return "0";
             }
           }
         },
@@ -231,7 +191,7 @@ export default {
             if (fourLinesNewSubscriptions) {
               return fourLinesNewSubscriptions;
             } else {
-              return "-";
+              return "0";
             }
           }
         },
@@ -241,127 +201,7 @@ export default {
             if (fiveLinesNewSubscriptions) {
               return fiveLinesNewSubscriptions;
             } else {
-              return "-";
-            }
-          }
-        },
-        "2L Unsub": {
-          field: "twoLinesUnSubscriptions",
-          callback: twoLinesUnSubscriptions => {
-            if (twoLinesUnSubscriptions) {
-              return twoLinesUnSubscriptions;
-            } else {
-              return "-";
-            }
-          }
-        },
-        "3L Unsub": {
-          field: "threeLinesUnSubscriptions",
-          callback: threeLinesUnSubscriptions => {
-            if (threeLinesUnSubscriptions) {
-              return threeLinesUnSubscriptions;
-            } else {
-              return "-";
-            }
-          }
-        },
-        "4L Unsub": {
-          field: "fourLinesUnSubscriptions",
-          callback: fourLinesUnSubscriptions => {
-            if (fourLinesUnSubscriptions) {
-              return fourLinesUnSubscriptions;
-            } else {
-              return "-";
-            }
-          }
-        },
-        "5L Unsub": {
-          field: "fiveLinesUnSubscriptions",
-          callback: fiveLinesUnSubscriptions => {
-            if (fiveLinesUnSubscriptions) {
-              return fiveLinesUnSubscriptions;
-            } else {
-              return "-";
-            }
-          }
-        },
-        "2L Upgrade": {
-          field: "twoLinesUpgrade",
-          callback: twoLinesUpgrade => {
-            if (twoLinesUpgrade) {
-              return mthlySms;
-            } else {
-              return "-";
-            }
-          }
-        },
-        "3L Upgrade": {
-          field: "threeLinesUpgrade",
-          callback: threeLinesUpgrade => {
-            if (threeLinesUpgrade) {
-              return threeLinesUpgrade;
-            } else {
-              return "-";
-            }
-          }
-        },
-        "4L Upgrade": {
-          field: "fourLinesUpgrade",
-          callback: fourLinesUpgrade => {
-            if (fourLinesUpgrade) {
-              return fourLinesUpgrade;
-            } else {
-              return "-";
-            }
-          }
-        },
-        "5L Upgrade": {
-          field: "fiveLinesUpgrade",
-          callback: fiveLinesUpgrade => {
-            if (fiveLinesUpgrade) {
-              return fiveLinesUpgrade;
-            } else {
-              return "-";
-            }
-          }
-        },
-        "2L Downgrade": {
-          field: "twoLinesDowngrade",
-          callback: twoLinesDowngrade => {
-            if (twoLinesDowngrade) {
-              return twoLinesDowngrade;
-            } else {
-              return "-";
-            }
-          }
-        },
-        "3L Downgrade": {
-          field: "threeLinesDowngrade",
-          callback: threeLinesDowngrade => {
-            if (threeLinesDowngrade) {
-              return threeLinesDowngrade;
-            } else {
-              return "-";
-            }
-          }
-        },
-        "4L Downgrade": {
-          field: "fourLinesDowngrade",
-          callback: fourLinesDowngrade => {
-            if (fourLinesDowngrade) {
-              return fourLinesDowngrade;
-            } else {
-              return "-";
-            }
-          }
-        },
-        "5L Downgrade": {
-          field: "fiveLinesDowngrade",
-          callback: fiveLinesDowngrade => {
-            if (fiveLinesDowngrade) {
-              return fiveLinesDowngrade;
-            } else {
-              return "-";
+              return "0";
             }
           }
         },
@@ -371,7 +211,7 @@ export default {
             if (twoLinesTotalActive) {
               return twoLinesTotalActive;
             } else {
-              return "-";
+              return "0";
             }
           }
         },
@@ -381,7 +221,7 @@ export default {
             if (threeLinesTotalActive) {
               return threeLinesTotalActive;
             } else {
-              return "-";
+              return "0";
             }
           }
         },
@@ -391,7 +231,7 @@ export default {
             if (fourLinesTotalActive) {
               return fourLinesTotalActive;
             } else {
-              return "-";
+              return "0";
             }
           }
         },
@@ -401,10 +241,170 @@ export default {
             if (fiveLinesTotalActive) {
               return fiveLinesTotalActive;
             } else {
-              return "-";
+              return "0";
             }
           }
         },
+        "2L Unsub": {
+          field: "twoLinesUnSubscriptions",
+          callback: twoLinesUnSubscriptions => {
+            if (twoLinesUnSubscriptions) {
+              return twoLinesUnSubscriptions;
+            } else {
+              return "0";
+            }
+          }
+        },
+        "3L Unsub": {
+          field: "threeLinesUnSubscriptions",
+          callback: threeLinesUnSubscriptions => {
+            if (threeLinesUnSubscriptions) {
+              return threeLinesUnSubscriptions;
+            } else {
+              return "0";
+            }
+          }
+        },
+        "4L Unsub": {
+          field: "fourLinesUnSubscriptions",
+          callback: fourLinesUnSubscriptions => {
+            if (fourLinesUnSubscriptions) {
+              return fourLinesUnSubscriptions;
+            } else {
+              return "0";
+            }
+          }
+        },
+        "5L Unsub": {
+          field: "fiveLinesUnSubscriptions",
+          callback: fiveLinesUnSubscriptions => {
+            if (fiveLinesUnSubscriptions) {
+              return fiveLinesUnSubscriptions;
+            } else {
+              return "0";
+            }
+          }
+        },
+        "2L Upgrade": {
+          field: "twoLinesUpgrade",
+          callback: twoLinesUpgrade => {
+            if (twoLinesUpgrade) {
+              return mthlySms;
+            } else {
+              return "0";
+            }
+          }
+        },
+        "3L Upgrade": {
+          field: "threeLinesUpgrade",
+          callback: threeLinesUpgrade => {
+            if (threeLinesUpgrade) {
+              return threeLinesUpgrade;
+            } else {
+              return "0";
+            }
+          }
+        },
+        "4L Upgrade": {
+          field: "fourLinesUpgrade",
+          callback: fourLinesUpgrade => {
+            if (fourLinesUpgrade) {
+              return fourLinesUpgrade;
+            } else {
+              return "0";
+            }
+          }
+        },
+        "5L Upgrade": {
+          field: "fiveLinesUpgrade",
+          callback: fiveLinesUpgrade => {
+            if (fiveLinesUpgrade) {
+              return fiveLinesUpgrade;
+            } else {
+              return "0";
+            }
+          }
+        },
+        "2L Downgrade": {
+          field: "twoLinesDowngrade",
+          callback: twoLinesDowngrade => {
+            if (twoLinesDowngrade) {
+              return twoLinesDowngrade;
+            } else {
+              return "0";
+            }
+          }
+        },
+        "3L Downgrade": {
+          field: "threeLinesDowngrade",
+          callback: threeLinesDowngrade => {
+            if (threeLinesDowngrade) {
+              return threeLinesDowngrade;
+            } else {
+              return "0";
+            }
+          }
+        },
+        "4L Downgrade": {
+          field: "fourLinesDowngrade",
+          callback: fourLinesDowngrade => {
+            if (fourLinesDowngrade) {
+              return fourLinesDowngrade;
+            } else {
+              return "0";
+            }
+          }
+        },
+        "5L Downgrade": {
+          field: "fiveLinesDowngrade",
+          callback: fiveLinesDowngrade => {
+            if (fiveLinesDowngrade) {
+              return fiveLinesDowngrade;
+            } else {
+              return "0";
+            }
+          }
+        },
+        "2L Renewal": {
+          field: "twoLinesRenewalCount",
+          callback: twoLinesRenewalCount => {
+            if (twoLinesRenewalCount) {
+              return twoLinesRenewalCount;
+            } else {
+              return "0";
+            }
+          }
+        },
+        "3L Renewal": {
+          field: "threeLinesRenewalCount",
+          callback: threeLinesRenewalCount => {
+            if (threeLinesRenewalCount) {
+              return threeLinesRenewalCount;
+            } else {
+              return "0";
+            }
+          }
+        },
+        "4L Renewal": {
+          field: "fourLinesRenewalCount",
+          callback: fourLinesRenewalCount => {
+            if (fourLinesRenewalCount) {
+              return fourLinesRenewalCount;
+            } else {
+              return "0";
+            }
+          }
+        },
+       "5L Renewal": {
+          field: "fiveLinesRenewalCount",
+          callback: fiveLinesRenewalCount => {
+            if (fiveLinesRenewalCount) {
+              return fiveLinesRenewalCount;
+            } else {
+              return "0";
+            }
+          }
+        }
       },
       loading: false,
       items: [],
@@ -422,30 +422,7 @@ export default {
           sortable: false,
           align: 'right'
         },
-        {
-          text: "2L Renewal",
-          value: "twoLinesRenewalCount",
-          sortable: false,
-          align: 'center'
-        },
-        {
-          text: "3L Renewal",
-          value: "threeLinesRenewalCount",
-          sortable: false,
-          align: 'center'
-        },
-        {
-          text: "4L Renewal",
-          value: "fourLinesRenewalCount",
-          sortable: false,
-          align: 'center'
-        },
-        {
-          text: "5L Renewal",
-          value: "fiveLinesRenewalCount",
-          sortable: false,
-          align: 'center'
-        },
+       
         {
           text: "2L New Sub",
           value: "twoLinesNewSubscriptions",
@@ -469,6 +446,32 @@ export default {
           value: "fiveLinesNewSubscriptions",
           align: 'center',
           sortable: false
+        },
+        {
+          text: "2L Active",
+          value: "twoLinesTotalActive",
+
+          align: 'center',
+          sortable: false
+        },
+        {
+          text: "3L Active",
+          value: "threeLinesTotalActive",
+          sortable: false,
+          align: 'center'
+        },
+        {
+          text: "4L Active",
+          value: "fourLinesTotalActive",
+
+          align: 'center',
+          sortable: false
+        },
+        {
+          text: "5L Active",
+          value: "fiveLinesTotalActive",
+          sortable: false,
+          align: 'center'
         },
         {
           text: "2L Unsub",
@@ -550,32 +553,30 @@ export default {
           align: 'center',
           sortable: false
         },
-        {
-          text: "2L Active",
-          value: "twoLinesTotalActive",
-
-          align: 'center',
-          sortable: false
-        },
-        {
-          text: "3L Active",
-          value: "threeLinesTotalActive",
+         {
+          text: "2L Renewal",
+          value: "twoLinesRenewalCount",
           sortable: false,
           align: 'center'
         },
         {
-          text: "4L Active",
-          value: "fourLinesTotalActive",
-
-          align: 'center',
-          sortable: false
-        },
-        {
-          text: "5L Active",
-          value: "fiveLinesTotalActive",
+          text: "3L Renewal",
+          value: "threeLinesRenewalCount",
           sortable: false,
           align: 'center'
-        }
+        },
+        {
+          text: "4L Renewal",
+          value: "fourLinesRenewalCount",
+          sortable: false,
+          align: 'center'
+        },
+        {
+          text: "5L Renewal",
+          value: "fiveLinesRenewalCount",
+          sortable: false,
+          align: 'center'
+        },
       ],
       consentReport: [],
       exportData: [],
