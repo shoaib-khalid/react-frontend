@@ -60,6 +60,10 @@
                   <th scope="row">12</th>
                   <td>Parent Report</td>
                 </tr>
+                <tr class="table-row" @click="goToParentRenewalSummary()">
+                  <th scope="row">13</th>
+                  <td>Parent Renewal Summary</td>
+                </tr>
               </tbody>
             </table>
           </div>
@@ -106,7 +110,10 @@ export default {
     },
     goToParentReport() {
       this.$router.push({ name: "report.parentReport" });
-    }
+    },
+    goToParentRenewalSummary() {
+      this.$router.push({ name: "report.ParentRenewalSummary" });
+    },
   }
 };
 </script>

@@ -31,6 +31,7 @@ import AddUserComponent from './components/user/AddUserComponent'
 import UserProfileComponent from './components/user/UserProfileComponent'
 
 import ParentReportComponent from './components/reports/ParentReportComponent'
+import ParentRenewalSummaryComponent from './components/reports/ParentRenewalSummaryComponent'
 
 const router = new VueRouter({
     base: __dirname,
@@ -160,6 +161,12 @@ const router = new VueRouter({
                     path: 'parentReport',
                     name: 'report.parentReport',
                     component: ParentReportComponent,
+                    meta: { description: '', requiresAuth: true }
+                },
+                {
+                    path: 'ParentRenewalSummary',
+                    name: 'report.ParentRenewalSummary',
+                    component: ParentRenewalSummaryComponent,
                     meta: { description: '', requiresAuth: true }
                 }
 
