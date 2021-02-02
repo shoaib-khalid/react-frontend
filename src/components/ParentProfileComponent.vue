@@ -175,7 +175,7 @@
                   color="rgb(254,173,33)"
                 >Resume</v-btn>
                 <v-btn
-                  v-if="parentProfile.status=='PENDING_CBS'"
+                  v-if="parentProfile.status=='PENDING_CBS' || parentProfile.status=='CBS_NOT_UPDATE'"
                   type="button"
                   round
                   :disabled="loading"

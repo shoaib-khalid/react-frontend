@@ -38,7 +38,7 @@
                     >Unsubscribe</v-btn>
                     
                     <v-btn
-                      v-if="childAccount.childProfile.status=='PENDING_CBS'"
+                      v-if="childAccount.childProfile.status=='PENDING_CBS' || childAccount.childProfile.status=='CBS_NOT_UPDATE'"
                       type="button"
                       round
                       :disabled="loading"

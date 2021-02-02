@@ -106,7 +106,10 @@
                         <td>{{ props.item.subscriptionDate ? props.item.subscriptionDate : "-"}}</td>
                         <td>{{ props.item.subscriberFranchise ? props.item.subscriberFranchise : "-"}}</td>
                         <td>{{ props.item.parentMsisdn ? props.item.parentMsisdn : "-" }}</td>
+                        <td>{{ props.item.childMsisdn? props.item.childMsisdn :"All" }}</td>
                         <td>{{ props.item.pricePlan ? props.item.pricePlan : "-" }}</td>
+                        
+                        <td>{{ props.item.totalChildern? props.item.totalChildern :"-" }}</td>
                         <td>{{ props.item.currentChildern? props.item.currentChildern :"-" }}</td>
                         <td>{{ props.item.otOnnetMins? props.item.otOnnetMins :"_"}}</td>
                         <td>{{ props.item.otOffnetMins? props.item.otOffnetMins:"-" }}</td>
@@ -181,6 +184,16 @@ export default {
             }
           }
         },
+       "Child Msisdn": {
+          field: "childMsisdn",
+          callback: childMsisdn => {
+            if (childMsisdn) {
+              return childMsisdn;
+            } else {
+              return "-";
+            }
+          }
+        },
         "Price Plan": {
           field: "pricePlan",
           callback: pricePlan => {
@@ -191,7 +204,7 @@ export default {
             }
           }
         },
-    /*    "Total Childs": {
+       "Total Childs": {
           field: "totalChildern",
           callback: totalChildern => {
             if (totalChildern) {
@@ -200,7 +213,7 @@ export default {
               return "-";
             }
           }
-        },*/
+        },
         "Current Children": {
           field: "currentChildern",
           callback: currentChildern => {
@@ -371,17 +384,23 @@ export default {
           align: 'center'
         },
         {
+          text: "Child Msisdn",
+          value: "childMsisdn",
+          sortable: false,
+          align: 'center'
+        },
+        {
           text: "Price Plan",
           value: "pricePlan",
           sortable: false,
           align: 'center'
         },
-       /* {
-          text: "Total Childs",
+        {
+          text: "Total Childern",
           value: "totalChildern",
           sortable: false,
           align: 'center'
-        },*/
+        },
         {
           text: "Current Children",
           value: "currentChildern",
