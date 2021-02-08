@@ -107,22 +107,26 @@
                         <td>{{ props.item.subscriberFranchise ? props.item.subscriberFranchise : "-"}}</td>
                         <td>{{ props.item.parentMsisdn ? props.item.parentMsisdn : "-" }}</td>
                         <td>{{ props.item.childMsisdn? props.item.childMsisdn :"All" }}</td>
+                        <td>{{ props.item.childStatus? props.item.childStatus :"-" }}</td>
                         <td>{{ props.item.pricePlan ? props.item.pricePlan : "-" }}</td>
-                        
-                        <td>{{ props.item.totalChildern? props.item.totalChildern :"-" }}</td>
-                        <td>{{ props.item.currentChildern? props.item.currentChildern :"-" }}</td>
-                        <td>{{ props.item.otOnnetMins? props.item.otOnnetMins :"_"}}</td>
-                        <td>{{ props.item.otOffnetMins? props.item.otOffnetMins:"-" }}</td>
-                        <td>{{ props.item.otData ? props.item.otData :"-" }}</td>
-                        <td>{{ props.item.otSms ? props.item.otSms :"-" }}</td>
-                        <td>{{ props.item.mthlyOnnetMins ? props.item.mthlyOnnetMins :"-" }}</td>
-                        <td>{{ props.item.mthlyOffnetMins?props.item.mthlyOffnetMins:"-" }}</td>
-                        <td>{{ props.item.mthlyData ? props.item.mthlyData:"-" }}</td>
-                        <td>{{ props.item.mthlySms ? props.item.mthlySms:"-" }}</td>
-                        <td>{{ props.item.addOnOnnetMins ? props.item.addOnOnnetMins:"-" }}</td>
-                        <td>{{ props.item.addOnOffnetMins ? props.item.addOnOffnetMins:"-" }}</td>
-                        <td>{{ props.item.addOnData ? props.item.addOnData:"-" }}</td>
-                        <td>{{ props.item.addOnSms ? props.item.addOnSms:"-" }}</td>
+                        <td>{{ props.item.totalChildern? props.item.totalChildern :"0" }}</td>
+                        <td>{{ props.item.currentChildern? props.item.currentChildern :"0" }}</td>
+                        <td>{{ props.item.caOnnetMins? props.item.caOnnetMins :"0"}}</td>
+                        <td>{{ props.item.caOffnetMins? props.item.caOffnetMins:"0" }}</td>
+                        <td>{{ props.item.caData ? props.item.caData :"0" }}</td>
+                        <td>{{ props.item.caSms ? props.item.caSms :"0" }}</td>
+                        <td>{{ props.item.otOnnetMins? props.item.otOnnetMins :"0"}}</td>
+                        <td>{{ props.item.otOffnetMins? props.item.otOffnetMins:"0" }}</td>
+                        <td>{{ props.item.otData ? props.item.otData :"0" }}</td>
+                        <td>{{ props.item.otSms ? props.item.otSms :"0" }}</td>
+                        <td>{{ props.item.mthlyOnnetMins ? props.item.mthlyOnnetMins :"0" }}</td>
+                        <td>{{ props.item.mthlyOffnetMins?props.item.mthlyOffnetMins:"0" }}</td>
+                        <td>{{ props.item.mthlyData ? props.item.mthlyData:"0" }}</td>
+                        <td>{{ props.item.mthlySms ? props.item.mthlySms:"0" }}</td>
+                        <td>{{ props.item.addOnOnnetMins ? props.item.addOnOnnetMins:"0" }}</td>
+                        <td>{{ props.item.addOnOffnetMins ? props.item.addOnOffnetMins:"0" }}</td>
+                        <td>{{ props.item.addOnData ? props.item.addOnData:"0" }}</td>
+                        <td>{{ props.item.addOnSms ? props.item.addOnSms:"0" }}</td>
                         <td>{{ props.item.billingCycle?props.item.billingCycle :"-" }}</td>
                     </template> 
                     <template v-slot:no-results>
@@ -194,6 +198,16 @@ export default {
             }
           }
         },
+       "Child Status": {
+          field: "childStatus",
+          callback: childStatus => {
+            if (childStatus) {
+              return childStatus;
+            } else {
+              return "-";
+            }
+          }
+        },
         "Price Plan": {
           field: "pricePlan",
           callback: pricePlan => {
@@ -219,6 +233,46 @@ export default {
           callback: currentChildern => {
             if (currentChildern) {
               return currentChildern;
+            } else {
+              return "-";
+            }
+          }
+        },
+        "Allocated Telenor Mins": {
+          field: "caOnnetMins",
+          callback: caOnnetMins => {
+            if (caOnnetMins) {
+              return caOnnetMins;
+            } else {
+              return "-";
+            }
+          }
+        },
+        "Allocated Other Mins": {
+          field: "caOffnetMins",
+          callback: caOffnetMins => {
+            if (caOffnetMins) {
+              return caOffnetMins;
+            } else {
+              return "-";
+            }
+          }
+        },
+        "Allocated Data": {
+          field: "caData",
+          callback: caData => {
+            if (caData) {
+              return caData;
+            } else {
+              return "-";
+            }
+          }
+        },
+        "Allocated SMS": {
+          field: "caSms",
+          callback: caSms => {
+            if (caSms) {
+              return caSms;
             } else {
               return "-";
             }
@@ -390,6 +444,12 @@ export default {
           align: 'center'
         },
         {
+          text: "Child Status",
+          value: "childStatus",
+          sortable: false,
+          align: 'center'
+        },
+        {
           text: "Price Plan",
           value: "pricePlan",
           sortable: false,
@@ -406,6 +466,30 @@ export default {
           value: "currentChildern",
           sortable: false,
           align: 'center'
+        },
+        {
+            text: "Allocated Telenor Mins",
+            value: "caOnnetMins",
+            align: 'center',
+            sortable: false
+        },
+        {
+          text: "Allocated Other Mins",
+          value: "caOffnetMins",
+          align: 'center',
+          sortable: false
+        },
+        {
+          text: "Allocated Data",
+          value: "caData",
+          align: 'center',
+          sortable: false
+        },
+        {
+          text: "Allocated SMS",
+          value: "caSms",
+          align: 'center',
+          sortable: false
         },
         {
             text: "One Time Telenor Mins",
