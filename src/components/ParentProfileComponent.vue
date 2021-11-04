@@ -60,6 +60,7 @@
               <div class="col-md-12 pb-1 pt-1">
                 <h6>BILLING DATE: {{parentProfile.billingDate}}</h6>
               </div>
+
               <div class="col-md-12 pb-1 pt-1">
                 <table class="table table-bordered child-report small">
                   <thead>
@@ -607,6 +608,8 @@ export default {
           _this.IsShareableAddOnResourceExists = _this.parentMonthlyBalance.find(
             m => m.isFPService == 2
           );
+
+          console.log(this.parentProfile);
         }
       });
     },
