@@ -5,6 +5,7 @@
       <div class="row">
         <div class="col-sm-12">
           <!-- Authentication card start -->
+          <!-- TODO <form @submit.prevent="handleSubmit" class="md-float-material form-material"> -->
           <form @submit.prevent="handleSubmit" class="md-float-material form-material">
             <div class="text-center">
               <img class="img-fluid" src="/assets/images/logo.png" alt="Theme-Logo" />
@@ -79,6 +80,7 @@
 <script>
 import Vue from "vue";
 import Swal from "sweetalert2";
+import ApiUrls from "../enums/ApiUrls";
 import axios from "axios";
 
 export default {
@@ -87,7 +89,8 @@ export default {
       username: "",
       password: "",
       submitted: false,
-      error: ""
+      error: "",
+      ApiUrls: ApiUrls
     };
   },
   computed: {
@@ -122,7 +125,6 @@ export default {
         input: "email",
         inputPlaceholder: "Enter the Email",
         showCancelButton: true
-        // footer: '<a href>Why do I have this issue?</a>'
       });
       if (email) {
         let path = window.location.href.replace(
@@ -162,29 +164,25 @@ export default {
         "Amir"
       ];
       if (users.includes(this.username)) {
-        sessionStorage.setItem("baseURL", "http://127.0.0.1:" + process.env.VUE_APP_LOCAL_CORE_PORT);
-        sessionStorage.setItem("ReportBaseURL", "http://127.0.0.1:" + process.env.VUE_APP_LOCAL_REPORT_PORT);
-        this.$http.defaults.baseURL = sessionStorage
-          .getItem("baseURL")
-          .toString();
-        window.ReportBaseURL = sessionStorage
-          .getItem("ReportBaseURL")
-          .toString();
+        sessionStorage.setItem(this.ApiUrls.BASE_URL_KEY, "http://127.0.0.1:" + process.env.VUE_APP_LOCAL_CORE_PORT);
+        sessionStorage.setItem(this.ApiUrls.BASE_REPORT_URL_KEY, "http://127.0.0.1:" + process.env.VUE_APP_LOCAL_REPORT_PORT);
+        sessionStorage.setItem(this.ApiUrls.BASE_PREPAID_URL_KEY, "http://127.0.0.1:" + process.env.VUE_APP_LOCAL_PREPAID_CORE_PORT);
+        this.$http.defaults.baseURL = sessionStorage.getItem(this.ApiUrls.BASE_URL_KEY).toString();
+        // this.$http.defaults.basePrepaidURL = sessionStorage.getItem("basePrepaidURL").toString();
+        window.basePrepaidURL = sessionStorage.getItem(this.ApiUrls.BASE_PREPAID_URL_KEY).toString();
+        window.ReportBaseURL = sessionStorage.getItem(this.ApiUrls.BASE_REPORT_URL_KEY).toString();
       } else {
-        if (sessionStorage.getItem("baseURL")) {
-          sessionStorage.removeItem("baseURL");
-        }
-        if (sessionStorage.getItem("ReportBaseURL")) {
-          sessionStorage.removeItem("ReportBaseURL");
-        }
-        //this.$http.defaults.baseURL = window.baseApiURL;
-        this.$http.defaults.baseURL = "http:"+window.location.origin.split(":")[1] + ":" + process.env.VUE_APP_CORE_PORT;
-        //console.log(this.$http.defaults.baseURL);
-        //alert(this.$http.defaults.baseURL);
-        //window.ReportBaseURL = window.ReportBaseURL_CONST;
-        window.ReportBaseURL = "http:"+window.location.origin.split(":")[1] + ":" + process.env.VUE_APP_REPORT_PORT;
-        //console.log(window.ReportBaseURL);
-       // alert(window.ReportBaseURL);
+        const baseUrl = "http:"+window.location.origin.split(":")[1] + ":" + process.env.VUE_APP_CORE_PORT;
+        const basePrepaidURL = "http:"+window.location.origin.split(":")[1] + ":" + process.env.VUE_APP_LOCAL_PREPAID_CORE_PORT;
+        const baseReportURL = "http:"+window.location.origin.split(":")[1] + ":" + process.env.VUE_APP_REPORT_PORT;
+
+        sessionStorage.setItem(this.ApiUrls.BASE_URL_KEY, baseUrl);
+        sessionStorage.setItem(this.ApiUrls.BASE_REPORT_URL_KEY, baseReportURL);
+        sessionStorage.setItem(this.ApiUrls.BASE_PREPAID_URL_KEY, basePrepaidURL);
+        this.$http.defaults.baseURL = baseUrl;
+        // this.$http.defaults.basePrepaidURL = "http:"+window.location.origin.split(":")[1] + ":" + process.env.VUE_APP_LOCAL_PREPAID_CORE_PORT;
+        window.basePrepaidURL = basePrepaidURL;
+        window.ReportBaseURL = baseReportURL;
       }
       return this.$http.post("/user/login", {
         username: this.username,
@@ -192,7 +190,6 @@ export default {
       });
     },
     loadRolePermission(loginInfo) {
-      let that = this;
       this.$http.get("/permission/rolepermission").then(result => {
         if (result.errorCode == "00") {
           let role = result.data.find(val => val.roleId == loginInfo.role);
@@ -207,6 +204,8 @@ export default {
             this.$store.commit("updateRolePermission", data);
           }
         }
+      }).catch(e => {
+        console.error("Error logging in", e);
       });
     },
     handleSubmit(e) {
@@ -261,7 +260,7 @@ export default {
               if (loginInfo.forceChangePassword == 1) {
                 this.$router.push({ name: "changePassword" });
               } else {
-                this.$router.push({ name: "fpSearch" });
+                this.$router.push({ name: "fpUserType" });
               }
             } else {
               this.$store.commit("notis/setAlert", {
@@ -270,12 +269,13 @@ export default {
                 time: "4"
               });
             }
+          }).catch(e => {
+            console.error("Error logging in", e);
           });
         }
       });
     },
     loadCompanyAdminDetail: function(info, data) {
-      let that = this;
       Vue.$http
         .get("/master/getmasterbycompany/" + info.user.company.id)
         .then(result => {
@@ -295,7 +295,7 @@ export default {
 
             this.$store.commit("updateRolePermission", data);
 
-            this.$router.push({ name: "fpsearch" });
+            this.$router.push({ name: "fpUserType" });
           }
         });
     }

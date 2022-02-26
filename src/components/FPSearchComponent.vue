@@ -4,6 +4,12 @@
     <div class="card col-md-4 p-3">
       <div class="card-block">
         <div v-if="!createNewFF && !requestPending">
+          <div>
+              <v-btn @click="goBack" color="#3498db" dark id="back-button">
+                <v-icon dark left>arrow_back</v-icon>
+                Back
+              </v-btn>
+          </div>
           <h5>FP Search</h5>
           <form @submit.prevent="handleFpSearch">
             <v-layout row wrap>
@@ -31,7 +37,7 @@
           <v-flex xs12 px-5 py-5 class="text-center">
             <p
               class="lead"
-            >{{ fpSearch.userMsisdn.substring(0,4)+ ' ' + fpSearch.userMsisdn.substring(4,11)}} is not a Family Plan User</p>
+            >{{ fpSearch.userMsisdn.substring(0,4)+ ' ' + fpSearch.userMsisdn.substring(4,11)}} is not a {{ selectedFpUserType }} Family Plan User</p>
           </v-flex>
           <v-flex xs12 px-4 py-2 class="text-center">
             <v-btn
@@ -78,6 +84,9 @@
 import Swal from "sweetalert2";
 import Vue from "vue";
 import utils from "../utils";
+import FPUserTypes from "../enums/FPUserTypes";
+import ApiUrls from "../enums/ApiUrls";
+
 export default {
   data: () => ({
     fpSearch: {
@@ -86,7 +95,10 @@ export default {
     loading: false,
     submitted: false,
     createNewFF: false,
-    requestPending: false
+    requestPending: false,
+    fpUserTypes: FPUserTypes,
+    ApiUrls: ApiUrls,
+    selectedFpUserType: ""
   }),
   methods: {
     handleFpSearch() {
@@ -94,61 +106,105 @@ export default {
       let _this = this;
       this.$validator.validateAll().then(status => {
         if (status) {
-          Vue.$http
-            .post("/parent/getMsisdnStatus", _this.fpSearch)
-            .then(result => {
-              if (result.errorCode == "00") {
-                if (result.data.status == "NEW") {
-                  sessionStorage.setItem(
-                    "ParentMSISDN",
-                    this.fpSearch.userMsisdn
-                  );
-                  _this.createNewFF = true;
-                  _this.requestPending = false;
-                  _this.$nextTick(() => _this.$refs.refToCreateNew.$el.focus());
-                } else if (result.data.status == "PENDING") {
-                  _this.createNewFF = false;
-                  _this.requestPending = true;
-                  _this.$nextTick(() =>
-                    _this.$refs.refToSubscriptionRequestSent.$el.focus()
-                  );
-                } else if (
-                  result.data.status == "SUSPENDED" ||
-                  result.data.status == "BLOCKED" ||
-                  result.data.status == "PP_BLACKLISTED"
-                ) {
-                  this.$store.commit("notis/setAlert", {
-                    type: "error",
-                    title: "Nmber is " + result.data.status.replace("PP_", ""),
-                    time: "4"
-                  });
-                } else if (result.data.type == "PARENT") {
-                  sessionStorage.setItem(
-                    "ParentMSISDN",
-                    this.fpSearch.userMsisdn
-                  );
-                  _this.$router.push({ name: "parentProfile" });
-                } else if (result.data.type == "CHILD") {
-                  sessionStorage.setItem(
-                    "ParentMSISDN",
-                    result.data.parentMsisdn
-                  );
-                  sessionStorage.setItem(
-                    "ChildMSISDN",
-                    this.fpSearch.userMsisdn
-                  );
-                  _this.$router.push({ name: "childProfile" });
-                }
-              } else {
-                this.$store.commit("notis/setAlert", {
-                  type: "error",
-                  title: result.errorMsg,
-                  time: "4"
-                });
-              }
-            });
+          switch(this.selectedFpUserType) {
+            case _this.fpUserTypes.PREPAID:
+              this.resolveMsisdnPrepaid(_this);
+              break;
+            case _this.fpUserTypes.POSTPAID:
+              console.log("Querying postpaid user");
+              this.resolveMsisdnPostpaid(_this);
+              break;
+            default:
+              this.goBack();
+          }
         }
       });
+    },
+    resolveMsisdnPrepaid(_this) {
+      // TODO: Uncomment
+      // const parentMsisdn = _this.fpSearch.userMsisdn
+      const parentMsisdn = "03005438062";
+      const basePrepaidURL = sessionStorage.getItem(this.ApiUrls.BASE_PREPAID_URL_KEY);
+      Vue.$http
+        .get(`${basePrepaidURL}/user/getSubscriberType?parentMsisdn=${parentMsisdn}`)
+        .then(result => {
+          console.log(result);
+          if (result === "Prepaid") {
+            sessionStorage.setItem(
+              "ParentMSISDN",
+              parentMsisdn
+            );
+            _this.$router.push({ name: "prepaidParentProfile" });
+          } else {
+            // TODO
+            this.$store.commit("notis/setAlert", {
+              type: "error",
+              title: "Not a subscriber",
+              time: "4"
+            });
+          }
+        }, error => {
+            this.$store.commit("notis/setAlert", {
+              type: "error",
+              title: result.errorMsg,
+              time: "4"
+            });
+        });
+    },
+    resolveMsisdnPostpaid(_this) {
+      Vue.$http
+        .post("/parent/getMsisdnStatus", _this.fpSearch)
+        .then(result => {
+          if (result.errorCode == "00") {
+            if (result.data.status == "NEW") {
+              sessionStorage.setItem(
+                "ParentMSISDN",
+                this.fpSearch.userMsisdn
+              );
+              _this.createNewFF = true;
+              _this.requestPending = false;
+              _this.$nextTick(() => _this.$refs.refToCreateNew.$el.focus());
+            } else if (result.data.status == "PENDING") {
+              _this.createNewFF = false;
+              _this.requestPending = true;
+              _this.$nextTick(() =>
+                _this.$refs.refToSubscriptionRequestSent.$el.focus()
+              );
+            } else if (
+              result.data.status == "SUSPENDED" ||
+              result.data.status == "BLOCKED" ||
+              result.data.status == "PP_BLACKLISTED"
+            ) {
+              this.$store.commit("notis/setAlert", {
+                type: "error",
+                title: "Nmber is " + result.data.status.replace("PP_", ""),
+                time: "4"
+              });
+            } else if (result.data.type == "PARENT") {
+              sessionStorage.setItem(
+                "ParentMSISDN",
+                this.fpSearch.userMsisdn
+              );
+              _this.$router.push({ name: "parentProfile" });
+            } else if (result.data.type == "CHILD") {
+              sessionStorage.setItem(
+                "ParentMSISDN",
+                result.data.parentMsisdn
+              );
+              sessionStorage.setItem(
+                "ChildMSISDN",
+                this.fpSearch.userMsisdn
+              );
+              _this.$router.push({ name: "childProfile" });
+            }
+          } else {
+            this.$store.commit("notis/setAlert", {
+              type: "error",
+              title: result.errorMsg,
+              time: "4"
+            });
+          }
+        });
     },
     handleCreateNewFPU() {
       let msisdn = sessionStorage.getItem("ParentMSISDN");
@@ -207,9 +263,17 @@ export default {
       this.fpSearch.userMsisdn = "";
       this.createNewFF = false;
       this.requestPending = false;
+    },
+    goBack() {
+      this.$router.push({ name: "fpUserType" });
     }
   },
-  mounted() {},
+  mounted() {
+    this.selectedFpUserType = sessionStorage.getItem(this.fpUserTypes.STORAGE_KEY);
+    if (!this.selectedFpUserType) {
+      this.goBack();
+    }
+  },
   beforeDestroy() {}
 };
 </script>
@@ -218,5 +282,10 @@ export default {
   margin: 0 auto; /* Added */
   float: none; /* Added */
   margin-bottom: 10px; /* Added */
+}
+
+#back-button {
+  margin-bottom: 1rem;
+  margin-left: 0;
 }
 </style>

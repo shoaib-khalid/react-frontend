@@ -195,7 +195,7 @@
             <v-tab>TRANSACTION DETAILS</v-tab>
             <v-tab-item :key="'tabuserProfile'">
               <v-container fluid>
-                <div
+                <!-- <div
                   class="row pl-3 pr-3"
                   :key="'monthlyResourcesComponentKey_'+monthlyResourcesComponentKey"
                 >
@@ -263,7 +263,7 @@
                       </tbody>
                     </table>
                   </div>
-                </div>
+                </div> -->
                 <ChildsProfileComponent
                   :key="childsProfileComponentKey"
                   v-bind:parentMsisdn="parentMsisdn"
@@ -300,7 +300,8 @@
 <script>
 import Swal from "sweetalert2";
 import Vue from "vue";
-import ChildsProfileComponent from "./ChildsProfileComponent";
+import ChildsProfileComponent from "./ChildsProfileComponent.vue";
+import ApiUrls from "../enums/ApiUrls";
 import UserHistoryComponent from "./UserHistoryComponent";
 
 import utils from "../utils";
@@ -329,27 +330,12 @@ export default {
     DataId: "",
     reinitiateRenewal: false,
     parentProfile: {
-      id: "",
       msisdn: "",
-      status: "",
-      pricePlanDetails: {
-        id: "",
-        name: "",
-        numberOfLines: "",
-        cbsPlanNameParent: "",
-        productDetails: [
-          {
-            id: "",
-            amount: 0,
-            productId: "",
-            productList: {
-              id: "",
-              productName: "",
-              productType: ""
-            }
-          }
-        ]
-      }
+      subscriber: true,
+      groups: [],
+      createdDate: "",
+      lastModifiedDate: "",
+      error: ""
     },
     parentMonthlyBalance: {},
     pricePlans: [],
@@ -357,7 +343,8 @@ export default {
     // parentResources: {},
     loading: false,
     submitted: false,
-    childAccounts: []
+    childAccounts: [],
+    basePrepaidUrl: ""
   }),
   methods: {
     forceRerender() {
@@ -559,10 +546,9 @@ export default {
     },
     getParentProfile: function() {
       let _this = this;
-      let products = [];
       let obj = { parentMsisdn: _this.parentMsisdn };
-      Vue.$http.post("/parent/getParentProfile", obj).then(result => {
-        if (result.errorCode == "00") {
+      Vue.$http.post(this.basePrepaidUrl + "/groups/get", obj).then(result => {
+        if (!result.error) {
           _this.parentProfile = result.data.parentProfile;
           _this.renewedDate = result.data.renewedDate;
           _this.reinitiateRenewal = result.data.reinitiateRenewal;
@@ -741,7 +727,7 @@ export default {
     refresh() {
       this.getParentProfile();
       this.getChildsOfParent(this.parentMsisdn);
-      this.forceRerender();
+    //   this.forceRerender();
     },
     getProductValue(product) {
       if (product.productInfo.quotaUnit == "BYTE") {
@@ -848,6 +834,7 @@ export default {
     }
   },
   mounted() {
+    this.basePrepaidUrl = sessionStorage.getItem(ApiUrls.BASE_PREPAID_URL_KEY);
     this.parentMsisdn = sessionStorage.getItem("ParentMSISDN");
 
     if (!this.parentMsisdn) {
