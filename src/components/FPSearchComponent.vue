@@ -136,7 +136,7 @@ export default {
             );
             _this.$router.push({ name: "prepaidParentProfile" });
           } else {
-            // TODO
+            // TODO: Give option to create prepaid subscriber
             this.$store.commit("notis/setAlert", {
               type: "error",
               title: "Not a subscriber",

@@ -1,3 +1,5 @@
+// TODO
+
 <template>
   <div class="center col-sm-12 col-md-12 col-lg-12">
     <div class="row">
@@ -58,7 +60,8 @@
                 <h6>NUMBER STATUS: {{parentProfile.status}}</h6>
               </div>
               <div class="col-md-12 pb-1 pt-1">
-                <h6>BILLING DATE: {{parentProfile.billingDate}}</h6>
+                <!-- TODO -->
+                <h6>User Type: </h6>
               </div>
 
               <div class="col-md-12 pb-1 pt-1">
@@ -66,18 +69,18 @@
                   <thead>
                     <tr>
                       <th colspan="2">
-                        <h6>Shareable Resources</h6>
+                        <h6>Purchased Offers</h6>
                       </th>
                     </tr>
                     <tr>
-                      <th class="text-center">ALLOCATED RESOURCES</th>
+                      <th class="text-center">PURCHASED RESOURCES</th>
                       <th class="text-center">REMAINING RESOURCES</th>
                     </tr>
-                    <tr>
+                    <!-- <tr>
                       <th colspan="2">{{parentProfile.pricePlanDetails.cbsPlanNameParent}}</th>
-                    </tr>
+                    </tr> -->
                   </thead>
-                  <tbody>
+                  <!-- <tbody>
                     <tr>
                       <td>
                         <ul :key="'product' + i" v-for="(product, i) in parentMonthlyBalance">
@@ -105,55 +108,7 @@
                         </ul>
                       </td>
                     </tr>
-                  </tbody>
-                </table>
-                <table
-                  v-if="IsNonShareableResourceExists"
-                  class="table table-bordered child-report small"
-                >
-                  <thead>
-                    <tr>
-                      <th colspan="2">
-                        <h6>Non Sharable Resources</h6>
-                      </th>
-                    </tr>
-                    <tr>
-                      <th class="text-center">ALLOCATED RESOURCES</th>
-                      <th class="text-center">REMAINING RESOURCES</th>
-                    </tr>
-                    <tr>
-                      <th colspan="2">{{parentProfile.pricePlanDetails.cbsPlanNameParent}}</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr>
-                      <td>
-                        <ul :key="'product' + i" v-for="(product, i) in parentMonthlyBalance">
-                          <li v-if="product.isFPService==0">{{ getMonthlyQuota(product)}}</li>
-                        </ul>
-                      </td>
-                      <td>
-                        <ul :key="'product' + i" v-for="(product, i) in parentMonthlyBalance">
-                          <li v-if="product.isFPService==0">{{ getRemainingQuota(product) }}</li>
-                        </ul>
-                      </td>
-                    </tr>
-                    <tr v-if="IsNonShareableAddOnResourceExists">
-                      <th colspan="2">Add-on Bundle</th>
-                    </tr>
-                    <tr v-if="IsNonShareableAddOnResourceExists">
-                      <td>
-                        <ul :key="'product' + i" v-for="(product, i) in parentMonthlyBalance">
-                          <li v-if="product.isFPService==3">{{ getMonthlyQuota(product)}}</li>
-                        </ul>
-                      </td>
-                      <td>
-                        <ul :key="'product' + i" v-for="(product, i) in parentMonthlyBalance">
-                          <li v-if="product.isFPService==3">{{ getRemainingQuota(product)}}</li>
-                        </ul>
-                      </td>
-                    </tr>
-                  </tbody>
+                  </tbody> -->
                 </table>
               </div>
             </div>
@@ -264,7 +219,7 @@
                     </table>
                   </div>
                 </div> -->
-                <ChildsProfileComponent
+                <PrepaidChildProfileComponent
                   :key="childsProfileComponentKey"
                   v-bind:parentMsisdn="parentMsisdn"
                   v-bind:parentId="parentProfile.id"
@@ -274,7 +229,7 @@
                   v-on:childAdded="onChildAdded"
                   v-on:childDeleted="onChildDeleted"
                   v-if="parentProfile.id"
-                ></ChildsProfileComponent>
+                ></PrepaidChildProfileComponent>
               </v-container>
             </v-tab-item>
             <v-tab-item :key="'tabUserHistory'">
@@ -300,7 +255,7 @@
 <script>
 import Swal from "sweetalert2";
 import Vue from "vue";
-import ChildsProfileComponent from "./ChildsProfileComponent.vue";
+import PrepaidChildProfileComponent from "./PrepaidChildProfileComponent.vue";
 import ApiUrls from "../enums/ApiUrls";
 import UserHistoryComponent from "./UserHistoryComponent";
 
@@ -308,7 +263,7 @@ import utils from "../utils";
 
 export default {
   components: {
-    ChildsProfileComponent
+    PrepaidChildProfileComponent
   },
 
   data: () => ({

@@ -57,15 +57,15 @@ const router = new VueRouter({
       meta: { description: "", requiresAuth: true },
     },
     {
-      path: "/prepaidParentProfile",
-      name: "prepaidParentProfile",
-      component: PrepaidParentProfileComponent,
-      meta: { description: "", requiresAuth: true },
-    },
-    {
       path: "/childprofile",
       name: "childProfile",
       component: ChildViewComponent,
+      meta: { description: "", requiresAuth: true },
+    },
+    {
+      path: "/prepaidParentProfile",
+      name: "prepaidParentProfile",
+      component: PrepaidParentProfileComponent,
       meta: { description: "", requiresAuth: true },
     },
     {
