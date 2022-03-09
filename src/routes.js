@@ -25,6 +25,16 @@ import ProfileAccessComponent from "./components/reports/ProfileAccessComponent"
 import ProfileChangesComponent from "./components/reports/ProfileChangesComponent";
 import AgentActivityComponent from "./components/reports/AgentActivityComponent";
 
+import PrepaidSubscriptionComponent from "./components/reports/PrepaidSubscriptionComponent";
+import PrepaidHierarchyComponent from "./components/reports/PrepaidHierarchyComponent";
+import PrepaidResourceSharingComponent from "./components/reports/PrepaidResourceSharingComponent";
+import PrepaidLoginComponent from "./components/reports/PrepaidLoginComponent";
+import PrepaidProfileAccessComponent from "./components/reports/PrepaidProfileAccessComponent";
+import PrepaidMsisdnComponent from "./components/reports/PrepaidMsisdnComponent";
+import PrepaidGroupsEditComponent from "./components/reports/PrepaidGroupsEditComponent";
+import PrepaidTransactionComponent from "./components/reports/PrepaidTransactionComponent";
+import PrepaidUssdComponent from "./components/reports/PrepaidUssdComponent";
+
 import ReportListComponent from "./components/reports/ReportListComponent";
 import DashboardUserComponent from "./components/user/DashboardUserComponent";
 import ListUserComponent from "./components/user/ListUserComponent";
@@ -181,6 +191,60 @@ const router = new VueRouter({
           path: "ParentRenewalSummary",
           name: "report.ParentRenewalSummary",
           component: ParentRenewalSummaryComponent,
+          meta: { description: "", requiresAuth: true },
+        },
+        {
+          path: "PrepaidDailySubscription",
+          name: "report.prepaidSubscription",
+          component: PrepaidSubscriptionComponent,
+          meta: { description: "", requiresAuth: true },
+        },
+        {
+          path: "PrepaidHierarchy",
+          name: "report.prepaidHierarchy",
+          component: PrepaidHierarchyComponent,
+          meta: { description: "", requiresAuth: true },
+        },
+        {
+          path: "PrepaidResourceSharing",
+          name: "report.prepaidResourceSharing",
+          component: PrepaidResourceSharingComponent,
+          meta: { description: "", requiresAuth: true },
+        },
+        {
+          path: "PrepaidLogin",
+          name: "report.prepaidLogin",
+          component: PrepaidLoginComponent,
+          meta: { description: "", requiresAuth: true },
+        },
+        {
+          path: "PrepaidProfileAccess",
+          name: "report.prepaidProfileAccess",
+          component: PrepaidProfileAccessComponent,
+          meta: { description: "", requiresAuth: true },
+        },
+        {
+          path: "PrepaidMsisdn",
+          name: "report.prepaidMsisdn",
+          component: PrepaidMsisdnComponent,
+          meta: { description: "", requiresAuth: true },
+        },
+        {
+          path: "PrepaidGroupsEdit",
+          name: "report.groupsEdit",
+          component: PrepaidGroupsEditComponent,
+          meta: { description: "", requiresAuth: true },
+        },
+        {
+          path: "PrepaidTransaction",
+          name: "report.prepaidTransaction",
+          component: PrepaidTransactionComponent,
+          meta: { description: "", requiresAuth: true },
+        },
+        {
+          path: "PrepaidUssd",
+          name: "report.prepaidUssd",
+          component: PrepaidUssdComponent,
           meta: { description: "", requiresAuth: true },
         },
       ],

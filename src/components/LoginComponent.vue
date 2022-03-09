@@ -172,8 +172,11 @@ export default {
         window.basePrepaidURL = sessionStorage.getItem(this.ApiUrls.BASE_PREPAID_URL_KEY).toString();
         window.ReportBaseURL = sessionStorage.getItem(this.ApiUrls.BASE_REPORT_URL_KEY).toString();
       } else {
+        // const baseUrl = "http:"+process.env.VUE_APP_PREPAID_CORE_IP + ":" + process.env.VUE_APP_CORE_PORT;
+        const basePrepaidURL = "http:"+process.env.VUE_APP_PREPAID_CORE_IP + ":" + process.env.VUE_APP_PREPAID_CORE_PORT;
+        // const baseReportURL = "http:"+process.env.VUE_APP_PREPAID_CORE_IP + ":" + process.env.VUE_APP_REPORT_PORT;
         const baseUrl = "http:"+window.location.origin.split(":")[1] + ":" + process.env.VUE_APP_CORE_PORT;
-        const basePrepaidURL = "http:"+window.location.origin.split(":")[1] + ":" + process.env.VUE_APP_LOCAL_PREPAID_CORE_PORT;
+        // const basePrepaidURL = "http:"+window.location.origin.split(":")[1] + ":" + process.env.VUE_APP_PREPAID_CORE_PORT;
         const baseReportURL = "http:"+window.location.origin.split(":")[1] + ":" + process.env.VUE_APP_REPORT_PORT;
 
         sessionStorage.setItem(this.ApiUrls.BASE_URL_KEY, baseUrl);

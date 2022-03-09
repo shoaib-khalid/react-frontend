@@ -122,8 +122,8 @@ export default {
     },
     resolveMsisdnPrepaid(_this) {
       // TODO: Uncomment
-      // const parentMsisdn = _this.fpSearch.userMsisdn
-      const parentMsisdn = "03005438062";
+      const parentMsisdn = _this.fpSearch.userMsisdn
+      // const parentMsisdn = "03005438062";
       const basePrepaidURL = sessionStorage.getItem(this.ApiUrls.BASE_PREPAID_URL_KEY);
       Vue.$http
         .get(`${basePrepaidURL}/user/getSubscriberType?parentMsisdn=${parentMsisdn}`)
@@ -207,25 +207,29 @@ export default {
         });
     },
     handleCreateNewFPU() {
-      let msisdn = sessionStorage.getItem("ParentMSISDN");
-      let obj = {
-        parentMsisdn: msisdn
-      };
-      Vue.$http.post("/parent/isMsisdnEligibleForFP", obj).then(result => {
-        if (result.errorCode == "00") {
-          if (result.data.isSubscribed) {
-            this.provisionParent();
+      if (this.selectedFpUserType === this.fpUserTypes.POSTPAID) {
+        let msisdn = sessionStorage.getItem("ParentMSISDN");
+        let obj = {
+          parentMsisdn: msisdn
+        };
+        Vue.$http.post("/parent/isMsisdnEligibleForFP", obj).then(result => {
+          if (result.errorCode == "00") {
+            if (result.data.isSubscribed) {
+              this.provisionParent();
+            } else {
+              this.$router.push({ name: "createfpuser" });
+            }
           } else {
-            this.$router.push({ name: "createfpuser" });
+            this.$store.commit("notis/setAlert", {
+              type: "error",
+              title: result.errorMsg,
+              time: "4"
+            });
           }
-        } else {
-          this.$store.commit("notis/setAlert", {
-            type: "error",
-            title: result.errorMsg,
-            time: "4"
-          });
-        }
-      });
+        });
+      } else {
+        // TODO: Implement logic for creating Prepaid FP User
+      }
     },
     provisionParent() {
         let msisdn = sessionStorage.getItem("ParentMSISDN");
