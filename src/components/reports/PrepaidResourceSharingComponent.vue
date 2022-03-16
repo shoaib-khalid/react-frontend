@@ -10,7 +10,9 @@
             <router-link to="/report/list">Reports</router-link>
           </li>
           <li class="activePage">
-            <p href title="" class="animation">TODO</p>
+            <p href title="Daily Subscription" class="animation">
+              Resource Sharing
+            </p>
           </li>
           <div class="clear"></div>
         </ul>
@@ -81,27 +83,26 @@
           </v-menu>
         </div>
         <div class="col-md-2">
-          <v-btn round color="#3498db" @click="navigateToSearch" dark
-            >Search</v-btn
-          >
+          <v-btn round color="#3498db" @click="getReport" dark>Search</v-btn>
         </div>
       </div>
 
-      <div class="row pb-2">
+      <!-- Download Excel Button -->
+      <!-- <div class="row pb-2">
         <div class="col-md-2">
           <v-btn round color="#3498db" dark>
-            <!-- <download-excel
+            <download-excel
                           :escapeCsv=false
                           :fetch="fetchData"
                           :fields="json_fields"
                           type="csv"
                           name="ParentRenewalSummary.xls"
-                        >Download Excel</download-excel> -->
+                        >Download Excel</download-excel>
           </v-btn>
         </div>
-      </div>
+      </div> -->
 
-      <div class="rs-table text-center">
+      <div class="rs-table">
         <v-data-table
           :headers="headers"
           :items="tableData"
@@ -110,7 +111,26 @@
           :rows-per-page-items="[10]"
         >
           <template v-slot:items="props">
-            <td>{{ props.item.date ? props.item.date : "-" }}</td>
+            <td name="Parent Number">{{ props.item.parentMsisdn }}</td>
+            <td name="Child number">{{ props.item.memberMsisdn }}</td>
+            <td name="Offer Name">{{ props.item.offerName }}</td>
+            <td name="On Net Value Shared (Parent)"></td>
+            <td name="Off Net Value Shared (Parent)"></td>
+            <td name="Data Value Shared (Parent)"></td>
+            <td name="SMS Value Shared (Parent)"></td>
+            <td name="On Net Value Shared (Child)"></td>
+            <td name="Off Net Value Shared (Child)"></td>
+            <td name="Data Value Shared (Child)"></td>
+            <td name="SMS Value Shared (Child)"></td>
+            <!-- <td>{{ props.item.operationDate }}</td> -->
+            <!-- <td>{{ props.item.operationType }}</td> -->
+            <!-- <td>{{ props.item.sharedResource }}</td> -->
+            <!-- <td>{{ props.item.sharedResourceValue }}</td> -->
+            <td name="Resources Expiry Date">
+              {{ props.item.sharedResourceExpiryDate }}
+            </td>
+            <td name="Response">{{ props.item.response }}</td>
+            <td name="Reason of Response">{{ props.item.resonOfResponse }}</td>
           </template>
           <template v-slot:no-results>
             <v-alert :value="true" color="error" icon="warning"
@@ -131,10 +151,115 @@
 </template>
 
 <script>
+import moment from "moment";
+import ApiUrls from "../../enums/ApiUrls";
+
 export default {
   data() {
-    return {};
+    return {
+      basePrepaidUrl: "",
+      tableData: [],
+      headers: [
+        {
+          text: "Parent Number",
+          value: "Parent Number",
+          sortable: false,
+        },
+        {
+          text: "Child Number",
+          value: "Child Number",
+          sortable: false,
+        },
+        {
+          text: "Offer Name",
+          value: "Offer Name",
+          sortable: false,
+        },
+        {
+          text: "On Net Value Shared (Parent)",
+          value: "On Net Value Shared (Parent)",
+          sortable: false,
+        },
+        {
+          text: "Off Net Value Shared (Parent)",
+          value: "Off Net Value Shared (Parent)",
+          sortable: false,
+        },
+        {
+          text: "Data Value Shared (Parent)",
+          value: "Data Value Shared (Parent)",
+          sortable: false,
+        },
+        {
+          text: "SMS Value Shared (Parent)",
+          value: "SMS Value Shared (Parent)",
+          sortable: false,
+        },
+        {
+          text: "On Net Value Shared (Child)",
+          value: "On Net Value Shared (Child)",
+          sortable: false,
+        },
+        {
+          text: "Off Net Value Shared (Child)",
+          value: "Off Net Value Shared (Child)",
+          sortable: false,
+        },
+        {
+          text: "Data Value Shared (Child)",
+          value: "Data Value Shared (Child)",
+          sortable: false,
+        },
+        {
+          text: "SMS Value Shared (Child)",
+          value: "SMS Value Shared (Child)",
+          sortable: false,
+        },
+        {
+          text: "Resources Expiry Date",
+          value: "Resources Expiry Date",
+          sortable: false,
+        },
+        {
+          text: "Response",
+          value: "Response",
+          sortable: false,
+        },
+        {
+          text: "Reason of Response",
+          value: "Reason of Response",
+          sortable: false,
+        },
+      ],
+      pagination: {
+        page: 1,
+        rowsPerPage: 10,
+        totalPages: undefined,
+        totalItems: undefined,
+      },
+      dateMenuFrom: false,
+      startDate: moment().format("YYYY-MM-DD"),
+      endDate: moment().format("YYYY-MM-DD"),
+      errorMsg: null,
+    };
   },
-  methods: {},
+  methods: {
+    getReport() {
+      const query = {
+        params: {
+          operationStartDate: this.startDate,
+          operationEndDate: this.endDate,
+        },
+      };
+      this.$http
+        .post(`${this.basePrepaidUrl}/reports/getResourceSharingReport`, query)
+        .then((result) => {
+          this.tableData = result;
+        });
+    },
+  },
+  mounted() {
+    this.basePrepaidUrl = sessionStorage.getItem(ApiUrls.BASE_PREPAID_URL_KEY);
+  },
 };
 </script>

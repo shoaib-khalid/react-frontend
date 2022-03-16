@@ -1,14 +1,21 @@
 <template>
-  <section class="login-block" style="background:#00bcd4">
+  <section class="login-block" style="background: #00bcd4">
     <!-- Container-fluid starts -->
     <div class="container">
       <div class="row">
         <div class="col-sm-12">
           <!-- Authentication card start -->
           <!-- TODO <form @submit.prevent="handleSubmit" class="md-float-material form-material"> -->
-          <form @submit.prevent="handleSubmit" class="md-float-material form-material">
+          <form
+            @submit.prevent="handleSubmit"
+            class="md-float-material form-material"
+          >
             <div class="text-center">
-              <img class="img-fluid" src="/assets/images/logo.png" alt="Theme-Logo" />
+              <img
+                class="img-fluid"
+                src="/assets/images/logo.png"
+                alt="Theme-Logo"
+              />
             </div>
             <div class="auth-box card">
               <div class="card-block">
@@ -42,7 +49,14 @@
                   />
                 </div>
                 <v-flex xs12 px-4 py-2 class="text-center">
-                  <v-btn type="submit" round :disabled="loggingIn" color="#3498db" dark>Login</v-btn>
+                  <v-btn
+                    type="submit"
+                    round
+                    :disabled="loggingIn"
+                    color="#3498db"
+                    dark
+                    >Login</v-btn
+                  >
                 </v-flex>
                 <div class="row m-t-25 text-left">
                   <div class="col-12">
@@ -60,7 +74,8 @@
                         href="javascript:void(0);"
                         @click="resetPassword"
                         class="text-right f-w-600"
-                      >Forgot Password?</a>
+                        >Forgot Password?</a
+                      >
                     </div>
                   </div>
                 </div>
@@ -90,7 +105,7 @@ export default {
       password: "",
       submitted: false,
       error: "",
-      ApiUrls: ApiUrls
+      ApiUrls: ApiUrls,
     };
   },
   computed: {
@@ -100,13 +115,13 @@ export default {
 
     alert() {
       // return this.$store.state.alert
-    }
+    },
   },
   watch: {
     $route(to, from) {
       // clear alert on location change
       // this.$store.dispatch('alert/clear');
-    }
+    },
   },
   mounted() {
     // console.log("mounted");
@@ -118,13 +133,13 @@ export default {
     // this.$store.commit('logout');
   },
   methods: {
-    resetPassword: async function() {
+    resetPassword: async function () {
       const { value: email } = await Swal.fire({
         title: "Reset Password",
         text: "please enter your email so we can sent link reset password",
         input: "email",
         inputPlaceholder: "Enter the Email",
-        showCancelButton: true
+        showCancelButton: true,
       });
       if (email) {
         let path = window.location.href.replace(
@@ -133,7 +148,7 @@ export default {
         );
         this.$http
           .post("/user/resetpassword", { domain: path, email: email })
-          .then(result => {
+          .then((result) => {
             if (result.errorCode == "00") {
               Swal.fire(
                 "Success sent link!",
@@ -145,7 +160,7 @@ export default {
                 title: "Failed!",
                 text: "Failed reset password",
                 type: "error",
-                confirmButtonText: "Exit"
+                confirmButtonText: "Exit",
               });
             }
           });
@@ -161,27 +176,57 @@ export default {
         "Wasim",
         "Nauman",
         "DanishIS",
-        "Amir"
+        "Amir",
       ];
       if (users.includes(this.username)) {
-        sessionStorage.setItem(this.ApiUrls.BASE_URL_KEY, "http://127.0.0.1:" + process.env.VUE_APP_LOCAL_CORE_PORT);
-        sessionStorage.setItem(this.ApiUrls.BASE_REPORT_URL_KEY, "http://127.0.0.1:" + process.env.VUE_APP_LOCAL_REPORT_PORT);
-        sessionStorage.setItem(this.ApiUrls.BASE_PREPAID_URL_KEY, "http://127.0.0.1:" + process.env.VUE_APP_LOCAL_PREPAID_CORE_PORT);
-        this.$http.defaults.baseURL = sessionStorage.getItem(this.ApiUrls.BASE_URL_KEY).toString();
+        sessionStorage.setItem(
+          this.ApiUrls.BASE_URL_KEY,
+          "http://127.0.0.1:" + process.env.VUE_APP_LOCAL_CORE_PORT
+        );
+        sessionStorage.setItem(
+          this.ApiUrls.BASE_REPORT_URL_KEY,
+          "http://127.0.0.1:" + process.env.VUE_APP_LOCAL_REPORT_PORT
+        );
+        sessionStorage.setItem(
+          this.ApiUrls.BASE_PREPAID_URL_KEY,
+          "http://127.0.0.1:" + process.env.VUE_APP_LOCAL_PREPAID_CORE_PORT
+        );
+        this.$http.defaults.baseURL = sessionStorage
+          .getItem(this.ApiUrls.BASE_URL_KEY)
+          .toString();
         // this.$http.defaults.basePrepaidURL = sessionStorage.getItem("basePrepaidURL").toString();
-        window.basePrepaidURL = sessionStorage.getItem(this.ApiUrls.BASE_PREPAID_URL_KEY).toString();
-        window.ReportBaseURL = sessionStorage.getItem(this.ApiUrls.BASE_REPORT_URL_KEY).toString();
+        window.basePrepaidURL = sessionStorage
+          .getItem(this.ApiUrls.BASE_PREPAID_URL_KEY)
+          .toString();
+        window.ReportBaseURL = sessionStorage
+          .getItem(this.ApiUrls.BASE_REPORT_URL_KEY)
+          .toString();
       } else {
         // const baseUrl = "http:"+process.env.VUE_APP_PREPAID_CORE_IP + ":" + process.env.VUE_APP_CORE_PORT;
-        const basePrepaidURL = "http:"+process.env.VUE_APP_PREPAID_CORE_IP + ":" + process.env.VUE_APP_PREPAID_CORE_PORT;
+        const basePrepaidURL =
+          "http:" +
+          process.env.VUE_APP_PREPAID_CORE_IP +
+          ":" +
+          process.env.VUE_APP_PREPAID_CORE_PORT;
         // const baseReportURL = "http:"+process.env.VUE_APP_PREPAID_CORE_IP + ":" + process.env.VUE_APP_REPORT_PORT;
-        const baseUrl = "http:"+window.location.origin.split(":")[1] + ":" + process.env.VUE_APP_CORE_PORT;
+        const baseUrl =
+          "http:" +
+          window.location.origin.split(":")[1] +
+          ":" +
+          process.env.VUE_APP_CORE_PORT;
         // const basePrepaidURL = "http:"+window.location.origin.split(":")[1] + ":" + process.env.VUE_APP_PREPAID_CORE_PORT;
-        const baseReportURL = "http:"+window.location.origin.split(":")[1] + ":" + process.env.VUE_APP_REPORT_PORT;
+        const baseReportURL =
+          "http:" +
+          window.location.origin.split(":")[1] +
+          ":" +
+          process.env.VUE_APP_REPORT_PORT;
 
         sessionStorage.setItem(this.ApiUrls.BASE_URL_KEY, baseUrl);
         sessionStorage.setItem(this.ApiUrls.BASE_REPORT_URL_KEY, baseReportURL);
-        sessionStorage.setItem(this.ApiUrls.BASE_PREPAID_URL_KEY, basePrepaidURL);
+        sessionStorage.setItem(
+          this.ApiUrls.BASE_PREPAID_URL_KEY,
+          basePrepaidURL
+        );
         this.$http.defaults.baseURL = baseUrl;
         // this.$http.defaults.basePrepaidURL = "http:"+window.location.origin.split(":")[1] + ":" + process.env.VUE_APP_LOCAL_PREPAID_CORE_PORT;
         window.basePrepaidURL = basePrepaidURL;
@@ -189,27 +234,30 @@ export default {
       }
       return this.$http.post("/user/login", {
         username: this.username,
-        password: this.password
+        password: this.password,
       });
     },
     loadRolePermission(loginInfo) {
-      this.$http.get("/permission/rolepermission").then(result => {
-        if (result.errorCode == "00") {
-          let role = result.data.find(val => val.roleId == loginInfo.role);
-          let data = {
-            role: role ? role.roleId : "ADMIN",
-            permissions: role ? role.menuAccess : []
-          };
+      this.$http
+        .get("/permission/rolepermission")
+        .then((result) => {
+          if (result.errorCode == "00") {
+            let role = result.data.find((val) => val.roleId == loginInfo.role);
+            let data = {
+              role: role ? role.roleId : "ADMIN",
+              permissions: role ? role.menuAccess : [],
+            };
 
-          if (loginInfo.is_admin) {
-            // that.loadCompanyAdminDetail(loginInfo, data);
-          } else {
-            this.$store.commit("updateRolePermission", data);
+            if (loginInfo.is_admin) {
+              // that.loadCompanyAdminDetail(loginInfo, data);
+            } else {
+              this.$store.commit("updateRolePermission", data);
+            }
           }
-        }
-      }).catch(e => {
-        console.error("Error logging in", e);
-      });
+        })
+        .catch((e) => {
+          console.error("Error logging in", e);
+        });
     },
     handleSubmit(e) {
       this.submitted = true;
@@ -218,70 +266,72 @@ export default {
       const { dispatch } = this.$store;
 
       let loginInfo = {};
-      this.$validator.validateAll().then(status => {
+      this.$validator.validateAll().then((status) => {
         if (status) {
-          this.loginRequest().then(login => {
-            if (login.errorCode == "15") {
-              that.$store.commit("notis/setAlert", {
-                type: "warning",
-                title: login.errorDescription,
-                time: "20",
-                message: login.errorMsg
-              });
-            } else if (login.errorCode == "00") {
-              loginInfo = {
-                is_auth: 1,
-                is_admin: login.data.role == "ADMIN" ? 1 : 0,
-                is_superadmin: login.data.role == "SUPERADMIN" ? 1 : 0,
-                is_changepasswordrequired:
-                  login.data.forceChangePassword == 1 ? 1 : 0,
-                token: login.data.authToken,
-                user: {
-                  id: login.data.id,
-                  name: login.data.name,
-                  email: login.data.email,
-                  company: login.data.company,
-                  username: login.data.username
-                },
-                role: login.data.role,
-                forceChangePassword: login.data.forceChangePassword,
-                permissions: []
-              };
+          this.loginRequest()
+            .then((login) => {
+              if (login.errorCode == "15") {
+                that.$store.commit("notis/setAlert", {
+                  type: "warning",
+                  title: login.errorDescription,
+                  time: "20",
+                  message: login.errorMsg,
+                });
+              } else if (login.errorCode == "00") {
+                loginInfo = {
+                  is_auth: 1,
+                  is_admin: login.data.role == "ADMIN" ? 1 : 0,
+                  is_superadmin: login.data.role == "SUPERADMIN" ? 1 : 0,
+                  is_changepasswordrequired:
+                    login.data.forceChangePassword == 1 ? 1 : 0,
+                  token: login.data.authToken,
+                  user: {
+                    id: login.data.id,
+                    name: login.data.name,
+                    email: login.data.email,
+                    company: login.data.company,
+                    username: login.data.username,
+                  },
+                  role: login.data.role,
+                  forceChangePassword: login.data.forceChangePassword,
+                  permissions: [],
+                };
 
-              dispatch("login", loginInfo);
-              //that.loadRolePermission(loginInfo);
+                dispatch("login", loginInfo);
+                //that.loadRolePermission(loginInfo);
 
-              // added below block because there is no role module permission handeled
-              //---------------------------------------------------------------------
-              let data = {
-                role: login.data.role,
-                permissions: []
-              };
-              this.$store.commit("updateRolePermission", data);
-              //---------------------------------------------------------------------
+                // added below block because there is no role module permission handeled
+                //---------------------------------------------------------------------
+                let data = {
+                  role: login.data.role,
+                  permissions: [],
+                };
+                this.$store.commit("updateRolePermission", data);
+                //---------------------------------------------------------------------
 
-              if (loginInfo.forceChangePassword == 1) {
-                this.$router.push({ name: "changePassword" });
+                if (loginInfo.forceChangePassword == 1) {
+                  this.$router.push({ name: "changePassword" });
+                } else {
+                  this.$router.push({ name: "fpUserType" });
+                }
               } else {
-                this.$router.push({ name: "fpUserType" });
+                this.$store.commit("notis/setAlert", {
+                  type: "error",
+                  title: login.errorMsg,
+                  time: "4",
+                });
               }
-            } else {
-              this.$store.commit("notis/setAlert", {
-                type: "error",
-                title: login.errorMsg,
-                time: "4"
-              });
-            }
-          }).catch(e => {
-            console.error("Error logging in", e);
-          });
+            })
+            .catch((e) => {
+              console.error("Error logging in", e);
+            });
         }
       });
     },
-    loadCompanyAdminDetail: function(info, data) {
+    loadCompanyAdminDetail: function (info, data) {
       Vue.$http
         .get("/master/getmasterbycompany/" + info.user.company.id)
-        .then(result => {
+        .then((result) => {
           if (result.errorCode == "00") {
             info.user.company.msisdn = null;
             info.user.company.totalBalance = 0;
@@ -293,7 +343,7 @@ export default {
 
             this.$store.commit("updateCompany", {
               msisdn: info.user.company.msisdn,
-              totalBalance: info.user.company.totalBalance
+              totalBalance: info.user.company.totalBalance,
             });
 
             this.$store.commit("updateRolePermission", data);
@@ -301,8 +351,8 @@ export default {
             this.$router.push({ name: "fpUserType" });
           }
         });
-    }
-  }
+    },
+  },
 };
 </script>
 <style type="text/css" scoped>

@@ -231,7 +231,7 @@ const router = new VueRouter({
         },
         {
           path: "PrepaidGroupsEdit",
-          name: "report.groupsEdit",
+          name: "report.prepaidGroupsEdit",
           component: PrepaidGroupsEditComponent,
           meta: { description: "", requiresAuth: true },
         },

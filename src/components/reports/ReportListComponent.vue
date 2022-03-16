@@ -87,40 +87,40 @@
               <tbody>
                 <tr class="table-row" @click="goToPrepaidSubscriptionReport()">
                   <th scope="row">1</th>
-                  <td>Daily Subscription</td>
+                  <td>Daily Subscription Report</td>
                 </tr>
                 <tr class="table-row" @click="goToPrepaidHierarchyReport()">
                   <th scope="row">2</th>
-                  <td>Hierarchy & Subscription</td>
+                  <td>Hierarchy &amp; Sub Report</td>
                 </tr>
                 <tr class="table-row" @click="goToPrepaidResourceReport()">
                   <th scope="row">3</th>
                   <td>Resource Sharing</td>
                 </tr>
-                <tr class="table-row" @click="goToPrepaidLoginReport()">
+                <!-- <tr class="table-row" @click="goToPrepaidLoginReport()">
                   <th scope="row">4</th>
                   <td>Agent Login</td>
-                </tr>
-                <tr class="table-row" @click="goToPrepaidProfileAccessReport()">
+                </tr> -->
+                <!-- <tr class="table-row" @click="goToPrepaidProfileAccessReport()">
                   <th scope="row">5</th>
                   <td>Customer Profile Access Details</td>
-                </tr>
-                <tr class="table-row" @click="goToPrepaidMsisdnWiseReport()">
+                </tr> -->
+                <!-- <tr class="table-row" @click="goToPrepaidMsisdnWiseReport()">
                   <th scope="row">6</th>
                   <td>MSISDN-wise Report</td>
-                </tr>
+                </tr> -->
                 <tr class="table-row" @click="goToPrepaidGroupsEditReport()">
-                  <th scope="row">7</th>
+                  <th scope="row">4</th>
                   <td>Groups Edit Report</td>
                 </tr>
-                <tr class="table-row" @click="goToPrepaidTransactionReport()">
+                <!-- <tr class="table-row" @click="goToPrepaidTransactionReport()">
                   <th scope="row">8</th>
                   <td>Transaction Report</td>
-                </tr>
-                <tr class="table-row" @click="goToPrepaidUssdReport()">
+                </tr> -->
+                <!-- <tr class="table-row" @click="goToPrepaidUssdReport()">
                   <th scope="row">9</th>
                   <td>USSD Report</td>
-                </tr>
+                </tr> -->
               </tbody>
             </table>
           </div>

@@ -10,7 +10,9 @@
             <router-link to="/report/list">Reports</router-link>
           </li>
           <li class="activePage">
-            <p href title="" class="animation">TODO</p>
+            <p href title="Daily Subscription" class="animation">
+              Daily Subscription
+            </p>
           </li>
           <div class="clear"></div>
         </ul>
@@ -81,27 +83,26 @@
           </v-menu>
         </div>
         <div class="col-md-2">
-          <v-btn round color="#3498db" @click="navigateToSearch" dark
-            >Search</v-btn
-          >
+          <v-btn round color="#3498db" @click="getReport" dark>Search</v-btn>
         </div>
       </div>
 
-      <div class="row pb-2">
+      <!-- Download Excel Button -->
+      <!-- <div class="row pb-2">
         <div class="col-md-2">
           <v-btn round color="#3498db" dark>
-            <!-- <download-excel
+            <download-excel
                           :escapeCsv=false
                           :fetch="fetchData"
                           :fields="json_fields"
                           type="csv"
                           name="ParentRenewalSummary.xls"
-                        >Download Excel</download-excel> -->
+                        >Download Excel</download-excel>
           </v-btn>
         </div>
-      </div>
+      </div> -->
 
-      <div class="rs-table text-center">
+      <div class="rs-table">
         <v-data-table
           :headers="headers"
           :items="tableData"
@@ -110,7 +111,11 @@
           :rows-per-page-items="[10]"
         >
           <template v-slot:items="props">
-            <td>{{ props.item.date ? props.item.date : "-" }}</td>
+            <td>{{ props.item.msisdn }}</td>
+            <td>{{ props.item.subscriptionDate }}</td>
+            <td>{{ props.item.bundleName }}</td>
+            <td>{{ props.item.chargedAmount }}</td>
+            <td>{{ props.item.resources }}</td>
           </template>
           <template v-slot:no-results>
             <v-alert :value="true" color="error" icon="warning"
@@ -131,10 +136,70 @@
 </template>
 
 <script>
+import moment from "moment";
+import ApiUrls from "../../enums/ApiUrls";
+import utils from "../../utils";
+
 export default {
   data() {
-    return {};
+    return {
+      basePrepaidUrl: "",
+      tableData: [],
+      headers: [
+        {
+          text: "Number",
+          value: "Number",
+          sortable: false,
+        },
+        {
+          text: "Date of Subscription",
+          value: "Date of Subscription",
+          sortable: false,
+        },
+        {
+          text: "Offer/Bundle Name",
+          value: "Offer/Bundle Name",
+          sortable: false,
+        },
+        {
+          text: "Charged Amount",
+          value: "Charged Amount",
+          sortable: false,
+        },
+        {
+          text: "Resources",
+          value: "Resources",
+          sortable: false,
+        },
+      ],
+      pagination: {
+        page: 1,
+        rowsPerPage: 10,
+        totalPages: undefined,
+        totalItems: undefined,
+      },
+      dateMenuFrom: false,
+      startDate: moment().format("YYYY-MM-DD"),
+      errorMsg: null,
+    };
   },
-  methods: {},
+  methods: {
+    getReport() {
+      const query = {
+        params: {
+          operationStartDate: this.startDate,
+          operationEndDate: this.endDate,
+        },
+      };
+      this.$http
+        .post(`${this.basePrepaidUrl}/reports/getSubscriptionReport`, query)
+        .then((result) => {
+          this.tableData = result;
+        });
+    },
+  },
+  mounted() {
+    this.basePrepaidUrl = sessionStorage.getItem(ApiUrls.BASE_PREPAID_URL_KEY);
+  },
 };
 </script>

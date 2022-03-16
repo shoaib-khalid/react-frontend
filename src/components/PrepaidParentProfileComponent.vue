@@ -10,7 +10,7 @@
             <div class="row p-2">
               <div class="col-md-12 pb-1 pt-1">
                 <h6 class="single-line user-heading">Main Profile</h6>
-                <span
+                <!-- <span
                   title="Change Price Plan"
                   v-if="!parentProfileEditing"
                   class="cursor-pointer"
@@ -25,7 +25,7 @@
                   @click="resetParentProfile()"
                 >
                   <i class="material-icons">clear</i>
-                </span>
+                </span> -->
                 <span
                   title="Refresh"
                   class="float-right"
@@ -45,39 +45,14 @@
                 <h6>MSISDN: {{ parentProfile.msisdn }}</h6>
               </div>
               <div class="col-md-12 pb-1 pt-1">
-                <h6 v-if="!parentProfileEditing">
-                  PRICE PLAN:
-                  <!-- {{parentProfile.pricePlanDetails.cbsPlanNameParent}} -->
-                </h6>
-                <span :hidden="!parentProfileEditing">
-                  <h6 class="single-line">PRICE PLAN:</h6>
-                  <v-select
-                    style="
-                      margin-top: -15px;
-                      margin-bottom: -15px;
-                      padding: 0px;
-                    "
-                    class="uprcase"
-                    :items="pricePlans"
-                    v-model="selectedPricePlan"
-                    item-text="cbsPlanNameParent"
-                    item-value="id"
-                    v-on:change="changePricePlan()"
-                  >
-                    <template slot="item" slot-scope="data">
-                      <div class="text-uppercase">
-                        {{ data.item.cbsPlanNameParent }}
-                      </div>
-                    </template>
-                  </v-select>
-                </span>
+                <h6>PRICE PLAN: {{ parentProfile.pricePlan }}</h6>
               </div>
               <div class="col-md-12 pb-1 pt-1">
-                <h6>NUMBER STATUS: {{ parentProfile.status }}</h6>
+                <h6>NUMBER STATUS: {{ parentProfile.assetStatus }}</h6>
               </div>
               <div class="col-md-12 pb-1 pt-1">
                 <!-- TODO -->
-                <h6>User Type:</h6>
+                <h6>User Type: {{ parentProfile.customerType }}</h6>
               </div>
 
               <div class="col-md-12 pb-1 pt-1">
@@ -199,6 +174,18 @@
                             <i class="material-icons">delete_forever</i>
                           </span>
                         </div>
+                        <div class="row">
+                          <v-btn
+                            round
+                            :disabled="loading"
+                            color="#3498db"
+                            dark
+                            @click="showSubscribeDialog(group.name)"
+                          >
+                            <v-icon dark left>sim_card</v-icon>
+                            Subscribe
+                          </v-btn>
+                        </div>
                         <v-divider></v-divider>
                         <template
                           v-for="(member, memberIndex) of group.members"
@@ -214,7 +201,7 @@
                             @delete="showDeleteChildDialog(i, member.msisdn)"
                           ></PrepaidChildProfileComponent>
                         </template>
-                        <div class="row pl-4">
+                        <div class="row">
                           <v-btn
                             round
                             :disabled="loading"
@@ -349,7 +336,7 @@
                     v-model="newUserMsisdn"
                     :rules="[rules.required]"
                     pattern="^\d{11}$"
-                    v-mask="'###########'"
+                    v-mask="'03#########'"
                     type="text"
                     :error-messages="errors.collect('MSISDN')"
                     data-vv-name="MSISDN"
@@ -384,7 +371,7 @@
                     v-model="updatedChildMsisdn"
                     :rules="[rules.required]"
                     pattern="^\d{11}$"
-                    v-mask="'###########'"
+                    v-mask="'03#########'"
                     type="text"
                     :error-messages="errors.collect('MSISDN')"
                     data-vv-name="MSISDN"
@@ -410,6 +397,53 @@
         </v-form>
       </v-card>
     </v-dialog>
+
+    <v-dialog v-model="subscribeDialog" scrollable max-width="500px">
+      <v-card>
+        <v-card-title primary-title>Subscribe to Bundle</v-card-title>
+        <v-divider></v-divider>
+        <v-card-text>
+          <v-card v-for="(bundle, bundleIndex) of bundles" :key="bundleIndex">
+            <!-- <v-card-title primary-title> -->
+            <div class="card-content">
+              <div class="headline">{{ bundle.name }}</div>
+              <div class="headline">Rs. {{ bundle.price }}</div>
+              <div class="grey--text">{{ bundle.validity }} days</div>
+              <div class="flex">
+                <div
+                  v-for="(resource, resourceIndex) of bundle.resources"
+                  :key="resourceIndex"
+                >
+                  <p class="grey--text">{{ resource.name }}</p>
+                  <h5>{{ resource.amount }}</h5>
+                </div>
+              </div>
+            </div>
+            <!-- </v-card-title> -->
+            <v-card-actions>
+              <v-spacer></v-spacer>
+              <v-btn
+                round
+                :disabled="loading"
+                dark
+                color="#3498db"
+                @click="showSubscribeDialog(group.name)"
+              >
+                <v-icon dark left>sim_card</v-icon>
+                Subscribe
+              </v-btn>
+            </v-card-actions>
+            <v-divider></v-divider>
+          </v-card>
+        </v-card-text>
+        <v-divider></v-divider>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn flat @click="closeSubscribeDialog">Cancel</v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+
     <v-snackbar
       v-model="snackbar"
       :top="true"
@@ -436,25 +470,17 @@ export default {
   },
 
   data: () => ({
-    parentProfileEditing: false,
-    IsNonShareableResourceExists: false,
-    IsNonShareableAddOnResourceExists: false,
-    IsShareableAddOnResourceExists: false,
-    selectedPricePlan: "",
-    objSelectedPricePlan: "",
     parentMsisdn: "",
-    SMSId: "",
-    OnNetCallId: "",
-    OffNetCallId: "",
-    DataId: "",
-    reinitiateRenewal: false,
     parentProfile: {
       msisdn: "",
       subscriber: true,
       groups: [],
+      pricePlan: "",
+      customerType: "",
+      assetStatus: "",
       createdDate: "",
       lastModifiedDate: "",
-      error: "",
+      errorMsgUssd: "",
     },
     parentMonthlyBalance: {},
     pricePlans: [],
@@ -471,6 +497,7 @@ export default {
     addGroupDialog: false,
     editGroupDialog: false,
     updateChildMsisdnDialog: false,
+    subscribeDialog: false,
     newGroupName: "",
     groupEditRequest: {
       existingGroupName: "",
@@ -499,6 +526,8 @@ export default {
     snackbarText: "",
     snackbarColor: "info",
     timeout: 10000,
+
+    bundles: [],
   }),
   methods: {
     forceRerender() {
@@ -573,13 +602,6 @@ export default {
       });
     },
 
-    editParentProfile() {
-      this.parentProfileEditing = true;
-    },
-    resetParentProfile() {
-      this.parentProfileEditing = false;
-    },
-
     changePricePlan() {},
     changeParentPP(newPPId) {
       let obj = {
@@ -641,6 +663,19 @@ export default {
             console.log(_this.parentProfile);
           } else {
             this.showSnackbar(result.errorMsgUssd, true);
+          }
+        },
+        (error) => {
+          this.showSnackbar(error, true);
+        }
+      );
+    },
+    getBundles: function () {
+      let _this = this;
+      Vue.$http.post(`${this.basePrepaidUrl}/bundles/get`).then(
+        (result) => {
+          if (result.data) {
+            _this.bundles = result.data;
           }
         },
         (error) => {
@@ -1084,6 +1119,13 @@ export default {
           }
         );
     },
+    showSubscribeDialog(groupName) {
+      this.subscribeDialog = true;
+    },
+    closeSubscribeDialog() {
+      this.subscribeDialog = false;
+    },
+
     isNumber(evt) {
       return utils.isNumber(evt);
     },
@@ -1110,6 +1152,7 @@ export default {
         });
     }
     this.getParentProfile();
+    this.getBundles();
   },
 };
 </script>
@@ -1166,5 +1209,14 @@ input:invalid {
   margin: 0 auto; /* Added */
   float: none; /* Added */
   margin-bottom: 10px; /* Added */
+}
+.card-content {
+  padding: 16px;
+}
+.flex {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  flex-basis: auto;
 }
 </style>
