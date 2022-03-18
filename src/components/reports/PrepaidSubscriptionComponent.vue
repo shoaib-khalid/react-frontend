@@ -179,22 +179,30 @@ export default {
         totalItems: undefined,
       },
       dateMenuFrom: false,
+      dateMenuTo: false,
       startDate: moment().format("YYYY-MM-DD"),
+      endDate: moment().format("YYYY-MM-DD"),
       errorMsg: null,
     };
   },
   methods: {
     getReport() {
-      const query = {
-        params: {
-          operationStartDate: this.startDate,
-          operationEndDate: this.endDate,
-        },
+      const queryObj = {
+        subscriptionStartDate: this.startDate,
+        subscriptionEndDate: this.endDate,
       };
+      const queryParams = utils.getQueryString(queryObj);
+
       this.$http
-        .post(`${this.basePrepaidUrl}/reports/getSubscriptionReport`, query)
+        .post(
+          `${this.basePrepaidUrl}/reports/getSubscriptionReport${queryParams}`
+        )
         .then((result) => {
-          this.tableData = result;
+          this.tableData = result.map((record) => {
+            const date = new Date(record.subscriptionDate);
+            record.subscriptionDate = date.toLocaleDateString("en-GB");
+            return record;
+          });
         });
     },
   },

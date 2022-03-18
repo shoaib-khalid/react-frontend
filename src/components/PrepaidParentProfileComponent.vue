@@ -174,7 +174,7 @@
                             <i class="material-icons">delete_forever</i>
                           </span>
                         </div>
-                        <div class="row">
+                        <!-- <div class="row">
                           <v-btn
                             round
                             :disabled="loading"
@@ -185,7 +185,7 @@
                             <v-icon dark left>sim_card</v-icon>
                             Subscribe
                           </v-btn>
-                        </div>
+                        </div> -->
                         <v-divider></v-divider>
                         <template
                           v-for="(member, memberIndex) of group.members"
@@ -400,7 +400,7 @@
 
     <v-dialog v-model="subscribeDialog" scrollable max-width="500px">
       <v-card>
-        <v-card-title primary-title>Subscribe to Bundle</v-card-title>
+        <v-card-title primary-title><h3>Subscribe to Bundle</h3></v-card-title>
         <v-divider></v-divider>
         <v-card-text>
           <v-card v-for="(bundle, bundleIndex) of bundles" :key="bundleIndex">
@@ -420,7 +420,7 @@
               </div>
             </div>
             <!-- </v-card-title> -->
-            <v-card-actions>
+            <!-- <v-card-actions>
               <v-spacer></v-spacer>
               <v-btn
                 round
@@ -432,7 +432,7 @@
                 <v-icon dark left>sim_card</v-icon>
                 Subscribe
               </v-btn>
-            </v-card-actions>
+            </v-card-actions> -->
             <v-divider></v-divider>
           </v-card>
         </v-card-text>

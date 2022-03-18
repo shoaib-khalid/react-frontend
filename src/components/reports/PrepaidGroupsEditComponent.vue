@@ -10,9 +10,7 @@
             <router-link to="/report/list">Reports</router-link>
           </li>
           <li class="activePage">
-            <p href title="Daily Subscription" class="animation">
-              Daily Subscription
-            </p>
+            <p href title="Groups Edit" class="animation">Groups Edit</p>
           </li>
           <div class="clear"></div>
         </ul>
@@ -82,6 +80,7 @@
             ></v-date-picker>
           </v-menu>
         </div>
+
         <div class="col-md-2">
           <v-btn round color="#3498db" @click="getReport" dark>Search</v-btn>
         </div>
@@ -103,6 +102,16 @@
       </div> -->
 
       <div class="rs-table">
+        <div class="table-top-controls">
+          <v-select
+            v-model="selectedChannelFilter"
+            :items="channelFilters"
+            item-text="text"
+            item-value="value"
+            label="Channel"
+            @change="onSelectChannelFilter"
+          ></v-select>
+        </div>
         <v-data-table
           :headers="headers"
           :items="tableData"
@@ -112,14 +121,12 @@
         >
           <template v-slot:items="props">
             <td name="MSISDN">{{ props.item.parentMsisdn }}</td>
-            <td name="Price Plan"></td>
-            <td name="Offer Name"></td>
+            <td name="Group Name">{{ props.item.operationGroup }}</td>
+            <td name="Type of Event">{{ props.item.operationType }}</td>
             <td name="Channel (CC/Franchise/Backend/USSD)">
               {{ props.item.channel }}
             </td>
-            <td name="User ID"></td>
-            <td name="Date & Time">{{ props.item.operationDate }}</td>
-            <td name="tc.">{{ props.item.operationType }}</td>
+            <td name="Date and Time">{{ props.item.operationDate }}</td>
           </template>
           <template v-slot:no-results>
             <v-alert :value="true" color="error" icon="warning"
@@ -148,21 +155,22 @@ export default {
   data() {
     return {
       basePrepaidUrl: "",
+      reportData: [],
       tableData: [],
       headers: [
         {
-          text: "MSISDN",
-          value: "MSISDN",
+          text: "Parent Number",
+          value: "Parent Number",
           sortable: false,
         },
         {
-          text: "Price Plan",
-          value: "Price Plan",
+          text: "Group Name",
+          value: "Group Name",
           sortable: false,
         },
         {
-          text: "Offer Name",
-          value: "Offer Name",
+          text: "Type of Event",
+          value: "Type of Event",
           sortable: false,
         },
         {
@@ -171,18 +179,8 @@ export default {
           sortable: false,
         },
         {
-          text: "User ID",
-          value: "User ID",
-          sortable: false,
-        },
-        {
           text: "Date & Time",
           value: "Date & Time",
-          sortable: false,
-        },
-        {
-          text: "tc.",
-          value: "tc.",
           sortable: false,
         },
       ],
@@ -193,24 +191,51 @@ export default {
         totalItems: undefined,
       },
       dateMenuFrom: false,
+      dateMenuTo: false,
       startDate: moment().format("YYYY-MM-DD"),
       endDate: moment().format("YYYY-MM-DD"),
       errorMsg: null,
+
+      channelFilters: [
+        { text: "All", value: "" },
+        { text: "WEB", value: "WEB" },
+        { text: "USSD", value: "USSD" },
+        { text: "SYSTEM", value: "SYSTEM" },
+      ],
+      selectedChannelFilter: "",
     };
   },
   methods: {
     getReport() {
-      const query = {
-        params: {
-          operationStartDate: this.startDate,
-          operationEndDate: this.endDate,
-        },
+      const queryObj = {
+        operationStartDate: this.startDate,
+        operationEndDate: this.endDate,
       };
+      const queryParams = utils.getQueryString(queryObj);
+
       this.$http
-        .post(`${this.basePrepaidUrl}/reports/getGroupReport`, query)
+        .post(`${this.basePrepaidUrl}/reports/getGroupReport${queryParams}`)
         .then((result) => {
-          this.tableData = result;
+          this.reportData = result.map((record) => {
+            const date = new Date(record.operationDate);
+            record.operationDate = date.toLocaleDateString("en-GB");
+            record.channel = record.channel ? record.channel : "";
+            return record;
+          });
+          this.filterData();
         });
+    },
+    onSelectChannelFilter() {
+      this.filterData();
+    },
+    filterData() {
+      this.tableData = this.selectedChannelFilter
+        ? this.reportData.filter(
+            (record) =>
+              record.channel.toLowerCase() ===
+              this.selectedChannelFilter.toLowerCase()
+          )
+        : this.reportData;
     },
   },
   mounted() {
@@ -218,3 +243,11 @@ export default {
   },
 };
 </script>
+
+<style scoped>
+.table-top-controls {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+}
+</style>

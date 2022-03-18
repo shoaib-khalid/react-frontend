@@ -116,6 +116,7 @@
             <td>{{ props.item.operationDate }}</td>
             <td>{{ props.item.operationGroup }}</td>
             <td>{{ props.item.memberMsisdn }}</td>
+            <td>{{ props.item.updatedMemberMsisdn }}</td>
           </template>
           <template v-slot:no-results>
             <v-alert :value="true" color="error" icon="warning"
@@ -138,6 +139,7 @@
 <script>
 import moment from "moment";
 import ApiUrls from "../../enums/ApiUrls";
+import utils from "../../utils";
 
 export default {
   data() {
@@ -166,7 +168,12 @@ export default {
           sortable: false,
         },
         {
-          text: "Child",
+          text: "Child 1",
+          value: "Child",
+          sortable: false,
+        },
+        {
+          text: "Child 2",
           value: "Child",
           sortable: false,
         },
@@ -178,6 +185,7 @@ export default {
         totalItems: undefined,
       },
       dateMenuFrom: false,
+      dateMenuTo: false,
       startDate: moment().format("YYYY-MM-DD"),
       endDate: moment().format("YYYY-MM-DD"),
       errorMsg: null,
@@ -185,18 +193,23 @@ export default {
   },
   methods: {
     getReport() {
-      const query = {
-        params: {
-          operationStartDate: this.startDate,
-          operationEndDate: this.endDate,
-        },
+      const queryObj = {
+        operationStartDate: this.startDate,
+        operationEndDate: this.endDate,
       };
+      const queryParams = utils.getQueryString(queryObj);
+
       this.$http
-        .post(`${this.basePrepaidUrl}/reports/getHeirarchyAndSubReport`, query)
+        .post(
+          `${this.basePrepaidUrl}/reports/getHeirarchyAndSubReport${queryParams}`
+        )
         .then((result) => {
           this.tableData = result.map((record) => {
+            record.updatedMemberMsisdn = record.updatedMemberMsisdn
+              ? record.updatedMemberMsisdn
+              : "-";
             const date = new Date(record.operationDate);
-            record.operationDate = date.toLocaleDateString();
+            record.operationDate = date.toLocaleDateString("en-GB");
             return record;
           });
         });

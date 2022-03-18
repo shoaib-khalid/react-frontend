@@ -113,24 +113,14 @@
           <template v-slot:items="props">
             <td name="Parent Number">{{ props.item.parentMsisdn }}</td>
             <td name="Child number">{{ props.item.memberMsisdn }}</td>
-            <td name="Offer Name">{{ props.item.offerName }}</td>
-            <td name="On Net Value Shared (Parent)"></td>
-            <td name="Off Net Value Shared (Parent)"></td>
-            <td name="Data Value Shared (Parent)"></td>
-            <td name="SMS Value Shared (Parent)"></td>
-            <td name="On Net Value Shared (Child)"></td>
-            <td name="Off Net Value Shared (Child)"></td>
-            <td name="Data Value Shared (Child)"></td>
-            <td name="SMS Value Shared (Child)"></td>
-            <!-- <td>{{ props.item.operationDate }}</td> -->
-            <!-- <td>{{ props.item.operationType }}</td> -->
-            <!-- <td>{{ props.item.sharedResource }}</td> -->
-            <!-- <td>{{ props.item.sharedResourceValue }}</td> -->
-            <td name="Resources Expiry Date">
+            <td name="Type Of Event">{{ props.item.operationType }}</td>
+            <td name="Resource Type">{{ props.item.sharedResource }}</td>
+            <td name="Quota Allocated">{{ props.item.sharedResourceValue }}</td>
+            <td name="Resource Expiry Date">
               {{ props.item.sharedResourceExpiryDate }}
             </td>
-            <td name="Response">{{ props.item.response }}</td>
-            <td name="Reason of Response">{{ props.item.resonOfResponse }}</td>
+            <td name="Status">{{ props.item.response }}</td>
+            <td name="Date and Time">{{ props.item.operationDate }}</td>
           </template>
           <template v-slot:no-results>
             <v-alert :value="true" color="error" icon="warning"
@@ -153,6 +143,7 @@
 <script>
 import moment from "moment";
 import ApiUrls from "../../enums/ApiUrls";
+import utils from "../../utils";
 
 export default {
   data() {
@@ -171,63 +162,33 @@ export default {
           sortable: false,
         },
         {
-          text: "Offer Name",
-          value: "Offer Name",
+          text: "Type of Event",
+          value: "Type of Event",
           sortable: false,
         },
         {
-          text: "On Net Value Shared (Parent)",
-          value: "On Net Value Shared (Parent)",
+          text: "Resource Type",
+          value: "Resource Type",
           sortable: false,
         },
         {
-          text: "Off Net Value Shared (Parent)",
-          value: "Off Net Value Shared (Parent)",
+          text: "Quota Allocated",
+          value: "Quota Allocated",
           sortable: false,
         },
         {
-          text: "Data Value Shared (Parent)",
-          value: "Data Value Shared (Parent)",
+          text: "Resource Expiry Date",
+          value: "Resource Expiry Date",
           sortable: false,
         },
         {
-          text: "SMS Value Shared (Parent)",
-          value: "SMS Value Shared (Parent)",
+          text: "Status",
+          value: "Status",
           sortable: false,
         },
         {
-          text: "On Net Value Shared (Child)",
-          value: "On Net Value Shared (Child)",
-          sortable: false,
-        },
-        {
-          text: "Off Net Value Shared (Child)",
-          value: "Off Net Value Shared (Child)",
-          sortable: false,
-        },
-        {
-          text: "Data Value Shared (Child)",
-          value: "Data Value Shared (Child)",
-          sortable: false,
-        },
-        {
-          text: "SMS Value Shared (Child)",
-          value: "SMS Value Shared (Child)",
-          sortable: false,
-        },
-        {
-          text: "Resources Expiry Date",
-          value: "Resources Expiry Date",
-          sortable: false,
-        },
-        {
-          text: "Response",
-          value: "Response",
-          sortable: false,
-        },
-        {
-          text: "Reason of Response",
-          value: "Reason of Response",
+          text: "Date & Time",
+          value: "Date & Time",
           sortable: false,
         },
       ],
@@ -238,6 +199,7 @@ export default {
         totalItems: undefined,
       },
       dateMenuFrom: false,
+      dateMenuTo: false,
       startDate: moment().format("YYYY-MM-DD"),
       endDate: moment().format("YYYY-MM-DD"),
       errorMsg: null,
@@ -245,16 +207,21 @@ export default {
   },
   methods: {
     getReport() {
-      const query = {
-        params: {
-          operationStartDate: this.startDate,
-          operationEndDate: this.endDate,
-        },
+      const queryObj = {
+        operationStartDate: this.startDate,
+        operationEndDate: this.endDate,
       };
+      const queryParams = utils.getQueryString(queryObj);
       this.$http
-        .post(`${this.basePrepaidUrl}/reports/getResourceSharingReport`, query)
+        .post(
+          `${this.basePrepaidUrl}/reports/getResourceSharingReport${queryParams}`
+        )
         .then((result) => {
-          this.tableData = result;
+          this.tableData = result.map((record) => {
+            const date = new Date(record.operationDate);
+            record.operationDate = date.toLocaleDateString("en-GB");
+            return record;
+          });
         });
     },
   },
