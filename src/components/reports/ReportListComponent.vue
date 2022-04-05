@@ -113,13 +113,13 @@
                   <th scope="row">4</th>
                   <td>Groups Edit Report</td>
                 </tr>
+                <tr class="table-row" @click="goToPrepaidUssdReport()">
+                  <th scope="row">5</th>
+                  <td>USSD Report</td>
+                </tr>
                 <!-- <tr class="table-row" @click="goToPrepaidTransactionReport()">
                   <th scope="row">8</th>
                   <td>Transaction Report</td>
-                </tr> -->
-                <!-- <tr class="table-row" @click="goToPrepaidUssdReport()">
-                  <th scope="row">9</th>
-                  <td>USSD Report</td>
                 </tr> -->
               </tbody>
             </table>

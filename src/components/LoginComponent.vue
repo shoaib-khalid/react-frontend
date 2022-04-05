@@ -203,23 +203,9 @@ export default {
           .toString();
       } else {
         // const baseUrl = "http:"+process.env.VUE_APP_PREPAID_CORE_IP + ":" + process.env.VUE_APP_CORE_PORT;
-        const basePrepaidURL =
-          "http:" +
-          process.env.VUE_APP_PREPAID_CORE_IP +
-          ":" +
-          process.env.VUE_APP_PREPAID_CORE_PORT;
-        // const baseReportURL = "http:"+process.env.VUE_APP_PREPAID_CORE_IP + ":" + process.env.VUE_APP_REPORT_PORT;
-        const baseUrl =
-          "http:" +
-          window.location.origin.split(":")[1] +
-          ":" +
-          process.env.VUE_APP_CORE_PORT;
-        // const basePrepaidURL = "http:"+window.location.origin.split(":")[1] + ":" + process.env.VUE_APP_PREPAID_CORE_PORT;
-        const baseReportURL =
-          "http:" +
-          window.location.origin.split(":")[1] +
-          ":" +
-          process.env.VUE_APP_REPORT_PORT;
+        const baseUrl = `http://${process.env.VUE_APP_CORE_IP}:${process.env.VUE_APP_CORE_PORT}`;
+        const baseReportURL = `http://${process.env.VUE_APP_CORE_IP}:${process.env.VUE_APP_REPORT_PORT}`;
+        const basePrepaidURL = `http://${process.env.VUE_APP_PREPAID_CORE_IP}:${process.env.VUE_APP_PREPAID_CORE_PORT}`;
 
         sessionStorage.setItem(this.ApiUrls.BASE_URL_KEY, baseUrl);
         sessionStorage.setItem(this.ApiUrls.BASE_REPORT_URL_KEY, baseReportURL);
@@ -228,9 +214,12 @@ export default {
           basePrepaidURL
         );
         this.$http.defaults.baseURL = baseUrl;
-        // this.$http.defaults.basePrepaidURL = "http:"+window.location.origin.split(":")[1] + ":" + process.env.VUE_APP_LOCAL_PREPAID_CORE_PORT;
         window.basePrepaidURL = basePrepaidURL;
         window.ReportBaseURL = baseReportURL;
+
+        console.log(`BaseURL: ${baseUrl}`);
+        console.log(`BasePrepaidURL: ${basePrepaidURL}`);
+        console.log(`ReportBaseUrl: ${baseReportURL}`);
       }
       return this.$http.post("/user/login", {
         username: this.username,
