@@ -108,7 +108,13 @@
           :total-items="pagination.totalItems"
           :rows-per-page-items="[10]"
         >
-          <template v-slot:items="props"> </template>
+          <template v-slot:items="props">
+            <td name="Parent Number">{{ props.item.parent }}</td>  
+            <td name="USSD">{{ props.item.userInput }}</td>  
+            <td name="Action Performed">{{ props.item.operationPerformed }}</td>  
+            <td name="Status">{{ props.item.operationStatus }}</td>  
+            <td name="Date &amp; Time">{{ props.item.operationTime }}</td>  
+          </template>
           <template v-slot:no-results>
             <v-alert :value="true" color="error" icon="warning"
               >Your search for "{{ search }}" found no results.</v-alert
