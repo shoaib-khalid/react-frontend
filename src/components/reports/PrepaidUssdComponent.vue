@@ -178,7 +178,25 @@ export default {
     };
   },
   methods: {
-    getReport() {},
+    getReport() {
+      const queryObj = {
+        operationStartDate: this.startDate,
+        operationEndDate: this.endDate,
+      };
+      const queryParams = utils.getQueryString(queryObj);
+
+      this.$http
+        .post(`${this.basePrepaidUrl}/reports/getUssdReport${queryParams}`)
+        .then((result) => {
+          this.reportData = result.map((record) => {
+            const date = new Date(record.operationDate);
+            record.operationDate = date.toLocaleDateString("en-GB");
+            record.channel = record.channel ? record.channel : "";
+            return record;
+          });
+          this.filterData();
+        });
+    },
   },
   mounted() {
     this.basePrepaidUrl = sessionStorage.getItem(ApiUrls.BASE_PREPAID_URL_KEY);
