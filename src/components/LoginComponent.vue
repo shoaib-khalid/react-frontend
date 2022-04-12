@@ -89,7 +89,6 @@
 import Vue from "vue";
 import Swal from "sweetalert2";
 import ApiUrls from "../enums/ApiUrls";
-import axios from "axios";
 
 export default {
   data() {
@@ -146,7 +145,7 @@ export default {
       }
     },
     loginRequest() {
-      const testUser = "testUser";
+      const testUser = "testuser";
       let users = [
         "Shoaib",
         "Taufik",
@@ -266,8 +265,8 @@ export default {
 
                 if (loginInfo.forceChangePassword == 1) {
                   this.$router.push({ name: "changePassword" });
-                } else if (this.isTestUser) {
-                  this.$router.push({ name: "fpSearch" });
+                  // } else if (this.isTestUser) {
+                  //   this.$router.push({ name: "fpSearch" });
                 } else {
                   this.$router.push({ name: "fpUserType" });
                 }
