@@ -49,14 +49,7 @@
                   />
                 </div>
                 <v-flex xs12 px-4 py-2 class="text-center">
-                  <v-btn
-                    type="submit"
-                    round
-                    :disabled="loggingIn"
-                    color="#3498db"
-                    dark
-                    >Login</v-btn
-                  >
+                  <v-btn type="submit" round color="#3498db" dark>Login</v-btn>
                 </v-flex>
                 <div class="row m-t-25 text-left">
                   <div class="col-12">
@@ -106,22 +99,8 @@ export default {
       submitted: false,
       error: "",
       ApiUrls: ApiUrls,
+      isTestUser: false,
     };
-  },
-  computed: {
-    loggingIn() {
-      // return this.$store.state.authentication.status.loggingIn;
-    },
-
-    alert() {
-      // return this.$store.state.alert
-    },
-  },
-  watch: {
-    $route(to, from) {
-      // clear alert on location change
-      // this.$store.dispatch('alert/clear');
-    },
   },
   mounted() {
     // console.log("mounted");
@@ -167,6 +146,7 @@ export default {
       }
     },
     loginRequest() {
+      const testUser = "testUser";
       let users = [
         "Shoaib",
         "Taufik",
@@ -178,49 +158,35 @@ export default {
         "DanishIS",
         "Amir",
       ];
-      if (users.includes(this.username)) {
-        sessionStorage.setItem(
-          this.ApiUrls.BASE_URL_KEY,
-          "http://127.0.0.1:" + process.env.VUE_APP_LOCAL_CORE_PORT
-        );
-        sessionStorage.setItem(
-          this.ApiUrls.BASE_REPORT_URL_KEY,
-          "http://127.0.0.1:" + process.env.VUE_APP_LOCAL_REPORT_PORT
-        );
-        sessionStorage.setItem(
-          this.ApiUrls.BASE_PREPAID_URL_KEY,
-          "http://127.0.0.1:" + process.env.VUE_APP_LOCAL_PREPAID_CORE_PORT
-        );
-        this.$http.defaults.baseURL = sessionStorage
-          .getItem(this.ApiUrls.BASE_URL_KEY)
-          .toString();
-        // this.$http.defaults.basePrepaidURL = sessionStorage.getItem("basePrepaidURL").toString();
-        window.basePrepaidURL = sessionStorage
-          .getItem(this.ApiUrls.BASE_PREPAID_URL_KEY)
-          .toString();
-        window.ReportBaseURL = sessionStorage
-          .getItem(this.ApiUrls.BASE_REPORT_URL_KEY)
-          .toString();
-      } else {
-        // const baseUrl = "http:"+process.env.VUE_APP_PREPAID_CORE_IP + ":" + process.env.VUE_APP_CORE_PORT;
-        const baseUrl = `http://${process.env.VUE_APP_CORE_IP}:${process.env.VUE_APP_CORE_PORT}`;
-        const baseReportURL = `http://${process.env.VUE_APP_CORE_IP}:${process.env.VUE_APP_REPORT_PORT}`;
-        const basePrepaidURL = `http://${process.env.VUE_APP_PREPAID_CORE_IP}:${process.env.VUE_APP_PREPAID_CORE_PORT}`;
-
-        sessionStorage.setItem(this.ApiUrls.BASE_URL_KEY, baseUrl);
-        sessionStorage.setItem(this.ApiUrls.BASE_REPORT_URL_KEY, baseReportURL);
-        sessionStorage.setItem(
-          this.ApiUrls.BASE_PREPAID_URL_KEY,
-          basePrepaidURL
-        );
-        this.$http.defaults.baseURL = baseUrl;
-        window.basePrepaidURL = basePrepaidURL;
-        window.ReportBaseURL = baseReportURL;
-
-        console.log(`BaseURL: ${baseUrl}`);
-        console.log(`BasePrepaidURL: ${basePrepaidURL}`);
-        console.log(`ReportBaseUrl: ${baseReportURL}`);
+      if (this.username === testUser) {
+        this.isTestUser = true;
       }
+      const baseUrl =
+        "http://" +
+        process.env.VUE_APP_CORE_IP +
+        ":" +
+        process.env.VUE_APP_CORE_PORT;
+      const baseReportURL =
+        "http://" +
+        process.env.VUE_APP_REPORT_CORE_IP +
+        ":" +
+        process.env.VUE_APP_REPORT_PORT;
+      const basePrepaidURL =
+        "http://" +
+        process.env.VUE_APP_PREPAID_CORE_IP +
+        ":" +
+        process.env.VUE_APP_PREPAID_CORE_PORT;
+
+      sessionStorage.setItem(this.ApiUrls.BASE_URL_KEY, baseUrl);
+      sessionStorage.setItem(this.ApiUrls.BASE_REPORT_URL_KEY, baseReportURL);
+      sessionStorage.setItem(this.ApiUrls.BASE_PREPAID_URL_KEY, basePrepaidURL);
+      this.$http.defaults.baseURL = baseUrl;
+      window.basePrepaidURL = basePrepaidURL;
+      window.ReportBaseURL = baseReportURL;
+
+      console.log(`BaseURL: ${baseUrl}`);
+      console.log(`BasePrepaidURL: ${basePrepaidURL}`);
+      console.log(`ReportBaseUrl: ${baseReportURL}`);
       return this.$http.post("/user/login", {
         username: this.username,
         password: this.password,
@@ -300,6 +266,8 @@ export default {
 
                 if (loginInfo.forceChangePassword == 1) {
                   this.$router.push({ name: "changePassword" });
+                } else if (this.isTestUser) {
+                  this.$router.push({ name: "fpSearch" });
                 } else {
                   this.$router.push({ name: "fpUserType" });
                 }
