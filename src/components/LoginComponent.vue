@@ -265,10 +265,14 @@ export default {
 
                 if (loginInfo.forceChangePassword == 1) {
                   this.$router.push({ name: "changePassword" });
-                  // } else if (this.isTestUser) {
-                  //   this.$router.push({ name: "fpSearch" });
-                } else {
+                } else if (this.isTestUser) {
                   this.$router.push({ name: "fpUserType" });
+                } else {
+                  sessionStorage.setItem(
+                    this.fpUserTypes.STORAGE_KEY,
+                    this.fpUserTypes.POSTPAID
+                  );
+                  this.$router.push({ name: "fpSearch" });
                 }
               } else {
                 this.$store.commit("notis/setAlert", {
