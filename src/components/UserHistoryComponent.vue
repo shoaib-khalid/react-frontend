@@ -4,25 +4,30 @@
       <div class="table-responsive border">
         <table class="table table-striped small">
           <thead>
-            <tr style="height:60px;" class="table-primary">
-              <th width="30%" class="align-middle" style="min-width:235px">FAMILY PLAN STATUS</th>
-              <td width="10%" class="align-middle">{{familyPlanStatus}}</td>
+            <tr style="height: 60px" class="table-primary">
+              <th width="30%" class="align-middle" style="min-width: 235px">
+                FAMILY PLAN STATUS
+              </th>
+              <td width="10%" class="align-middle">{{ familyPlanStatus }}</td>
               <td class="align-middle">
                 <v-btn
                   @click="activateParent()"
-                  v-if="familyPlanStatus=='INACTIVE'"
+                  v-if="familyPlanStatus == 'INACTIVE'"
                   type="button"
                   round
                   :disabled="loading"
                   color="rgb(78,255,84)"
-                >ACTIVE</v-btn>
+                  >ACTIVE</v-btn
+                >
               </td>
-              <td colspan="2" class="align-middle">{{ statusResion? statusResion:''}}</td>
+              <td colspan="2" class="align-middle">
+                {{ statusResion ? statusResion : "" }}
+              </td>
             </tr>
           </thead>
           <tbody>
-            <tr style="height:60px;" v-if="reinitiateRenewal">
-              <th class="align-middle" style="min-width:235px">RENEWAL</th>
+            <tr style="height: 60px" v-if="reinitiateRenewal">
+              <th class="align-middle" style="min-width: 235px">RENEWAL</th>
               <td></td>
               <td class="align-middle">
                 <v-btn
@@ -31,26 +36,34 @@
                   round
                   :disabled="loading"
                   color="#2ecc71"
-                  style="width:90px"
-                >REINITIATE</v-btn>
+                  style="width: 90px"
+                  >REINITIATE</v-btn
+                >
               </td>
-              <td colspan="2" class="align-middle">{{ renewalFailReason? renewalFailReason:''}}</td>
+              <td colspan="2" class="align-middle">
+                {{ renewalFailReason ? renewalFailReason : "" }}
+              </td>
             </tr>
             <tr :key="'consent' + i" v-for="(consent, i) in consentList">
-              <th
-                class="align-middle"
-                style="min-width:235px"
-              >{{consent.consentReceiver + ' CONSENT ('}}{{(consent.consentReceiver=='PARENT' ? consent.parentDetails.msisdn : consent.childDetails.msisdn)+ ')' }}</th>
-              <td class="align-middle">{{consent.consentStatus}}</td>
+              <th class="align-middle" style="min-width: 235px">
+                {{ consent.consentReceiver + " CONSENT ("
+                }}{{
+                  (consent.consentReceiver == "PARENT"
+                    ? consent.parentDetails.msisdn
+                    : consent.childDetails.msisdn) + ")"
+                }}
+              </th>
+              <td class="align-middle">{{ consent.consentStatus }}</td>
               <td class="align-middle">
                 <v-btn
                   type="button"
                   @click="resendConsent(consent.id)"
                   round
-                  :disabled="IsResendDisabled(consent,consentList)"
-                  style="width:90px"
+                  :disabled="IsResendDisabled(consent, consentList)"
+                  style="width: 90px"
                   color="#2ecc71"
-                >RESEND</v-btn>
+                  >RESEND</v-btn
+                >
               </td>
               <td class="align-middle">
                 <v-btn
@@ -59,20 +72,28 @@
                   round
                   :disabled="loading"
                   color="#e74c3c"
-                >CANCEL</v-btn>
+                  >CANCEL</v-btn
+                >
               </td>
               <td class="align-middle">
-                {{consent.opcodeDetails.description}}
+                {{ consent.opcodeDetails.description }}
                 <span
-                  v-if="consent.transactionDetails && consent.transactionDetails.childDetails"
-                >({{consent.transactionDetails.childDetails.msisdn}})</span>
+                  v-if="
+                    consent.transactionDetails &&
+                    consent.transactionDetails.childDetails
+                  "
+                  >({{ consent.transactionDetails.childDetails.msisdn }})</span
+                >
               </td>
             </tr>
           </tbody>
         </table>
       </div>
     </div>
-    <hr size="50" style="width:100%; margin-top:-10px;border:0.5px solid #212529" />
+    <hr
+      size="50"
+      style="width: 100%; margin-top: -10px; border: 0.5px solid #212529"
+    />
 
     <v-tabs left>
       <v-tab>MAIN USER</v-tab>
@@ -80,7 +101,8 @@
         :key="'childAccount' + i"
         v-for="(childAccount, i) in childAccounts"
         @click="childTabSelected(childAccount)"
-      >User ({{childAccount.childProfile.msisdn}})</v-tab>
+        >User ({{ childAccount.childProfile.msisdn }})</v-tab
+      >
       <v-tab-item :key="'tabMainProfileHistory'">
         <v-container fluid class="p-0 m-0">
           <div class="table-responsive text-break">
@@ -106,31 +128,125 @@
                 </tr>
                 <tr
                   :key="'parentTransactionDetail' + i"
-                  v-for="(parentTransactionDetail, i) in parentTransactionDetails"
+                  v-for="(
+                    parentTransactionDetail, i
+                  ) in parentTransactionDetails"
                 >
-                  <td>{{parentTransactionDetail.transactionDetails.parentDetails ? parentTransactionDetail.transactionDetails.parentDetails.msisdn:'NA'}}</td>
-                  <td>{{parentTransactionDetail.transactionDetails.childDetails?parentTransactionDetail.transactionDetails.childDetails.msisdn: 'NA'}}</td>
-                  <td>{{IsParentOpCode(parentTransactionDetail.transactionDetails.opcodeDetails.opcode) ? 'PARENT': 'CHILD'}}</td>
-                  <td>{{parentTransactionDetail.transactionDetails.opcodeDetails.description}}</td>
-                  <td>{{parentTransactionDetail.eventDetails.eventDescription}}</td>
-                  <td>{{parentTransactionDetail.created}}</td>
-                  <td>{{parentTransactionDetail.transactionDetails.channel}}</td>
-                  <td>{{parentTransactionDetail.transactionDetails.userDetails? parentTransactionDetail.transactionDetails.userDetails.username: 'NA'}}</td>
-                  <td>{{parentTransactionDetail.productDetails? parentTransactionDetail.productDetails.productType: 'NA'}}</td>
-                  <td>{{parentTransactionDetail.convertedAllocationAmount ? parentTransactionDetail.convertedAllocationAmount: 'NA'}}</td>
-                  <td>{{parentTransactionDetail.oldPricePlan ? parentTransactionDetail.oldPricePlan: 'NA'}}</td>
-                  <td>{{parentTransactionDetail.newPricePlan ? parentTransactionDetail.newPricePlan: 'NA'}}</td>
-                  <td>{{(parentTransactionDetail.eventStatus ? parentTransactionDetail.eventStatus: 'NA')}}</td>
-                  <td>{{(parentTransactionDetail.convertedNewChildBalance ? parentTransactionDetail.convertedNewChildBalance: 'NA')}}</td>
-                  <td>{{parentTransactionDetail.convertedNewParentBalance ? parentTransactionDetail.convertedNewParentBalance : 'NA'}}</td>
-                  <td>{{parentTransactionDetail.transactionDetails.systemTransactionId ? parentTransactionDetail.transactionDetails.systemTransactionId: 'NA'}}</td>
+                  <td>
+                    {{
+                      parentTransactionDetail.transactionDetails.parentDetails
+                        ? parentTransactionDetail.transactionDetails
+                            .parentDetails.msisdn
+                        : "NA"
+                    }}
+                  </td>
+                  <td>
+                    {{
+                      parentTransactionDetail.transactionDetails.childDetails
+                        ? parentTransactionDetail.transactionDetails
+                            .childDetails.msisdn
+                        : "NA"
+                    }}
+                  </td>
+                  <td>
+                    {{
+                      IsParentOpCode(
+                        parentTransactionDetail.transactionDetails.opcodeDetails
+                          .opcode
+                      )
+                        ? "PARENT"
+                        : "CHILD"
+                    }}
+                  </td>
+                  <td>
+                    {{
+                      parentTransactionDetail.transactionDetails.opcodeDetails
+                        .description
+                    }}
+                  </td>
+                  <td>
+                    {{ parentTransactionDetail.eventDetails.eventDescription }}
+                  </td>
+                  <td>{{ parentTransactionDetail.created }}</td>
+                  <td>
+                    {{ parentTransactionDetail.transactionDetails.channel }}
+                  </td>
+                  <td>
+                    {{
+                      parentTransactionDetail.transactionDetails.userDetails
+                        ? parentTransactionDetail.transactionDetails.userDetails
+                            .username
+                        : "NA"
+                    }}
+                  </td>
+                  <td>
+                    {{
+                      parentTransactionDetail.productDetails
+                        ? parentTransactionDetail.productDetails.productType
+                        : "NA"
+                    }}
+                  </td>
+                  <td>
+                    {{
+                      parentTransactionDetail.convertedAllocationAmount
+                        ? parentTransactionDetail.convertedAllocationAmount
+                        : "NA"
+                    }}
+                  </td>
+                  <td>
+                    {{
+                      parentTransactionDetail.oldPricePlan
+                        ? parentTransactionDetail.oldPricePlan
+                        : "NA"
+                    }}
+                  </td>
+                  <td>
+                    {{
+                      parentTransactionDetail.newPricePlan
+                        ? parentTransactionDetail.newPricePlan
+                        : "NA"
+                    }}
+                  </td>
+                  <td>
+                    {{
+                      parentTransactionDetail.eventStatus
+                        ? parentTransactionDetail.eventStatus
+                        : "NA"
+                    }}
+                  </td>
+                  <td>
+                    {{
+                      parentTransactionDetail.convertedNewChildBalance
+                        ? parentTransactionDetail.convertedNewChildBalance
+                        : "NA"
+                    }}
+                  </td>
+                  <td>
+                    {{
+                      parentTransactionDetail.convertedNewParentBalance
+                        ? parentTransactionDetail.convertedNewParentBalance
+                        : "NA"
+                    }}
+                  </td>
+                  <td>
+                    {{
+                      parentTransactionDetail.transactionDetails
+                        .systemTransactionId
+                        ? parentTransactionDetail.transactionDetails
+                            .systemTransactionId
+                        : "NA"
+                    }}
+                  </td>
                 </tr>
               </tbody>
             </table>
           </div>
         </v-container>
       </v-tab-item>
-      <v-tab-item :key="'childAccount' + j" v-for="(childAccount, j) in childAccounts">
+      <v-tab-item
+        :key="'childAccount' + j"
+        v-for="(childAccount, j) in childAccounts"
+      >
         <v-container fluid class="p-0 m-0">
           <div class="table-responsive text-break">
             <table class="table table-bordered table-striped small">
@@ -157,22 +273,111 @@
                   :key="'childTransactionDetail' + k"
                   v-for="(childTransactionDetail, k) in childTransactionDetails"
                 >
-                  <td>{{childTransactionDetail.transactionDetails.parentDetails ? childTransactionDetail.transactionDetails.parentDetails.msisdn:'NA'}}</td>
-                  <td>{{childTransactionDetail.transactionDetails.childDetails?childTransactionDetail.transactionDetails.childDetails.msisdn: 'NA'}}</td>
-                  <td>{{IsParentOpCode(childTransactionDetail.transactionDetails.opcodeDetails.opcode) ? 'PARENT': 'CHILD'}}</td>
-                  <td>{{childTransactionDetail.transactionDetails.opcodeDetails.description}}</td>
-                  <td>{{childTransactionDetail.eventDetails.eventDescription}}</td>
-                  <td>{{childTransactionDetail.created}}</td>
-                  <td>{{childTransactionDetail.transactionDetails.channel}}</td>
-                  <td>{{childTransactionDetail.transactionDetails.userDetails? childTransactionDetail.transactionDetails.userDetails.username: 'NA'}}</td>
-                  <td>{{childTransactionDetail.productDetails? childTransactionDetail.productDetails.productType: 'NA'}}</td>
-                  <td>{{childTransactionDetail.convertedAllocationAmount ? childTransactionDetail.convertedAllocationAmount: 'NA'}}</td>
-                  <td>{{childTransactionDetail.oldPricePlan ? childTransactionDetail.oldPricePlan: 'NA'}}</td>
-                  <td>{{childTransactionDetail.newPricePlan ? childTransactionDetail.newPricePlan: 'NA'}}</td>
-                  <td>{{(childTransactionDetail.eventStatus ? childTransactionDetail.eventStatus: 'NA')}}</td>
-                  <td>{{(childTransactionDetail.convertedNewChildBalance ? childTransactionDetail.convertedNewChildBalance: 'NA')}}</td>
-                  <td>{{childTransactionDetail.convertedNewParentBalance ? childTransactionDetail.convertedNewParentBalance : 'NA'}}</td>
-                  <td>{{childTransactionDetail.transactionDetails.systemTransactionId ? childTransactionDetail.transactionDetails.systemTransactionId: 'NA'}}</td>
+                  <td>
+                    {{
+                      childTransactionDetail.transactionDetails.parentDetails
+                        ? childTransactionDetail.transactionDetails
+                            .parentDetails.msisdn
+                        : "NA"
+                    }}
+                  </td>
+                  <td>
+                    {{
+                      childTransactionDetail.transactionDetails.childDetails
+                        ? childTransactionDetail.transactionDetails.childDetails
+                            .msisdn
+                        : "NA"
+                    }}
+                  </td>
+                  <td>
+                    {{
+                      IsParentOpCode(
+                        childTransactionDetail.transactionDetails.opcodeDetails
+                          .opcode
+                      )
+                        ? "PARENT"
+                        : "CHILD"
+                    }}
+                  </td>
+                  <td>
+                    {{
+                      childTransactionDetail.transactionDetails.opcodeDetails
+                        .description
+                    }}
+                  </td>
+                  <td>
+                    {{ childTransactionDetail.eventDetails.eventDescription }}
+                  </td>
+                  <td>{{ childTransactionDetail.created }}</td>
+                  <td>
+                    {{ childTransactionDetail.transactionDetails.channel }}
+                  </td>
+                  <td>
+                    {{
+                      childTransactionDetail.transactionDetails.userDetails
+                        ? childTransactionDetail.transactionDetails.userDetails
+                            .username
+                        : "NA"
+                    }}
+                  </td>
+                  <td>
+                    {{
+                      childTransactionDetail.productDetails
+                        ? childTransactionDetail.productDetails.productType
+                        : "NA"
+                    }}
+                  </td>
+                  <td>
+                    {{
+                      childTransactionDetail.convertedAllocationAmount
+                        ? childTransactionDetail.convertedAllocationAmount
+                        : "NA"
+                    }}
+                  </td>
+                  <td>
+                    {{
+                      childTransactionDetail.oldPricePlan
+                        ? childTransactionDetail.oldPricePlan
+                        : "NA"
+                    }}
+                  </td>
+                  <td>
+                    {{
+                      childTransactionDetail.newPricePlan
+                        ? childTransactionDetail.newPricePlan
+                        : "NA"
+                    }}
+                  </td>
+                  <td>
+                    {{
+                      childTransactionDetail.eventStatus
+                        ? childTransactionDetail.eventStatus
+                        : "NA"
+                    }}
+                  </td>
+                  <td>
+                    {{
+                      childTransactionDetail.convertedNewChildBalance
+                        ? childTransactionDetail.convertedNewChildBalance
+                        : "NA"
+                    }}
+                  </td>
+                  <td>
+                    {{
+                      childTransactionDetail.convertedNewParentBalance
+                        ? childTransactionDetail.convertedNewParentBalance
+                        : "NA"
+                    }}
+                  </td>
+                  <td>
+                    {{
+                      childTransactionDetail.transactionDetails
+                        .systemTransactionId
+                        ? childTransactionDetail.transactionDetails
+                            .systemTransactionId
+                        : "NA"
+                    }}
+                  </td>
                 </tr>
               </tbody>
             </table>
@@ -183,7 +388,6 @@
   </div>
 </template>
 <script>
-import Swal from "sweetalert2";
 import Vue from "vue";
 import utils from "../utils";
 
@@ -192,9 +396,9 @@ export default {
     parentMsisdn: String,
     familyPlanStatus: String,
     statusResion: String,
-    renewalFailReason:String,
+    renewalFailReason: String,
     parentId: String,
-    reinitiateRenewal: Boolean
+    reinitiateRenewal: Boolean,
   },
   data: () => ({
     userHistoryComponentKey: 0,
@@ -203,50 +407,55 @@ export default {
     consentList: [],
     childAccounts: [],
     parentTransactionDetails: [],
-    childTransactionDetails: []
+    childTransactionDetails: [],
+    baseUrl: "",
   }),
   methods: {
     resendConsent(id) {
       let obj = {
-        id: id
+        id: id,
       };
-      Vue.$http.post("/parent/resendConsent", obj).then(result => {
-        if (result.errorCode == "00") {
-          this.$store.commit("notis/setAlert", {
-            type: "success",
-            title: result.errorMsg,
-            time: "4"
-          });
-        } else {
-          this.$store.commit("notis/setAlert", {
-            type: "error",
-            title: result.errorMsg,
-            time: "4"
-          });
-        }
-      });
+      Vue.$http
+        .post(`${this.baseUrl}/parent/resendConsent`, obj)
+        .then((result) => {
+          if (result.errorCode == "00") {
+            this.$store.commit("notis/setAlert", {
+              type: "success",
+              title: result.errorMsg,
+              time: "4",
+            });
+          } else {
+            this.$store.commit("notis/setAlert", {
+              type: "error",
+              title: result.errorMsg,
+              time: "4",
+            });
+          }
+        });
     },
     cancelConsent(id) {
       let obj = {
-        id: id
+        id: id,
       };
-      Vue.$http.post("/parent/cancelConsent", obj).then(result => {
-        if (result.errorCode == "00") {
-          this.$store.commit("notis/setAlert", {
-            type: "success",
-            title: result.errorMsg,
-            time: "4"
-          });
-          this.getConsentList();
-          //  this.forceRerender();
-        } else {
-          this.$store.commit("notis/setAlert", {
-            type: "error",
-            title: result.errorMsg,
-            time: "4"
-          });
-        }
-      });
+      Vue.$http
+        .post(`${this.baseUrl}/parent/cancelConsent`, obj)
+        .then((result) => {
+          if (result.errorCode == "00") {
+            this.$store.commit("notis/setAlert", {
+              type: "success",
+              title: result.errorMsg,
+              time: "4",
+            });
+            this.getConsentList();
+            //  this.forceRerender();
+          } else {
+            this.$store.commit("notis/setAlert", {
+              type: "error",
+              title: result.errorMsg,
+              time: "4",
+            });
+          }
+        });
     },
     forceRerender() {
       this.userHistoryComponentKey += 1;
@@ -254,19 +463,21 @@ export default {
     getConsentList() {
       let obj = {
         parentMsisdn: this.parentMsisdn,
-        childMsisdn: ""
+        childMsisdn: "",
       };
-      Vue.$http.post("/parent/getConsentList", obj).then(result => {
-        if (result.errorCode == "00") {
-          this.consentList = result.data;
-        } else {
-          this.$store.commit("notis/setAlert", {
-            type: "error",
-            title: result.errorMsg,
-            time: "4"
-          });
-        }
-      });
+      Vue.$http
+        .post(`${this.baseUrl}/parent/getConsentList`, obj)
+        .then((result) => {
+          if (result.errorCode == "00") {
+            this.consentList = result.data;
+          } else {
+            this.$store.commit("notis/setAlert", {
+              type: "error",
+              title: result.errorMsg,
+              time: "4",
+            });
+          }
+        });
     },
     IsParentOpCode(opcode) {
       if (
@@ -280,25 +491,29 @@ export default {
     getChildsOfParent() {
       let _this = this;
       let obj = { parentMsisdn: this.parentMsisdn };
-      Vue.$http.post("/parent/getChildsOfParent", obj).then(result => {
-        if (result.errorCode == "00") {
-          _this.childAccounts = result.data.childDetails;
-        }
-      });
+      Vue.$http
+        .post(`${this.baseUrl}/parent/getChildsOfParent`, obj)
+        .then((result) => {
+          if (result.errorCode == "00") {
+            _this.childAccounts = result.data.childDetails;
+          }
+        });
     },
     getParentTransactionDetails() {
       let obj = {
         parentId: this.parentId,
         startDate: "",
         endDate: "",
-        opcodeId: ""
+        opcodeId: "",
       };
       // /transaction/getParentTransactionDetails
-      Vue.$http.post("/transaction/getParentEventDetails", obj).then(result => {
-        if (result.errorCode == "00") {
-          this.parentTransactionDetails = result.data;
-        }
-      });
+      Vue.$http
+        .post(`${this.baseUrl}/transaction/getParentEventDetails`, obj)
+        .then((result) => {
+          if (result.errorCode == "00") {
+            this.parentTransactionDetails = result.data;
+          }
+        });
     },
     getChildTransactionDetails(_childAccount) {
       let _this = this;
@@ -307,12 +522,12 @@ export default {
           childId: _childAccount.childProfile.id,
           startDate: "",
           endDate: "",
-          opcodeId: ""
+          opcodeId: "",
         };
         // /transaction/getChildTransactionDetails
         Vue.$http
-          .post("/transaction/getChildEventDetails", obj)
-          .then(result => {
+          .post(`${this.baseUrl}/transaction/getChildEventDetails`, obj)
+          .then((result) => {
             if (result.errorCode == "00") {
               _this.childTransactionDetails = result.data;
               _childAccount.childTransactionDetails = result.data;
@@ -324,44 +539,48 @@ export default {
     },
     activateParent() {
       let obj = {
-        parentMsisdn: this.parentMsisdn
+        parentMsisdn: this.parentMsisdn,
       };
-      Vue.$http.post("/parent/activateParent", obj).then(result => {
-        if (result.errorCode == "00") {
-          this.$store.commit("notis/setAlert", {
-            type: "success",
-            title: result.errorMsg,
-            time: "4"
-          });
-          this.familyPlanStatus = "ACTIVE";
-        } else {
-          this.$store.commit("notis/setAlert", {
-            type: "error",
-            title: result.errorMsg,
-            time: "4"
-          });
-        }
-      });
+      Vue.$http
+        .post(`${this.baseUrl}/parent/activateParent`, obj)
+        .then((result) => {
+          if (result.errorCode == "00") {
+            this.$store.commit("notis/setAlert", {
+              type: "success",
+              title: result.errorMsg,
+              time: "4",
+            });
+            this.familyPlanStatus = "ACTIVE";
+          } else {
+            this.$store.commit("notis/setAlert", {
+              type: "error",
+              title: result.errorMsg,
+              time: "4",
+            });
+          }
+        });
     },
     Reinitiate() {
       let obj = {
-        parentMsisdn: this.parentMsisdn
+        parentMsisdn: this.parentMsisdn,
       };
-      Vue.$http.post("/parent/reinitiateRenewal", obj).then(result => {
-        if (result.errorCode == "00") {
-          this.$store.commit("notis/setAlert", {
-            type: "success",
-            title: result.errorMsg,
-            time: "4"
-          });
-        } else {
-          this.$store.commit("notis/setAlert", {
-            type: "error",
-            title: result.errorMsg,
-            time: "4"
-          });
-        }
-      });
+      Vue.$http
+        .post(`${this.baseUrl}/parent/reinitiateRenewal`, obj)
+        .then((result) => {
+          if (result.errorCode == "00") {
+            this.$store.commit("notis/setAlert", {
+              type: "success",
+              title: result.errorMsg,
+              time: "4",
+            });
+          } else {
+            this.$store.commit("notis/setAlert", {
+              type: "error",
+              title: result.errorMsg,
+              time: "4",
+            });
+          }
+        });
     },
     childTabSelected(_childAccount) {
       this.getChildTransactionDetails(_childAccount);
@@ -369,8 +588,8 @@ export default {
     IsResendDisabled(consent, consentList) {
       if (consent.consentReceiver == "PARENT") {
         let dates = consentList
-          .filter(m => m.consentReceiver == "PARENT")
-          .map(ele => new Date(ele.created));
+          .filter((m) => m.consentReceiver == "PARENT")
+          .map((ele) => new Date(ele.created));
         let minDate = new Date(Math.min.apply(null, dates));
         let date = new Date(consent.created);
         if (date.getTime() == minDate.getTime()) {
@@ -381,13 +600,14 @@ export default {
       } else {
         return false;
       }
-    }
+    },
   },
   mounted() {
     this.getConsentList();
     this.getChildsOfParent();
     this.getParentTransactionDetails();
-  }
+    this.baseUrl = utils.getBaseUrl();
+  },
 };
 </script>
 <style scoped>

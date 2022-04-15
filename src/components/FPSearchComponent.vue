@@ -117,10 +117,10 @@ export default {
     createNewFF: false,
     requestPending: false,
     fpUserTypes: FPUserTypes,
-    ApiUrls: ApiUrls,
     selectedFpUserType: "",
-    basePrepaidUrl: "",
     userStatus: "parent",
+    baseUrl: "",
+    basePrepaidUrl: "",
   }),
   methods: {
     handleFpSearch() {
@@ -176,7 +176,7 @@ export default {
     },
     resolveMsisdnPostpaid(_this) {
       Vue.$http
-        .post("/parent/getMsisdnStatus", _this.fpSearch)
+        .post(`${this.baseUrl}/parent/getMsisdnStatus`, _this.fpSearch)
         .then((result) => {
           if (result.errorCode == "00") {
             if (result.data.status == "NEW") {
@@ -223,21 +223,23 @@ export default {
         let obj = {
           parentMsisdn: msisdn,
         };
-        Vue.$http.post("/parent/isMsisdnEligibleForFP", obj).then((result) => {
-          if (result.errorCode == "00") {
-            if (result.data.isSubscribed) {
-              this.provisionParent();
+        Vue.$http
+          .post(`${this.baseUrl}/parent/isMsisdnEligibleForFP`, obj)
+          .then((result) => {
+            if (result.errorCode == "00") {
+              if (result.data.isSubscribed) {
+                this.provisionParent();
+              } else {
+                this.$router.push({ name: "createfpuser" });
+              }
             } else {
-              this.$router.push({ name: "createfpuser" });
+              this.$store.commit("notis/setAlert", {
+                type: "error",
+                title: result.errorMsg,
+                time: "4",
+              });
             }
-          } else {
-            this.$store.commit("notis/setAlert", {
-              type: "error",
-              title: result.errorMsg,
-              time: "4",
-            });
-          }
-        });
+          });
       } else {
         // TODO: Implement logic for creating Prepaid FP User
       }
@@ -248,22 +250,24 @@ export default {
         parentMsisdn: msisdn,
         pricePlanId: "",
       };
-      Vue.$http.post("/parent/provisionParent", obj).then((result) => {
-        if (result.errorCode == "00") {
-          this.$store.commit("notis/setAlert", {
-            type: "success",
-            title: result.errorMsg,
-            time: "4",
-          });
-          this.$router.push({ name: "parentProfile" });
-        } else {
-          this.$store.commit("notis/setAlert", {
-            type: "error",
-            title: result.errorMsg,
-            time: "4",
-          });
-        }
-      });
+      Vue.$http
+        .post(`${this.baseUrl}/parent/provisionParent`, obj)
+        .then((result) => {
+          if (result.errorCode == "00") {
+            this.$store.commit("notis/setAlert", {
+              type: "success",
+              title: result.errorMsg,
+              time: "4",
+            });
+            this.$router.push({ name: "parentProfile" });
+          } else {
+            this.$store.commit("notis/setAlert", {
+              type: "error",
+              title: result.errorMsg,
+              time: "4",
+            });
+          }
+        });
     },
     handleSubscriptionRequestSent() {
       this.fpSearch.userMsisdn = "";
@@ -284,16 +288,8 @@ export default {
     },
   },
   mounted() {
-    this.basePrepaidURL = sessionStorage.getItem(
-      this.ApiUrls.BASE_PREPAID_URL_KEY
-    );
-    if (!this.basePrepaidUrl)
-      console.log(
-        `Base Prepaid URL: ${sessionStorage.getItem(
-          this.ApiUrls.BASE_PREPAID_URL_KEY
-        )}`
-      );
-
+    this.baseURL = utils.getBaseUrl();
+    this.basePrepaidURL = utils.getBasePrepaidUrl();
     this.selectedFpUserType = sessionStorage.getItem(
       this.fpUserTypes.STORAGE_KEY
     );
@@ -304,6 +300,7 @@ export default {
   beforeDestroy() {},
 };
 </script>
+
 <style scoped>
 .card {
   margin: 0 auto; /* Added */

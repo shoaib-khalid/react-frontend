@@ -43,7 +43,11 @@
                 :error-messages="errors.first('Date From')"
               ></v-text-field>
             </template>
-            <v-date-picker :max="endDate" v-model="startDate" @input="dateMenuFrom = false"></v-date-picker>
+            <v-date-picker
+              :max="endDate"
+              v-model="startDate"
+              @input="dateMenuFrom = false"
+            ></v-date-picker>
           </v-menu>
         </div>
         <div class="col-md-3">
@@ -69,15 +73,25 @@
                 :error-messages="errors.first('Date Until')"
               ></v-text-field>
             </template>
-            <v-date-picker :min="startDate" v-model="endDate" @input="dateMenuTo = false"></v-date-picker>
+            <v-date-picker
+              :min="startDate"
+              v-model="endDate"
+              @input="dateMenuTo = false"
+            ></v-date-picker>
           </v-menu>
         </div>
 
         <div class="col-md-3">
-          <v-text-field v-model="agentId" name="agentId" label="Agent Id"></v-text-field>
+          <v-text-field
+            v-model="agentId"
+            name="agentId"
+            label="Agent Id"
+          ></v-text-field>
         </div>
         <div class="col-md-2">
-          <v-btn round color="#3498db" @click="navigateToSearch" dark>Search</v-btn>
+          <v-btn round color="#3498db" @click="navigateToSearch" dark
+            >Search</v-btn
+          >
         </div>
       </div>
       <div class="row pb-2">
@@ -88,7 +102,8 @@
               :fields="json_fields"
               type="csv"
               name="Login.xls"
-            >Download Excel</download-excel>
+              >Download Excel</download-excel
+            >
           </v-btn>
         </div>
       </div>
@@ -101,109 +116,119 @@
           :rows-per-page-items="[10]"
         >
           <template v-slot:items="props">
-            <td>{{ props.item.userDetails ? props.item.userDetails.username : "-" }}</td>
-            <td>{{ props.item.eventDetails ? props.item.eventDetails.eventDescription: "-" }}</td>
-            <td>{{ props.item.eventData ? props.item.eventData :"-" }}</td>
-            <td>{{ props.item.created ? props.item.created :"-" }}</td>
+            <td>
+              {{
+                props.item.userDetails ? props.item.userDetails.username : "-"
+              }}
+            </td>
+            <td>
+              {{
+                props.item.eventDetails
+                  ? props.item.eventDetails.eventDescription
+                  : "-"
+              }}
+            </td>
+            <td>{{ props.item.eventData ? props.item.eventData : "-" }}</td>
+            <td>{{ props.item.created ? props.item.created : "-" }}</td>
           </template>
           <template v-slot:no-results>
-            <v-alert
-              :value="true"
-              color="error"
-              icon="warning"
-            >Your search for "{{ search }}" found no results.</v-alert>
+            <v-alert :value="true" color="error" icon="warning"
+              >Your search for "{{ search }}" found no results.</v-alert
+            >
           </template>
         </v-data-table>
       </div>
     </div>
     <div v-if="errorMsg">
-      <div style="width:100%; height:100%" class="card">
+      <div style="width: 100%; height: 100%" class="card">
         <div class="card-block p-5">
-          <h3>{{errorMsg}}</h3>
+          <h3>{{ errorMsg }}</h3>
         </div>
       </div>
     </div>
   </div>
 </template>
 <script>
+import Vue from "vue";
 import moment from "moment";
 import utils from "../../utils";
 
 export default {
   data() {
     return {
+      baseReportUrl: "",
       search: "",
       json_fields: {
         "Agent ID": {
           field: "userDetails",
-          callback: userDetails => {
+          callback: (userDetails) => {
             if (userDetails) {
               return userDetails.username;
             } else {
               return "-";
             }
-          }
+          },
         },
         "Type of Event": {
           field: "eventDetails",
-          callback: eventDetails => {
+          callback: (eventDetails) => {
             if (eventDetails) {
               return eventDetails.eventDescription;
             } else {
               return "-";
             }
-          }
+          },
         },
         Msisdn: {
           field: "eventData",
-          callback: eventData => {
+          callback: (eventData) => {
             if (eventData) {
               return eventData;
             } else {
               return "-";
             }
-          }
+          },
         },
         "Date & Time": {
           field: "created",
-          callback: created => {
+          callback: (created) => {
             if (created) {
               return created;
             } else {
               return "-";
             }
-          }
-        }
+          },
+        },
       },
       items: [],
       pagination: {
         page: 1,
         rowsPerPage: 10,
         totalPages: undefined,
-        totalItems: undefined
+        totalItems: undefined,
       },
       errorMsg: "",
       headers: [
         {
           text: " Agent ID",
           value: "AgentID",
-          sortable: false
+          sortable: false,
         },
         {
           text: "Type of Event",
           value: "TypeofEvent",
-          sortable: false
+          sortable: false,
         },
         {
           text: "Msisdn",
           value: "Msisdn",
-          sortable: false
+          sortable: false,
         },
         {
           text: "Date & Time",
           value: "DateTime",
-          sortable: false
-        }
+          sortable: false,
+        },
       ],
       consentReport: [],
       exportData: [],
@@ -211,16 +236,16 @@ export default {
       dateMenuTo: false,
       agentId: "",
       startDate: moment().format("YYYY-MM-DD"),
-      endDate: moment().format("YYYY-MM-DD")
+      endDate: moment().format("YYYY-MM-DD"),
     };
   },
   watch: {
-    pagination: function(news, olds) {
+    pagination: function (news, olds) {
       this.navigateToSearch();
     },
-    "$route.query": function() {
+    "$route.query": function () {
       this.getReport();
-    }
+    },
   },
   methods: {
     async fetchData() {
@@ -236,10 +261,10 @@ export default {
             rowsPerPage: this.pagination.rowsPerPage,
             startDate: this.startDate,
             endDate: this.endDate,
-            ...(this.agentId && { agentId: this.agentId })
-          }
+            ...(this.agentId && { agentId: this.agentId }),
+          },
         })
-        .catch(error => {
+        .catch((error) => {
           this.$router.push("/");
           this.$router.push({
             name: "report.login",
@@ -248,8 +273,8 @@ export default {
               rowsPerPage: this.pagination.rowsPerPage,
               startDate: this.startDate,
               endDate: this.endDate,
-              ...(this.agentId && { agentId: this.agentId })
-            }
+              ...(this.agentId && { agentId: this.agentId }),
+            },
           });
         });
     },
@@ -266,14 +291,14 @@ export default {
           endDate: this.endDate,
           agentId: this.agentId,
           pageNumber: this.pagination.page,
-          pageSize: isExport ? 999999 : this.pagination.rowsPerPage
+          pageSize: isExport ? 999999 : this.pagination.rowsPerPage,
         };
         let query = utils.getQueryString(obj);
-        await this.$http
+        await Vue.$http
           .get(
-            window.ReportBaseURL + "/reportdaily/agentLoginReportDaily" + query
+            `${this.baseReportUrl}/reportdaily/agentLoginReportDaily${query}`
           )
-          .then(result => {
+          .then((result) => {
             if (result.errorCode == "00") {
               if (isExport) {
                 this.exportData = result.data.content;
@@ -286,7 +311,7 @@ export default {
               this.errorMsg = result.errorMsg;
             }
           })
-          .catch(error => {});
+          .catch((error) => {});
         return this.exportData;
       }
     },
@@ -299,19 +324,17 @@ export default {
           : this.pagination.rowsPerPage;
         this.startDate = obj.startDate
           ? obj.startDate
-          : moment()
-              .subtract(1, "months")
-              .format("YYYY-MM-DD");
+          : moment().subtract(1, "months").format("YYYY-MM-DD");
         this.endDate = obj.endDate
           ? obj.endDate
           : moment().format("YYYY-MM-DD");
         this.agentId = obj.agentId;
       }
-    }
+    },
   },
   computed: {
-    tableData: function() {
-      return this.consentReport.map(data => {
+    tableData: function () {
+      return this.consentReport.map((data) => {
         data.consentSentTime = moment(
           data.consentSentTime,
           "YYYY-MM-DD HH:mm:ss"
@@ -322,9 +345,11 @@ export default {
         ).format("DD/MM/YYYY HH:mm:ss");
         return data;
       });
-    }
+    },
   },
-  mounted() {}
+  mounted() {
+    this.baseReportUrl = utils.getBaseReportUrl();
+  },
 };
 </script>
 <style>

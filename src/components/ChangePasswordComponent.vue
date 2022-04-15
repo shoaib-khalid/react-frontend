@@ -3,7 +3,10 @@
     <div class="col-md-3"></div>
     <div class="col-md-6">
       <!-- Authentication card start -->
-      <form @submit.prevent="handleSubmit" class="md-float-material form-material">
+      <form
+        @submit.prevent="handleSubmit"
+        class="md-float-material form-material"
+      >
         <div class="card">
           <div class="card-block p-5">
             <div class="row m-b-20">
@@ -46,7 +49,14 @@
               </div>
             </div>
             <v-flex xs12 px-4 py-2 class="text-center">
-              <v-btn type="submit" round :disabled="changing" color="#3498db" dark>Submit</v-btn>
+              <v-btn
+                type="submit"
+                round
+                :disabled="changing"
+                color="#3498db"
+                dark
+                >Submit</v-btn
+              >
             </v-flex>
             <hr />
           </div>
@@ -57,8 +67,7 @@
 </template>
 <script>
 import Vue from "vue";
-import Swal from "sweetalert2";
-import axios from "axios";
+import utils from "../utils";
 
 export default {
   data() {
@@ -68,40 +77,45 @@ export default {
       newPassword: "",
       submitted: false,
       error: "",
-      changing: false
+      changing: false,
+      baseUrl: "",
     };
   },
   computed: {},
   watch: {},
-  mounted() {},
+  mounted() {
+    this.baseUrl = utils.getBaseUrl();
+  },
   created() {},
   methods: {
     handleSubmit(e) {
-      this.$validator.validateAll().then(status => {
+      this.$validator.validateAll().then((status) => {
         let obj = {
           currentPassword: this.password,
-          newPassword: this.newPassword
+          newPassword: this.newPassword,
         };
-        Vue.$http.post("/user/changeUserPassword", obj).then(result => {
-          if (result.errorCode == "00") {
-            this.$store.commit("notis/setAlert", {
-              type: "success",
-              title: result.errorMsg,
-              time: "4"
-            });
-            sessionStorage.setItem("is_changepasswordrequired", 0);
-            window.location.href = "/";
-          } else {
-            this.$store.commit("notis/setAlert", {
-              type: "error",
-              title: result.errorMsg,
-              time: "4"
-            });
-          }
-        });
+        Vue.$http
+          .post(`${this.baseUrl}/user/changeUserPassword`, obj)
+          .then((result) => {
+            if (result.errorCode == "00") {
+              this.$store.commit("notis/setAlert", {
+                type: "success",
+                title: result.errorMsg,
+                time: "4",
+              });
+              sessionStorage.setItem("is_changepasswordrequired", 0);
+              window.location.href = "/";
+            } else {
+              this.$store.commit("notis/setAlert", {
+                type: "error",
+                title: result.errorMsg,
+                time: "4",
+              });
+            }
+          });
       });
-    }
-  }
+    },
+  },
 };
 </script>
 <style type="text/css" scoped>

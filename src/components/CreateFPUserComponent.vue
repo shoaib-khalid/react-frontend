@@ -41,20 +41,26 @@
                     >
                       <template slot="label">
                         <div class="row mt-4">
-                          <span class="col-md-12 text-uppercase">{{familyPlan.cbsPlanNameParent}}</span>
+                          <span class="col-md-12 text-uppercase">{{
+                            familyPlan.cbsPlanNameParent
+                          }}</span>
                           <span class="col-md-12">
                             Resources :
                             <span
                               :key="'product' + i"
                               v-for="(product, i) in familyPlan.productList"
                             >
-                              <span v-if="product.isShareable!=2">
-                                <span
-                                  v-if="i!=0"
-                                >,</span>
+                              <span v-if="product.isShareable != 2">
+                                <span v-if="i != 0">,</span>
                                 <!-- {{ (product.productInfo.quotaUnit=='BYTE' ? formatBytes(product.amount): product.amount) +' '+ product.productInfo.productName.replace("Internet", "MBs") }} -->
-                                {{getProductValue(product) +' '+ product.productInfo.productName.replace("Internet", "MBs")}}
-                                
+                                {{
+                                  getProductValue(product) +
+                                  " " +
+                                  product.productInfo.productName.replace(
+                                    "Internet",
+                                    "MBs"
+                                  )
+                                }}
                               </span>
                             </span>
                           </span>
@@ -73,7 +79,8 @@
                 :disabled="loading"
                 color="#3498db"
                 dark
-              >Submit</v-btn>
+                >Submit</v-btn
+              >
             </v-flex>
           </v-layout>
         </form>
@@ -82,10 +89,9 @@
   </div>
 </template>
 <script>
-import Swal from "sweetalert2";
 import Vue from "vue";
-import { serverBus } from "../main";
 import utils from "../utils";
+
 export default {
   data: () => ({
     fpAccount: {
@@ -95,6 +101,7 @@ export default {
     familyPlans: [],
     loading: false,
     submitted: false,
+    baseUrl: "",
   }),
   methods: {
     handleFpCreateUser() {
@@ -104,7 +111,7 @@ export default {
       this.$validator.validateAll().then((status) => {
         if (status) {
           Vue.$http
-            .post("/parent/provisionParent", this.fpAccount)
+            .post(`${this.baseUrl}/parent/provisionParent`, this.fpAccount)
             .then((result) => {
               if (result.errorCode == "00") {
                 this.$store.commit("notis/setAlert", {
@@ -125,12 +132,14 @@ export default {
       });
     },
     getFPPricePlan: function () {
-      Vue.$http.post("/general/getFPPricePlan", {}).then((result) => {
-        if (result.errorCode == "00") {
-          this.familyPlans = result.data;
-          this.fpAccount.pricePlanId = this.familyPlans[0].id;
-        }
-      });
+      Vue.$http
+        .post(`${this.baseUrl}/general/getFPPricePlan`, {})
+        .then((result) => {
+          if (result.errorCode == "00") {
+            this.familyPlans = result.data;
+            this.fpAccount.pricePlanId = this.familyPlans[0].id;
+          }
+        });
     },
     getProductValue(product) {
       if (product.productInfo.quotaUnit == "BYTE") {
@@ -153,6 +162,7 @@ export default {
       : undefined;
     this.getFPPricePlan();
     this.$nextTick(() => this.$refs.refTosubmit.$el.focus());
+    this.baseUrl = utils.getBaseUrl();
   },
 };
 </script>

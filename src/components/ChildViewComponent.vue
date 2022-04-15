@@ -8,8 +8,9 @@
             <a
               @click="goToParentProfile()"
               class="v-tabs__item v-tabs__item--active"
-              style="position: static;"
-            >Main User</a>
+              style="position: static"
+              >Main User</a
+            >
           </div>
           <v-tab-item :key="'tabChildProfile'">
             <v-container fluid>
@@ -19,39 +20,55 @@
                     <h3>User Profile</h3>
                   </div>
                   <div class="col-md-12 mt-3">
-                    <span>MSISDN: {{childAccount.childProfile.msisdn}}</span>
+                    <span>MSISDN: {{ childAccount.childProfile.msisdn }}</span>
                   </div>
                   <div class="col-md-12 mt-3">
-                    <span>SEGMENT: {{childAccount.childProfile.subType}}</span>
+                    <span
+                      >SEGMENT: {{ childAccount.childProfile.subType }}</span
+                    >
                   </div>
                   <div class="col-md-12 mt-3">
-                    <span>PRICE PLAN: {{childAccount.childProfile.originalPricePlan}}</span>
+                    <span
+                      >PRICE PLAN:
+                      {{ childAccount.childProfile.originalPricePlan }}</span
+                    >
                   </div>
                   <div class="col-md-12 mt-3">
                     <v-btn
-                      v-if="childAccount.childProfile.status=='ACTIVE'"
+                      v-if="childAccount.childProfile.status == 'ACTIVE'"
                       type="button"
                       round
                       :disabled="loading"
                       @click="UnsubscribeChild(childAccount)"
                       color="rgb(254,173,33)"
-                    >Unsubscribe</v-btn>
-                    
+                      >Unsubscribe</v-btn
+                    >
+
                     <v-btn
-                      v-if="childAccount.childProfile.status=='PENDING_CBS' || childAccount.childProfile.status=='CBS_NOT_UPDATE'"
+                      v-if="
+                        childAccount.childProfile.status == 'PENDING_CBS' ||
+                        childAccount.childProfile.status == 'CBS_NOT_UPDATE'
+                      "
                       type="button"
                       round
                       :disabled="loading"
                       @click="terminateChild(childAccount)"
                       color="rgb(254,173,33)"
-                    >Terminate</v-btn>
+                      >Terminate</v-btn
+                    >
                   </div>
                 </div>
                 <div class="col-md-8">
                   <div class="table-responsive mt-3">
                     <table
                       class="table table-bordered table-striped small"
-                      v-if="childAccount && ((childAccount.childMonthlyBalance && childAccount.childMonthlyBalance.length>0)|| (childAccount.childOneTimeBalance && childAccount.childOneTimeBalance.length>0))"
+                      v-if="
+                        childAccount &&
+                        ((childAccount.childMonthlyBalance &&
+                          childAccount.childMonthlyBalance.length > 0) ||
+                          (childAccount.childOneTimeBalance &&
+                            childAccount.childOneTimeBalance.length > 0))
+                      "
                     >
                       <tbody>
                         <tr class="table-primary">
@@ -63,23 +80,27 @@
                         </tr>
                         <tr
                           :key="'product_alo' + i"
-                          v-for="(product, i) in childAccount.childMonthlyBalance"
+                          v-for="(
+                            product, i
+                          ) in childAccount.childMonthlyBalance"
                         >
                           <td>{{ getTotalQuota(product) }}</td>
                           <td>{{ getRemainingQuota(product) }}</td>
                           <td>Monthly Sharing</td>
-                          <td>{{product.applyDate | formatDate}}</td>
-                          <td>{{product.expiryDate | formatDate}}</td>
+                          <td>{{ product.applyDate | formatDate }}</td>
+                          <td>{{ product.expiryDate | formatDate }}</td>
                         </tr>
                         <tr
                           :key="'product_rem' + i"
-                          v-for="(product, i) in childAccount.childOneTimeBalance"
+                          v-for="(
+                            product, i
+                          ) in childAccount.childOneTimeBalance"
                         >
                           <td>{{ getTotalQuota(product) }}</td>
                           <td>{{ getRemainingQuota(product) }}</td>
                           <td>One Time Bundle Sharing</td>
-                          <td>{{product.applyDate | formatDate}}</td>
-                          <td>{{product.expiryDate | formatDate}}</td>
+                          <td>{{ product.applyDate | formatDate }}</td>
+                          <td>{{ product.expiryDate | formatDate }}</td>
                         </tr>
                       </tbody>
                     </table>
@@ -91,7 +112,10 @@
                   <div class="table-responsive">
                     <table
                       class="table table-bordered table-striped small"
-                      v-if="childTransactionDetails && childTransactionDetails.length>0"
+                      v-if="
+                        childTransactionDetails &&
+                        childTransactionDetails.length > 0
+                      "
                     >
                       <tbody>
                         <tr class="table-primary">
@@ -114,24 +138,124 @@
                         </tr>
                         <tr
                           :key="'childTransactionDetail' + k"
-                          v-for="(childTransactionDetail, k) in childTransactionDetails"
+                          v-for="(
+                            childTransactionDetail, k
+                          ) in childTransactionDetails"
                         >
-                          <td>{{childTransactionDetail.transactionDetails.parentDetails ? childTransactionDetail.transactionDetails.parentDetails.msisdn:'NA'}}</td>
-                          <td>{{childTransactionDetail.transactionDetails.childDetails?childTransactionDetail.transactionDetails.childDetails.msisdn: 'NA'}}</td>
-                          <td>{{IsParentOpCode(childTransactionDetail.transactionDetails.opcodeDetails.opcode) ? 'PARENT': 'CHILD'}}</td>
-                          <td>{{childTransactionDetail.transactionDetails.opcodeDetails.description}}</td>
-                          <td>{{childTransactionDetail.eventDetails.eventDescription}}</td>
-                          <td>{{childTransactionDetail.created}}</td>
-                          <td>{{childTransactionDetail.transactionDetails.channel}}</td>
-                          <td>{{childTransactionDetail.transactionDetails.userDetails? childTransactionDetail.transactionDetails.userDetails.username: 'NA'}}</td>
-                          <td>{{childTransactionDetail.productDetails? childTransactionDetail.productDetails.productName: 'NA'}}</td>
-                          <td>{{childTransactionDetail.convertedAllocationAmount ? childTransactionDetail.convertedAllocationAmount: 'NA'}}</td>
-                          <td>{{childTransactionDetail.oldPricePlan ? childTransactionDetail.oldPricePlan: 'NA'}}</td>
-                          <td>{{childTransactionDetail.newPricePlan ? childTransactionDetail.newPricePlan: 'NA'}}</td>
-                          <td>{{(childTransactionDetail.eventStatus ? childTransactionDetail.eventStatus: 'NA')}}</td>
-                          <td>{{(childTransactionDetail.convertedNewChildBalance ? childTransactionDetail.convertedNewChildBalance: 'NA')}}</td>
-                          <td>{{childTransactionDetail.convertedNewParentBalance ? childTransactionDetail.convertedNewParentBalance : 'NA'}}</td>
-                          <td>{{childTransactionDetail.transactionDetails.systemTransactionId ? childTransactionDetail.transactionDetails.systemTransactionId: 'NA'}}</td>
+                          <td>
+                            {{
+                              childTransactionDetail.transactionDetails
+                                .parentDetails
+                                ? childTransactionDetail.transactionDetails
+                                    .parentDetails.msisdn
+                                : "NA"
+                            }}
+                          </td>
+                          <td>
+                            {{
+                              childTransactionDetail.transactionDetails
+                                .childDetails
+                                ? childTransactionDetail.transactionDetails
+                                    .childDetails.msisdn
+                                : "NA"
+                            }}
+                          </td>
+                          <td>
+                            {{
+                              IsParentOpCode(
+                                childTransactionDetail.transactionDetails
+                                  .opcodeDetails.opcode
+                              )
+                                ? "PARENT"
+                                : "CHILD"
+                            }}
+                          </td>
+                          <td>
+                            {{
+                              childTransactionDetail.transactionDetails
+                                .opcodeDetails.description
+                            }}
+                          </td>
+                          <td>
+                            {{
+                              childTransactionDetail.eventDetails
+                                .eventDescription
+                            }}
+                          </td>
+                          <td>{{ childTransactionDetail.created }}</td>
+                          <td>
+                            {{
+                              childTransactionDetail.transactionDetails.channel
+                            }}
+                          </td>
+                          <td>
+                            {{
+                              childTransactionDetail.transactionDetails
+                                .userDetails
+                                ? childTransactionDetail.transactionDetails
+                                    .userDetails.username
+                                : "NA"
+                            }}
+                          </td>
+                          <td>
+                            {{
+                              childTransactionDetail.productDetails
+                                ? childTransactionDetail.productDetails
+                                    .productName
+                                : "NA"
+                            }}
+                          </td>
+                          <td>
+                            {{
+                              childTransactionDetail.convertedAllocationAmount
+                                ? childTransactionDetail.convertedAllocationAmount
+                                : "NA"
+                            }}
+                          </td>
+                          <td>
+                            {{
+                              childTransactionDetail.oldPricePlan
+                                ? childTransactionDetail.oldPricePlan
+                                : "NA"
+                            }}
+                          </td>
+                          <td>
+                            {{
+                              childTransactionDetail.newPricePlan
+                                ? childTransactionDetail.newPricePlan
+                                : "NA"
+                            }}
+                          </td>
+                          <td>
+                            {{
+                              childTransactionDetail.eventStatus
+                                ? childTransactionDetail.eventStatus
+                                : "NA"
+                            }}
+                          </td>
+                          <td>
+                            {{
+                              childTransactionDetail.convertedNewChildBalance
+                                ? childTransactionDetail.convertedNewChildBalance
+                                : "NA"
+                            }}
+                          </td>
+                          <td>
+                            {{
+                              childTransactionDetail.convertedNewParentBalance
+                                ? childTransactionDetail.convertedNewParentBalance
+                                : "NA"
+                            }}
+                          </td>
+                          <td>
+                            {{
+                              childTransactionDetail.transactionDetails
+                                .systemTransactionId
+                                ? childTransactionDetail.transactionDetails
+                                    .systemTransactionId
+                                : "NA"
+                            }}
+                          </td>
                         </tr>
                       </tbody>
                     </table>
@@ -154,17 +278,18 @@ export default {
   data: () => ({
     childAccount: {
       childProfile: {
-        pricePlanDetails: {}
-      }
+        pricePlanDetails: {},
+      },
     },
     mainAccount: {
-      parentProfile: {}
+      parentProfile: {},
     },
     parentMsisdn: "",
     childMsisdn: "",
     loading: false,
     submitted: false,
-    childTransactionDetails: []
+    childTransactionDetails: [],
+    baseUrl: "",
   }),
   methods: {
     getTotalQuota(product) {
@@ -203,24 +328,28 @@ export default {
       return value;
     },
     getChildProfile() {
-      return new Promise(resolve => {
+      return new Promise((resolve) => {
         let obj = { childMsisdn: this.childMsisdn };
-        Vue.$http.post("/child/getChildProfile", obj).then(result => {
-          if (result.errorCode == "00") {
-            this.childAccount = result.data;
-            resolve();
-          }
-        });
+        Vue.$http
+          .post(`${this.baseUrl}/child/getChildProfile`, obj)
+          .then((result) => {
+            if (result.errorCode == "00") {
+              this.childAccount = result.data;
+              resolve();
+            }
+          });
       });
     },
     getMainProfile() {
       let _this = this;
       let obj = { parentMsisdn: this.parentMsisdn };
-      Vue.$http.post("/parent/getParentProfile", obj).then(result => {
-        if (result.errorCode == "00") {
-          _this.mainAccount = result.data;
-        }
-      });
+      Vue.$http
+        .post(`${this.baseUrl}/parent/getParentProfile`, obj)
+        .then((result) => {
+          if (result.errorCode == "00") {
+            _this.mainAccount = result.data;
+          }
+        });
     },
     formatBytes(bytes) {
       return utils.formatBytes(bytes);
@@ -245,27 +374,32 @@ export default {
         customClass: "swal-wide",
         confirmButtonText: "YES",
         reverseButtons: true,
-        cancelButtonText: "NO"
-      }).then(result => {
+        cancelButtonText: "NO",
+      }).then((result) => {
         if (result.value) {
           let _childToUnsub = {
             parentMsisdn: this.parentMsisdn,
-            childMsisdn: this.childMsisdn
+            childMsisdn: this.childMsisdn,
           };
-          Vue.$http.post("/child/terminateCrmPendingChild", _childToUnsub).then(result => {
-            if (result.errorCode == "00") {
-              this.$store.commit("notis/setAlert", {
-                type: "success",
-                title: result.errorMsg,
-                time: "4"
-              });
-            } else
-              this.$store.commit("notis/setAlert", {
-                type: "error",
-                title: result.errorMsg,
-                time: "4"
-              });
-          });
+          Vue.$http
+            .post(
+              `${this.baseUrl}/child/terminateCrmPendingChild`,
+              _childToUnsub
+            )
+            .then((result) => {
+              if (result.errorCode == "00") {
+                this.$store.commit("notis/setAlert", {
+                  type: "success",
+                  title: result.errorMsg,
+                  time: "4",
+                });
+              } else
+                this.$store.commit("notis/setAlert", {
+                  type: "error",
+                  title: result.errorMsg,
+                  time: "4",
+                });
+            });
         }
       });
     },
@@ -279,27 +413,29 @@ export default {
         customClass: "swal-wide",
         confirmButtonText: "YES",
         reverseButtons: true,
-        cancelButtonText: "NO"
-      }).then(result => {
+        cancelButtonText: "NO",
+      }).then((result) => {
         if (result.value) {
           let _childToUnsub = {
             parentMsisdn: this.parentMsisdn,
-            childMsisdn: this.childMsisdn
+            childMsisdn: this.childMsisdn,
           };
-          Vue.$http.post("/child/unsubChild", _childToUnsub).then(result => {
-            if (result.errorCode == "00") {
-              this.$store.commit("notis/setAlert", {
-                type: "success",
-                title: result.errorMsg,
-                time: "4"
-              });
-            } else
-              this.$store.commit("notis/setAlert", {
-                type: "error",
-                title: result.errorMsg,
-                time: "4"
-              });
-          });
+          Vue.$http
+            .post(`${this.baseUrl}/child/unsubChild`, _childToUnsub)
+            .then((result) => {
+              if (result.errorCode == "00") {
+                this.$store.commit("notis/setAlert", {
+                  type: "success",
+                  title: result.errorMsg,
+                  time: "4",
+                });
+              } else
+                this.$store.commit("notis/setAlert", {
+                  type: "error",
+                  title: result.errorMsg,
+                  time: "4",
+                });
+            });
         }
       });
     },
@@ -316,57 +452,59 @@ export default {
         confirmButtonText: "UNSUBSCRIBE",
         reverseButtons: true,
         cancelButtonText: "CANCEL",
-        inputValidator: value => {
-          return new Promise(resolve => {
-
+        inputValidator: (value) => {
+          return new Promise((resolve) => {
             let _childToUnsub = undefined;
             if (value) {
               _childToUnsub = {
                 parentMsisdn: this.parentMsisdn,
                 childMsisdn: this.childMsisdn,
-                newPricePlanId: value
+                newPricePlanId: value,
               };
             } else {
               _childToUnsub = {
                 parentMsisdn: this.parentMsisdn,
-                childMsisdn: this.childMsisdn
+                childMsisdn: this.childMsisdn,
               };
             }
-            Vue.$http.post("/child/unsubChild", _childToUnsub).then(result => {
-
-              if (result.errorCode == "00") {
-                this.$store.commit("notis/setAlert", {
-                  type: "success",
-                  title: result.errorMsg,
-                  time: "4"
-                });
-              } else
-                this.$store.commit("notis/setAlert", {
-                  type: "error",
-                  title: result.errorMsg,
-                  time: "4"
-                });
-            });
+            Vue.$http
+              .post(`${this.baseUrl}/child/unsubChild`, _childToUnsub)
+              .then((result) => {
+                if (result.errorCode == "00") {
+                  this.$store.commit("notis/setAlert", {
+                    type: "success",
+                    title: result.errorMsg,
+                    time: "4",
+                  });
+                } else
+                  this.$store.commit("notis/setAlert", {
+                    type: "error",
+                    title: result.errorMsg,
+                    time: "4",
+                  });
+              });
             resolve();
           });
-        }
+        },
       });
     },
     getOtherPricePlan() {
-      return new Promise(resolve => {
+      return new Promise((resolve) => {
         let param = {
           parentMsisdn: this.parentMsisdn,
-          typeOfPricePlan: "PREPAID"
+          typeOfPricePlan: "PREPAID",
         };
-        Vue.$http.post("/general/getOtherPricePlan", param).then(result => {
-          if (result.errorCode == "00") {
-            var obj = {};
-            result.data.forEach(element => {
-              obj[element.id] = element.name;
-            });
-            resolve(obj);
-          }
-        });
+        Vue.$http
+          .post(`${this.baseUrl}/general/getOtherPricePlan`, param)
+          .then((result) => {
+            if (result.errorCode == "00") {
+              var obj = {};
+              result.data.forEach((element) => {
+                obj[element.id] = element.name;
+              });
+              resolve(obj);
+            }
+          });
       });
     },
     getChildTransactionDetails() {
@@ -374,13 +512,15 @@ export default {
         childId: this.childAccount.childProfile.id,
         startDate: "",
         endDate: "",
-        opcodeId: ""
+        opcodeId: "",
       };
-      Vue.$http.post("/transaction/getChildEventDetails", obj).then(result => {
-        if (result.errorCode == "00") {
-          this.childTransactionDetails = result.data;
-        }
-      });
+      Vue.$http
+        .post(`${this.baseUrl}/transaction/getChildEventDetails`, obj)
+        .then((result) => {
+          if (result.errorCode == "00") {
+            this.childTransactionDetails = result.data;
+          }
+        });
     },
     IsParentOpCode(opcode) {
       if (
@@ -390,7 +530,7 @@ export default {
       } else {
         return false;
       }
-    }
+    },
   },
   mounted() {
     this.parentMsisdn = sessionStorage.getItem("ParentMSISDN")
@@ -404,7 +544,8 @@ export default {
       this.getChildTransactionDetails();
     });
     this.getMainProfile();
-  }
+    this.baseUrl = utils.getBaseUrl();
+  },
 };
 </script>
 <style scoped>

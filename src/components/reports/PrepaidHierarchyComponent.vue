@@ -137,8 +137,8 @@
 </template>
 
 <script>
+import Vue from "vue";
 import moment from "moment";
-import ApiUrls from "../../enums/ApiUrls";
 import utils from "../../utils";
 
 export default {
@@ -199,7 +199,7 @@ export default {
       };
       const queryParams = utils.getQueryString(queryObj);
 
-      this.$http
+      Vue.$http
         .post(
           `${this.basePrepaidUrl}/reports/getHeirarchyAndSubReport${queryParams}`
         )
@@ -216,7 +216,7 @@ export default {
     },
   },
   mounted() {
-    this.basePrepaidUrl = sessionStorage.getItem(ApiUrls.BASE_PREPAID_URL_KEY);
+    this.basePrepaidUrl = utils.getBasePrepaidUrl();
   },
 };
 </script>

@@ -2,7 +2,10 @@
   <div class="center col-sm-12 col-md-12 col-lg-12">
     <div class="row">
       <div class="col-sm-12 col-md-3 col-lg-3 pr-1">
-        <div class="card sticky-top" style="background: rgba(0, 188, 212,0.1); z-index:1;top:0">
+        <div
+          class="card sticky-top"
+          style="background: rgba(0, 188, 212, 0.1); z-index: 1; top: 0"
+        >
           <div class="card-block">
             <div class="row p-2">
               <div class="col-md-12 pb-1 pt-1">
@@ -23,24 +26,37 @@
                 >
                   <i class="material-icons">clear</i>
                 </span>
-                <span title="Refresh" class="float-right" style="cursor:pointer" @click="refresh()">
+                <span
+                  title="Refresh"
+                  class="float-right"
+                  style="cursor: pointer"
+                  @click="refresh()"
+                >
                   <b>
-                    <feather size="25" stroke="black" type="refresh-cw"></feather>
+                    <feather
+                      size="25"
+                      stroke="black"
+                      type="refresh-cw"
+                    ></feather>
                   </b>
                 </span>
               </div>
               <div class="col-md-12 pb-1 pt-1">
-                <h6>MSISDN: {{parentProfile.msisdn}}</h6>
+                <h6>MSISDN: {{ parentProfile.msisdn }}</h6>
               </div>
               <div class="col-md-12 pb-1 pt-1">
                 <h6 v-if="!parentProfileEditing">
                   PRICE PLAN:
-                  {{parentProfile.pricePlanDetails.cbsPlanNameParent}}
+                  {{ parentProfile.pricePlanDetails.cbsPlanNameParent }}
                 </h6>
                 <span :hidden="!parentProfileEditing">
                   <h6 class="single-line">PRICE PLAN:</h6>
                   <v-select
-                    style="margin-top:-15px; margin-bottom:-15px; padding:0px"
+                    style="
+                      margin-top: -15px;
+                      margin-bottom: -15px;
+                      padding: 0px;
+                    "
                     class="uprcase"
                     :items="pricePlans"
                     v-model="selectedPricePlan"
@@ -49,16 +65,18 @@
                     v-on:change="changePricePlan()"
                   >
                     <template slot="item" slot-scope="data">
-                      <div class="text-uppercase">{{ data.item.cbsPlanNameParent }}</div>
+                      <div class="text-uppercase">
+                        {{ data.item.cbsPlanNameParent }}
+                      </div>
                     </template>
                   </v-select>
                 </span>
               </div>
               <div class="col-md-12 pb-1 pt-1">
-                <h6>NUMBER STATUS: {{parentProfile.status}}</h6>
+                <h6>NUMBER STATUS: {{ parentProfile.status }}</h6>
               </div>
               <div class="col-md-12 pb-1 pt-1">
-                <h6>BILLING DATE: {{parentProfile.billingDate}}</h6>
+                <h6>BILLING DATE: {{ parentProfile.billingDate }}</h6>
               </div>
 
               <div class="col-md-12 pb-1 pt-1">
@@ -74,19 +92,31 @@
                       <th class="text-center">REMAINING RESOURCES</th>
                     </tr>
                     <tr>
-                      <th colspan="2">{{parentProfile.pricePlanDetails.cbsPlanNameParent}}</th>
+                      <th colspan="2">
+                        {{ parentProfile.pricePlanDetails.cbsPlanNameParent }}
+                      </th>
                     </tr>
                   </thead>
                   <tbody>
                     <tr>
                       <td>
-                        <ul :key="'product' + i" v-for="(product, i) in parentMonthlyBalance">
-                          <li v-if="product.isFPService==1">{{getMonthlyQuota(product)}}</li>
+                        <ul
+                          :key="'product' + i"
+                          v-for="(product, i) in parentMonthlyBalance"
+                        >
+                          <li v-if="product.isFPService == 1">
+                            {{ getMonthlyQuota(product) }}
+                          </li>
                         </ul>
                       </td>
                       <td>
-                        <ul :key="'product' + i" v-for="(product, i) in parentMonthlyBalance">
-                          <li v-if="product.isFPService==1">{{ getRemainingQuota(product)}}</li>
+                        <ul
+                          :key="'product' + i"
+                          v-for="(product, i) in parentMonthlyBalance"
+                        >
+                          <li v-if="product.isFPService == 1">
+                            {{ getRemainingQuota(product) }}
+                          </li>
                         </ul>
                       </td>
                     </tr>
@@ -95,13 +125,23 @@
                     </tr>
                     <tr v-if="IsShareableAddOnResourceExists">
                       <td>
-                        <ul :key="'product' + i" v-for="(product, i) in parentMonthlyBalance">
-                          <li v-if="product.isFPService==2">{{ getMonthlyQuota(product)}}</li>
+                        <ul
+                          :key="'product' + i"
+                          v-for="(product, i) in parentMonthlyBalance"
+                        >
+                          <li v-if="product.isFPService == 2">
+                            {{ getMonthlyQuota(product) }}
+                          </li>
                         </ul>
                       </td>
                       <td>
-                        <ul :key="'product' + i" v-for="(product, i) in parentMonthlyBalance">
-                          <li v-if="product.isFPService==2">{{ getRemainingQuota(product)}}</li>
+                        <ul
+                          :key="'product' + i"
+                          v-for="(product, i) in parentMonthlyBalance"
+                        >
+                          <li v-if="product.isFPService == 2">
+                            {{ getRemainingQuota(product) }}
+                          </li>
                         </ul>
                       </td>
                     </tr>
@@ -122,19 +162,31 @@
                       <th class="text-center">REMAINING RESOURCES</th>
                     </tr>
                     <tr>
-                      <th colspan="2">{{parentProfile.pricePlanDetails.cbsPlanNameParent}}</th>
+                      <th colspan="2">
+                        {{ parentProfile.pricePlanDetails.cbsPlanNameParent }}
+                      </th>
                     </tr>
                   </thead>
                   <tbody>
                     <tr>
                       <td>
-                        <ul :key="'product' + i" v-for="(product, i) in parentMonthlyBalance">
-                          <li v-if="product.isFPService==0">{{ getMonthlyQuota(product)}}</li>
+                        <ul
+                          :key="'product' + i"
+                          v-for="(product, i) in parentMonthlyBalance"
+                        >
+                          <li v-if="product.isFPService == 0">
+                            {{ getMonthlyQuota(product) }}
+                          </li>
                         </ul>
                       </td>
                       <td>
-                        <ul :key="'product' + i" v-for="(product, i) in parentMonthlyBalance">
-                          <li v-if="product.isFPService==0">{{ getRemainingQuota(product) }}</li>
+                        <ul
+                          :key="'product' + i"
+                          v-for="(product, i) in parentMonthlyBalance"
+                        >
+                          <li v-if="product.isFPService == 0">
+                            {{ getRemainingQuota(product) }}
+                          </li>
                         </ul>
                       </td>
                     </tr>
@@ -143,13 +195,23 @@
                     </tr>
                     <tr v-if="IsNonShareableAddOnResourceExists">
                       <td>
-                        <ul :key="'product' + i" v-for="(product, i) in parentMonthlyBalance">
-                          <li v-if="product.isFPService==3">{{ getMonthlyQuota(product)}}</li>
+                        <ul
+                          :key="'product' + i"
+                          v-for="(product, i) in parentMonthlyBalance"
+                        >
+                          <li v-if="product.isFPService == 3">
+                            {{ getMonthlyQuota(product) }}
+                          </li>
                         </ul>
                       </td>
                       <td>
-                        <ul :key="'product' + i" v-for="(product, i) in parentMonthlyBalance">
-                          <li v-if="product.isFPService==3">{{ getRemainingQuota(product)}}</li>
+                        <ul
+                          :key="'product' + i"
+                          v-for="(product, i) in parentMonthlyBalance"
+                        >
+                          <li v-if="product.isFPService == 3">
+                            {{ getRemainingQuota(product) }}
+                          </li>
                         </ul>
                       </td>
                     </tr>
@@ -160,29 +222,35 @@
             <div>
               <v-flex xs12 px-4 py-4 class="text-center">
                 <v-btn
-                  v-if="parentProfile.status=='ACTIVE'"
+                  v-if="parentProfile.status == 'ACTIVE'"
                   type="button"
                   round
                   :disabled="loading"
                   @click="Unsubscribe()"
                   color="rgb(254,173,33)"
-                >Unsubscribe</v-btn>
+                  >Unsubscribe</v-btn
+                >
                 <v-btn
-                  v-if="parentProfile.status=='TERMINATED'"
+                  v-if="parentProfile.status == 'TERMINATED'"
                   type="button"
                   round
                   :disabled="loading"
                   @click="Resume()"
                   color="rgb(254,173,33)"
-                >Resume</v-btn>
+                  >Resume</v-btn
+                >
                 <v-btn
-                  v-if="parentProfile.status=='PENDING_CBS' || parentProfile.status=='CBS_NOT_UPDATE'"
+                  v-if="
+                    parentProfile.status == 'PENDING_CBS' ||
+                    parentProfile.status == 'CBS_NOT_UPDATE'
+                  "
                   type="button"
                   round
                   :disabled="loading"
                   @click="terminate()"
                   color="rgb(254,173,33)"
-                >Terminate</v-btn>
+                  >Terminate</v-btn
+                >
               </v-flex>
             </div>
           </div>
@@ -197,65 +265,101 @@
               <v-container fluid>
                 <div
                   class="row pl-3 pr-3"
-                  :key="'monthlyResourcesComponentKey_'+monthlyResourcesComponentKey"
+                  :key="
+                    'monthlyResourcesComponentKey_' +
+                    monthlyResourcesComponentKey
+                  "
                 >
                   <h5>MONTHLY RESOURCES SHARED</h5>
                   <span class="small pl-2 pt-1">
                     ( Last updated on :
-                    <span
-                      class="font-weight-bold"
-                    >{{parentProfile.lastChildUpdateDateTime| formatDate}}</span>, Renewed on Bill Cycle:
-                    <span
-                      class="font-weight-bold"
-                    >{{renewedDate| formatDate}}</span> )
+                    <span class="font-weight-bold">{{
+                      parentProfile.lastChildUpdateDateTime | formatDate
+                    }}</span
+                    >, Renewed on Bill Cycle:
+                    <span class="font-weight-bold">{{
+                      renewedDate | formatDate
+                    }}</span>
+                    )
                   </span>
                   <div class="table-responsive" v-if="objSelectedPricePlan.id">
-                    <table class="table table-sm table-striped table-bordered-outside">
+                    <table
+                      class="
+                        table table-sm table-striped table-bordered-outside
+                      "
+                    >
                       <tbody>
                         <tr class="table-success">
                           <th>USER</th>
                           <th></th>
-                          <template v-for="(product, i) in objSelectedPricePlan.productList">
-                            <template v-if="product.isShareable==1">
-                              <th :key="'product_name_th' + i">{{product.productInfo.productName}}</th>
+                          <template
+                            v-for="(
+                              product, i
+                            ) in objSelectedPricePlan.productList"
+                          >
+                            <template v-if="product.isShareable == 1">
+                              <th :key="'product_name_th' + i">
+                                {{ product.productInfo.productName }}
+                              </th>
                               <th :key="'product_pct_th' + i">PERCENTAGE</th>
                             </template>
                           </template>
                         </tr>
                         <tr>
                           <td>PRICE PLAN</td>
-                          <td>{{objSelectedPricePlan.numberOfLines + "L"}}</td>
-                          <template v-for="(product, i) in objSelectedPricePlan.productList">
-                            <template v-if="product.isShareable==1">
-                              <td :key="'product_amt_th' + i">{{getProductValue(product)}}</td>
+                          <td>
+                            {{ objSelectedPricePlan.numberOfLines + "L" }}
+                          </td>
+                          <template
+                            v-for="(
+                              product, i
+                            ) in objSelectedPricePlan.productList"
+                          >
+                            <template v-if="product.isShareable == 1">
+                              <td :key="'product_amt_th' + i">
+                                {{ getProductValue(product) }}
+                              </td>
                               <td :key="'product_pct_value' + i">NA</td>
                             </template>
                           </template>
                         </tr>
                         <tr>
                           <td>MAIN USER</td>
-                          <td>{{parentProfile.msisdn }}</td>
-                          <template v-for="(product, i) in objSelectedPricePlan.productList">
-                            <template v-if="product.isShareable==1">
-                              <td :key="'product_amt_th' + i">{{getParentProductValue(product)}}</td>
-                              <td
-                                :key="'product_pct_value' + i"
-                              >{{getParentProductPct(product) + "%"}}</td>
+                          <td>{{ parentProfile.msisdn }}</td>
+                          <template
+                            v-for="(
+                              product, i
+                            ) in objSelectedPricePlan.productList"
+                          >
+                            <template v-if="product.isShareable == 1">
+                              <td :key="'product_amt_th' + i">
+                                {{ getParentProductValue(product) }}
+                              </td>
+                              <td :key="'product_pct_value' + i">
+                                {{ getParentProductPct(product) + "%" }}
+                              </td>
                             </template>
                           </template>
                         </tr>
-                        <tr :key="'child_row' + h" v-for="(child, h) in childAccounts">
+                        <tr
+                          :key="'child_row' + h"
+                          v-for="(child, h) in childAccounts"
+                        >
                           <template v-if="child">
-                            <td>{{"User 0"+ (h+1)}}</td>
-                            <td>{{child.childProfile.msisdn}}</td>
-                            <template v-for="(product, i) in objSelectedPricePlan.productList">
-                              <template v-if="product.isShareable==1">
-                                <td
-                                  :key="'child_product_amt_th' + i+h"
-                                >{{getChildProductValue(product,child)}}</td>
-                                <td
-                                  :key="'child_product_pct_value' + i+h"
-                                >{{getChildProductPct(product,child) + "%"}}</td>
+                            <td>{{ "User 0" + (h + 1) }}</td>
+                            <td>{{ child.childProfile.msisdn }}</td>
+                            <template
+                              v-for="(
+                                product, i
+                              ) in objSelectedPricePlan.productList"
+                            >
+                              <template v-if="product.isShareable == 1">
+                                <td :key="'child_product_amt_th' + i + h">
+                                  {{ getChildProductValue(product, child) }}
+                                </td>
+                                <td :key="'child_product_pct_value' + i + h">
+                                  {{ getChildProductPct(product, child) + "%" }}
+                                </td>
                               </template>
                             </template>
                           </template>
@@ -268,7 +372,9 @@
                   :key="childsProfileComponentKey"
                   v-bind:parentMsisdn="parentMsisdn"
                   v-bind:parentId="parentProfile.id"
-                  v-bind:numberOfLines="parentProfile.pricePlanDetails.numberOfLines"
+                  v-bind:numberOfLines="
+                    parentProfile.pricePlanDetails.numberOfLines
+                  "
                   v-bind:parentMonthlyBalance="parentMonthlyBalance"
                   v-bind:selectedPricePlan="objSelectedPricePlan"
                   v-on:childAdded="onChildAdded"
@@ -301,13 +407,11 @@
 import Swal from "sweetalert2";
 import Vue from "vue";
 import ChildsProfileComponent from "./ChildsProfileComponent";
-import UserHistoryComponent from "./UserHistoryComponent";
-
 import utils from "../utils";
 
 export default {
   components: {
-    ChildsProfileComponent
+    ChildsProfileComponent,
   },
 
   data: () => ({
@@ -345,11 +449,11 @@ export default {
             productList: {
               id: "",
               productName: "",
-              productType: ""
-            }
-          }
-        ]
-      }
+              productType: "",
+            },
+          },
+        ],
+      },
     },
     parentMonthlyBalance: {},
     pricePlans: [],
@@ -357,7 +461,8 @@ export default {
     // parentResources: {},
     loading: false,
     submitted: false,
-    childAccounts: []
+    childAccounts: [],
+    baseUrl: "",
   }),
   methods: {
     forceRerender() {
@@ -413,8 +518,8 @@ export default {
         confirmButtonText: "UNSUBSCRIBE",
         reverseButtons: true,
         cancelButtonText: "CANCEL",
-        inputValidator: value => {
-          return new Promise(resolve => {
+        inputValidator: (value) => {
+          return new Promise((resolve) => {
             if (value) {
               resolve();
               this.unsubscribeParent(value);
@@ -422,7 +527,7 @@ export default {
               resolve("You need to select other plan");
             }
           });
-        }
+        },
       });
     },
     Resume() {
@@ -434,8 +539,8 @@ export default {
         customClass: "swal-wide",
         confirmButtonText: "RESUME",
         reverseButtons: true,
-        cancelButtonText: "CANCEL"
-      }).then(result => {
+        cancelButtonText: "CANCEL",
+      }).then((result) => {
         if (result.value) {
           this.resumeParent();
         }
@@ -451,8 +556,8 @@ export default {
         customClass: "swal-wide",
         confirmButtonText: "RESUME",
         reverseButtons: true,
-        cancelButtonText: "CANCEL"
-      }).then(result => {
+        cancelButtonText: "CANCEL",
+      }).then((result) => {
         if (result.value) {
           this.terminateParent();
         }
@@ -477,23 +582,23 @@ export default {
         customClass: "swal-wide",
         confirmButtonText: "CONFIRM",
         reverseButtons: true,
-        cancelButtonText: "CANCEL"
-      }).then(result => {
+        cancelButtonText: "CANCEL",
+      }).then((result) => {
         this.parentProfileEditing = false;
         if (result.value) {
           let allowedNumberOfLines = this.pricePlans.find(
-            m => m.id == this.selectedPricePlan
+            (m) => m.id == this.selectedPricePlan
           ).numberOfLines;
           if (allowedNumberOfLines - 1 < this.totalChildCount) {
             this.$store.commit("notis/setAlert", {
               type: "error",
               title:
                 "To downgrade price plan, extra child needs to be deleted.",
-              time: "4"
+              time: "4",
             });
             this.selectedPricePlan = this.parentProfile.pricePlanDetails.id;
             this.objSelectedPricePlan = this.pricePlans.find(
-              m => m.id == this.selectedPricePlan
+              (m) => m.id == this.selectedPricePlan
             );
           } else {
             this.changeParentPP(this.selectedPricePlan);
@@ -502,7 +607,7 @@ export default {
         } else {
           this.selectedPricePlan = this.parentProfile.pricePlanDetails.id;
           this.objSelectedPricePlan = this.pricePlans.find(
-            m => m.id == this.selectedPricePlan
+            (m) => m.id == this.selectedPricePlan
           );
         }
       });
@@ -510,178 +615,190 @@ export default {
     changeParentPP(newPPId) {
       let obj = {
         parentMsisdn: this.parentProfile.msisdn,
-        newFPPricePlanId: newPPId
+        newFPPricePlanId: newPPId,
       };
-      Vue.$http.post("/parent/changeParentPP", obj).then(result => {
-        if (result.errorCode == "00") {
-          this.$store.commit("notis/setAlert", {
-            type: "success",
-            title: result.errorMsg,
-            time: "4"
-          });
-          this.getParentProfile();
-        } else {
-          this.$store.commit("notis/setAlert", {
-            type: "error",
-            title: result.errorMsg,
-            time: "4"
-          });
-        }
-      });
-    },
-    getFPPricePlan: function() {
-      let _this = this;
-      return new Promise(resolve => {
-        Vue.$http.post("/general/getFPPricePlan", {}).then(result => {
+      Vue.$http
+        .post(`${this.baseUrl}/parent/changeParentPP`, obj)
+        .then((result) => {
           if (result.errorCode == "00") {
-            _this.pricePlans = result.data;
-            resolve();
+            this.$store.commit("notis/setAlert", {
+              type: "success",
+              title: result.errorMsg,
+              time: "4",
+            });
+            this.getParentProfile();
+          } else {
+            this.$store.commit("notis/setAlert", {
+              type: "error",
+              title: result.errorMsg,
+              time: "4",
+            });
           }
         });
+    },
+    getFPPricePlan: function () {
+      let _this = this;
+      return new Promise((resolve) => {
+        Vue.$http
+          .post(`${this.baseUrl}/general/getFPPricePlan`, {})
+          .then((result) => {
+            if (result.errorCode == "00") {
+              _this.pricePlans = result.data;
+              resolve();
+            }
+          });
       });
     },
     getOtherPricePlan() {
-      return new Promise(resolve => {
+      return new Promise((resolve) => {
         let param = {
           parentMsisdn: this.parentMsisdn,
-          typeOfPricePlan: "PREPAID"
+          typeOfPricePlan: "PREPAID",
         };
-        Vue.$http.post("/general/getOtherPricePlan", param).then(result => {
-          if (result.errorCode == "00") {
-            var obj = {};
-            result.data.forEach(element => {
-              obj[element.id] = element.name;
-            });
-            resolve(obj);
-          }
-        });
+        Vue.$http
+          .post(`${this.baseUrl}/general/getOtherPricePlan`, param)
+          .then((result) => {
+            if (result.errorCode == "00") {
+              var obj = {};
+              result.data.forEach((element) => {
+                obj[element.id] = element.name;
+              });
+              resolve(obj);
+            }
+          });
       });
     },
-    getParentProfile: function() {
+    getParentProfile: function () {
       let _this = this;
       let products = [];
       let obj = { parentMsisdn: _this.parentMsisdn };
-      Vue.$http.post("/parent/getParentProfile", obj).then(result => {
-        if (result.errorCode == "00") {
-          _this.parentProfile = result.data.parentProfile;
-          _this.renewedDate = result.data.renewedDate;
-          _this.reinitiateRenewal = result.data.reinitiateRenewal;
-          products = result.data.parentProfile.pricePlanDetails.productList.filter(
-            m => m.isShareable == 1
-          );
+      Vue.$http
+        .post(`${this.baseUrl}/parent/getParentProfile`, obj)
+        .then((result) => {
+          if (result.errorCode == "00") {
+            _this.parentProfile = result.data.parentProfile;
+            _this.renewedDate = result.data.renewedDate;
+            _this.reinitiateRenewal = result.data.reinitiateRenewal;
+            products =
+              result.data.parentProfile.pricePlanDetails.productList.filter(
+                (m) => m.isShareable == 1
+              );
 
-          _this.SMSId = products.find(
-            m => m.productInfo.productType == "SMS"
-          ).productId;
-          _this.OnNetCallId = products.find(
-            m => m.productInfo.productType == "VOICE-ONNET"
-          ).productId;
-          _this.OffNetCallId = products.find(
-            m => m.productInfo.productType == "VOICE-OFFNET"
-          ).productId;
-          _this.DataId = products.find(
-            m => m.productInfo.productType == "DATA"
-          ).productId;
+            _this.SMSId = products.find(
+              (m) => m.productInfo.productType == "SMS"
+            ).productId;
+            _this.OnNetCallId = products.find(
+              (m) => m.productInfo.productType == "VOICE-ONNET"
+            ).productId;
+            _this.OffNetCallId = products.find(
+              (m) => m.productInfo.productType == "VOICE-OFFNET"
+            ).productId;
+            _this.DataId = products.find(
+              (m) => m.productInfo.productType == "DATA"
+            ).productId;
 
-          sessionStorage.setItem("SMSId", _this.SMSId);
-          sessionStorage.setItem("OnNetCallId", _this.OnNetCallId);
-          sessionStorage.setItem("OffNetCallId", _this.OffNetCallId);
-          sessionStorage.setItem("DataId", _this.DataId);
+            sessionStorage.setItem("SMSId", _this.SMSId);
+            sessionStorage.setItem("OnNetCallId", _this.OnNetCallId);
+            sessionStorage.setItem("OffNetCallId", _this.OffNetCallId);
+            sessionStorage.setItem("DataId", _this.DataId);
 
-          this.parentMonthlyBalance = result.data.parentMonthlyBalance;
-          this.selectedPricePlan = this.parentProfile.pricePlanDetails.id;
-          this.objSelectedPricePlan = this.pricePlans.find(
-            m => m.id == this.selectedPricePlan
-          );
+            this.parentMonthlyBalance = result.data.parentMonthlyBalance;
+            this.selectedPricePlan = this.parentProfile.pricePlanDetails.id;
+            this.objSelectedPricePlan = this.pricePlans.find(
+              (m) => m.id == this.selectedPricePlan
+            );
 
-          _this.totalChildCount = result.data.totalChildCount;
+            _this.totalChildCount = result.data.totalChildCount;
 
-          // _this.parentResources = _this.getParentResources(
-          //   _this.parentMonthlyBalance
-          // );
-          _this.IsNonShareableResourceExists = _this.parentMonthlyBalance.find(
-            m => m.isFPService == 0
-          );
-          _this.IsNonShareableAddOnResourceExists = _this.parentMonthlyBalance.find(
-            m => m.isFPService == 3
-          );
-          _this.IsShareableAddOnResourceExists = _this.parentMonthlyBalance.find(
-            m => m.isFPService == 2
-          );
+            // _this.parentResources = _this.getParentResources(
+            //   _this.parentMonthlyBalance
+            // );
+            _this.IsNonShareableResourceExists =
+              _this.parentMonthlyBalance.find((m) => m.isFPService == 0);
+            _this.IsNonShareableAddOnResourceExists =
+              _this.parentMonthlyBalance.find((m) => m.isFPService == 3);
+            _this.IsShareableAddOnResourceExists =
+              _this.parentMonthlyBalance.find((m) => m.isFPService == 2);
 
-          console.log(this.parentProfile);
-        }
-      });
+            console.log(this.parentProfile);
+          }
+        });
     },
     unsubscribeParent(newPricePlan) {
       let obj = {
         parentMsisdn: this.parentMsisdn,
-        newPricePlanId: newPricePlan
+        newPricePlanId: newPricePlan,
       };
       return new Promise(() => {
-        Vue.$http.post("/parent/unsubscribeParent", obj).then(result => {
-          if (result.errorCode == "00") {
-            this.$store.commit("notis/setAlert", {
-              type: "success",
-              title: result.errorMsg,
-              time: "4"
-            });
-            this.getParentProfile();
-          } else {
-            this.$store.commit("notis/setAlert", {
-              type: "error",
-              title: result.errorMsg,
-              time: "4"
-            });
-          }
-        });
+        Vue.$http
+          .post(`${this.baseUrl}/parent/unsubscribeParent`, obj)
+          .then((result) => {
+            if (result.errorCode == "00") {
+              this.$store.commit("notis/setAlert", {
+                type: "success",
+                title: result.errorMsg,
+                time: "4",
+              });
+              this.getParentProfile();
+            } else {
+              this.$store.commit("notis/setAlert", {
+                type: "error",
+                title: result.errorMsg,
+                time: "4",
+              });
+            }
+          });
       });
     },
     resumeParent() {
       let obj = {
-        parentMsisdn: this.parentMsisdn
+        parentMsisdn: this.parentMsisdn,
       };
       return new Promise(() => {
-        Vue.$http.post("/parent/resumeParent", obj).then(result => {
-          if (result.errorCode == "00") {
-            this.$store.commit("notis/setAlert", {
-              type: "success",
-              title: result.errorMsg,
-              time: "4"
-            });
-            this.getParentProfile();
-          } else {
-            this.$store.commit("notis/setAlert", {
-              type: "error",
-              title: result.errorMsg,
-              time: "4"
-            });
-          }
-        });
+        Vue.$http
+          .post(`${this.baseUrl}/parent/resumeParent`, obj)
+          .then((result) => {
+            if (result.errorCode == "00") {
+              this.$store.commit("notis/setAlert", {
+                type: "success",
+                title: result.errorMsg,
+                time: "4",
+              });
+              this.getParentProfile();
+            } else {
+              this.$store.commit("notis/setAlert", {
+                type: "error",
+                title: result.errorMsg,
+                time: "4",
+              });
+            }
+          });
       });
     },
 
     terminateParent() {
       let obj = {
-        parentMsisdn: this.parentMsisdn
+        parentMsisdn: this.parentMsisdn,
       };
       return new Promise(() => {
-        Vue.$http.post("/parent/terminateParent", obj).then(result => {
-          if (result.errorCode == "00") {
-            this.$store.commit("notis/setAlert", {
-              type: "success",
-              title: result.errorMsg,
-              time: "4"
-            });
-            this.getParentProfile();
-          } else {
-            this.$store.commit("notis/setAlert", {
-              type: "error",
-              title: result.errorMsg,
-              time: "4"
-            });
-          }
-        });
+        Vue.$http
+          .post(`${this.baseUrl}/parent/terminateParent`, obj)
+          .then((result) => {
+            if (result.errorCode == "00") {
+              this.$store.commit("notis/setAlert", {
+                type: "success",
+                title: result.errorMsg,
+                time: "4",
+              });
+              this.getParentProfile();
+            } else {
+              this.$store.commit("notis/setAlert", {
+                type: "error",
+                title: result.errorMsg,
+                time: "4",
+              });
+            }
+          });
       });
     },
 
@@ -696,7 +813,7 @@ export default {
     },
     getOnNetVal(_parentMonthlyBalance) {
       let obj = _parentMonthlyBalance.find(
-        m => m.parentProductId.productId == this.OnNetCallId
+        (m) => m.parentProductId.productId == this.OnNetCallId
       );
       if (obj) {
         return obj.monthlyQuota;
@@ -705,7 +822,7 @@ export default {
     },
     getOffNetVal(_parentMonthlyBalance) {
       let obj = _parentMonthlyBalance.find(
-        m => m.parentProductId.productId == this.OffNetCallId
+        (m) => m.parentProductId.productId == this.OffNetCallId
       );
       if (obj) {
         return obj.monthlyQuota;
@@ -714,7 +831,7 @@ export default {
     },
     getSMSVal(_parentMonthlyBalance) {
       let obj = _parentMonthlyBalance.find(
-        m => m.parentProductId.productId == this.SMSId
+        (m) => m.parentProductId.productId == this.SMSId
       );
       if (obj) {
         return obj.monthlyQuota;
@@ -723,7 +840,7 @@ export default {
     },
     getDataVal(_parentMonthlyBalance) {
       let obj = _parentMonthlyBalance.find(
-        m => m.parentProductId.productId == this.DataId
+        (m) => m.parentProductId.productId == this.DataId
       );
       if (obj) {
         return obj.monthlyQuota;
@@ -735,7 +852,7 @@ export default {
         onNetVal: this.getOnNetVal(_parentMonthlyBalance),
         offNetVal: this.getOffNetVal(_parentMonthlyBalance),
         smsVal: this.getSMSVal(_parentMonthlyBalance),
-        gbVal: this.getDataVal(_parentMonthlyBalance)
+        gbVal: this.getDataVal(_parentMonthlyBalance),
       };
     },
     refresh() {
@@ -780,9 +897,9 @@ export default {
     getSumOfChildsQuota(productId) {
       let totalChildQuota = 0;
       if (this.childAccounts) {
-        this.childAccounts.forEach(child => {
+        this.childAccounts.forEach((child) => {
           let _childMonthlyConfig = child.childMonthlyConfig.find(
-            m => m.childProductId.productId == productId
+            (m) => m.childProductId.productId == productId
           );
           if (_childMonthlyConfig && _childMonthlyConfig.monthlyQuota) {
             totalChildQuota =
@@ -795,7 +912,7 @@ export default {
     getChildProductValue(product, child) {
       if (child && product) {
         let _childProduct = child.childMonthlyConfig.find(
-          m => m.childProductId.productId == product.productId
+          (m) => m.childProductId.productId == product.productId
         );
         if (
           _childProduct &&
@@ -819,7 +936,7 @@ export default {
     getChildProductPct(product, child) {
       if (child && product) {
         let _childMonthlyBalance = child.childMonthlyConfig.find(
-          m => m.childProductId.productId == product.productId
+          (m) => m.childProductId.productId == product.productId
         );
         if (
           _childMonthlyBalance &&
@@ -839,13 +956,15 @@ export default {
     },
     getChildsOfParent(parentMsisdn) {
       let obj = { parentMsisdn };
-      Vue.$http.post("/parent/getChildsOfParent", obj).then(result => {
-        if (result.errorCode == "00") {
-          this.childAccounts = result.data.childDetails;
-          this.monthlyResourcesComponentKey += 1;
-        }
-      });
-    }
+      Vue.$http
+        .post(`${this.baseUrl}/parent/getChildsOfParent`, obj)
+        .then((result) => {
+          if (result.errorCode == "00") {
+            this.childAccounts = result.data.childDetails;
+            this.monthlyResourcesComponentKey += 1;
+          }
+        });
+    },
   },
   mounted() {
     this.parentMsisdn = sessionStorage.getItem("ParentMSISDN");
@@ -855,18 +974,20 @@ export default {
         .commit("notis/setAlert", {
           type: "error",
           title: "Parent MSISDN Not Found.",
-          time: "4"
+          time: "4",
         })
         .then(() => {
           this.$router.push({ name: "fpUserType" });
         });
     }
+
     this.getFPPricePlan().then(() => {
       this.getParentProfile();
       this.getChildsOfParent(this.parentMsisdn);
     });
-    // this.getProducts().then(() => {});
-  }
+
+    this.baseUrl = utils.getBaseUrl();
+  },
 };
 </script>
 <style scoped>

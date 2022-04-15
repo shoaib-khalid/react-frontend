@@ -10,7 +10,9 @@
             <router-link to="/report/list">Reports</router-link>
           </li>
           <li class="activePage">
-            <p href title="Daily Subscription" class="animation">Daily Subscription</p>
+            <p href title="Daily Subscription" class="animation">
+              Daily Subscription
+            </p>
           </li>
           <div class="clear"></div>
         </ul>
@@ -43,7 +45,11 @@
                 :error-messages="errors.first('Date From')"
               ></v-text-field>
             </template>
-            <v-date-picker :max="endDate" v-model="startDate" @input="dateMenuFrom = false"></v-date-picker>
+            <v-date-picker
+              :max="endDate"
+              v-model="startDate"
+              @input="dateMenuFrom = false"
+            ></v-date-picker>
           </v-menu>
         </div>
         <div class="col-md-3">
@@ -69,20 +75,35 @@
                 :error-messages="errors.first('Date Until')"
               ></v-text-field>
             </template>
-            <v-date-picker :min="startDate" v-model="endDate" @input="dateMenuTo = false"></v-date-picker>
+            <v-date-picker
+              :min="startDate"
+              v-model="endDate"
+              @input="dateMenuTo = false"
+            ></v-date-picker>
           </v-menu>
         </div>
       </div>
       <div class="row">
         <div class="col-md-1"></div>
         <div class="col-md-3">
-          <v-text-field v-model="parentMsisdn" name="ParentMsisdn" label="Parent Msisdn"></v-text-field>
+          <v-text-field
+            v-model="parentMsisdn"
+            name="ParentMsisdn"
+            label="Parent Msisdn"
+          ></v-text-field>
         </div>
         <div class="col-md-3">
-          <v-select :clearable="true" :items="statuses" label="Status" v-model="status"></v-select>
+          <v-select
+            :clearable="true"
+            :items="statuses"
+            label="Status"
+            v-model="status"
+          ></v-select>
         </div>
         <div class="col-md-2">
-          <v-btn round color="#3498db" @click="navigateToSearch" dark>Search</v-btn>
+          <v-btn round color="#3498db" @click="navigateToSearch" dark
+            >Search</v-btn
+          >
         </div>
       </div>
       <div class="row pb-2">
@@ -93,7 +114,8 @@
               :fields="json_fields"
               type="csv"
               name="Daily Subscription.xls"
-            >Download Excel</download-excel>
+              >Download Excel</download-excel
+            >
           </v-btn>
         </div>
       </div>
@@ -106,27 +128,47 @@
           :rows-per-page-items="[10]"
         >
           <template v-slot:items="props">
-            <td>{{ props.item.parentDetails ? props.item.parentDetails.msisdn : "-" }}</td>
+            <td>
+              {{
+                props.item.parentDetails ? props.item.parentDetails.msisdn : "-"
+              }}
+            </td>
             <td>{{ props.item.created ? props.item.created : "-" }}</td>
-            <td>{{ props.item.newPricePlanDetails ? props.item.newPricePlanDetails.name : "-" }}</td>
-            <td>{{ props.item.newPricePlanDetails ? props.item.newPricePlanDetails.lineRent :"-" }}</td>
-            <td>{{ props.item.channel ? props.item.channel:"-" }}</td>
-            <td>{{ props.item.transactionStatus ? props.item.transactionStatus:"-" }}</td>
+            <td>
+              {{
+                props.item.newPricePlanDetails
+                  ? props.item.newPricePlanDetails.name
+                  : "-"
+              }}
+            </td>
+            <td>
+              {{
+                props.item.newPricePlanDetails
+                  ? props.item.newPricePlanDetails.lineRent
+                  : "-"
+              }}
+            </td>
+            <td>{{ props.item.channel ? props.item.channel : "-" }}</td>
+            <td>
+              {{
+                props.item.transactionStatus
+                  ? props.item.transactionStatus
+                  : "-"
+              }}
+            </td>
           </template>
           <template v-slot:no-results>
-            <v-alert
-              :value="true"
-              color="error"
-              icon="warning"
-            >Your search for "{{ search }}" found no results.</v-alert>
+            <v-alert :value="true" color="error" icon="warning"
+              >Your search for "{{ search }}" found no results.</v-alert
+            >
           </template>
         </v-data-table>
       </div>
     </div>
     <div v-if="errorMsg">
-      <div style="width:100%; height:100%" class="card">
+      <div style="width: 100%; height: 100%" class="card">
         <div class="card-block p-5">
-          <h3>{{errorMsg}}</h3>
+          <h3>{{ errorMsg }}</h3>
         </div>
       </div>
     </div>
@@ -135,6 +177,7 @@
 <script>
 import moment from "moment";
 import utils from "../../utils";
+import Vue from "vue";
 
 export default {
   data() {
@@ -143,110 +186,111 @@ export default {
         { text: "PENDING", value: "PENDING" },
         { text: "SUCCESS", value: "SUCCESS" },
         { text: "FAILED", value: "FAILED" },
-        { text: "CANCELLED", value: "CANCELLED" }
+        { text: "CANCELLED", value: "CANCELLED" },
       ],
+      baseReportUrl: "",
       search: "",
       json_fields: {
         Number: {
           field: "parentDetails",
-          callback: parentDetails => {
+          callback: (parentDetails) => {
             if (parentDetails) {
               return parentDetails.msisdn;
             } else {
               return "-";
             }
-          }
+          },
         },
         "Date of Subscription": {
           field: "created",
-          callback: created => {
+          callback: (created) => {
             if (created) {
               return created;
             } else {
               return "-";
             }
-          }
+          },
         },
         "Price Plan": {
           field: "newPricePlanDetails",
-          callback: newPricePlanDetails => {
+          callback: (newPricePlanDetails) => {
             if (newPricePlanDetails) {
               return newPricePlanDetails.name;
             } else {
               return "-";
             }
-          }
+          },
         },
         "Line Rent Amount": {
           field: "newPricePlanDetails",
-          callback: newPricePlanDetails => {
+          callback: (newPricePlanDetails) => {
             if (newPricePlanDetails) {
               return newPricePlanDetails.lineRent;
             } else {
               return "-";
             }
-          }
+          },
         },
         Channel: {
           field: "channel",
-          callback: channel => {
+          callback: (channel) => {
             if (channel) {
               return channel;
             } else {
               return "-";
             }
-          }
+          },
         },
         Status: {
           field: "transactionStatus",
-          callback: transactionStatus => {
+          callback: (transactionStatus) => {
             if (transactionStatus) {
               return transactionStatus;
             } else {
               return "-";
             }
-          }
-        }
+          },
+        },
       },
       items: [],
       pagination: {
         page: 1,
         rowsPerPage: 10,
         totalPages: undefined,
-        totalItems: undefined
+        totalItems: undefined,
       },
       errorMsg: "",
       headers: [
         {
           text: "Number",
           value: "Number",
-          sortable: false
+          sortable: false,
         },
         {
           text: "DateofSubscription",
           value: "DateofSubscription",
-          sortable: false
+          sortable: false,
         },
         {
           text: "PricePlan",
           value: "PricePlan",
-          sortable: false
+          sortable: false,
         },
         {
           text: "Line Rent Amount",
           value: "LineRentAmount",
-          sortable: false
+          sortable: false,
         },
         {
           text: "Channel",
           value: "Channel",
-          sortable: false
+          sortable: false,
         },
         {
           text: "Status",
           value: "Status",
-          sortable: false
-        }
+          sortable: false,
+        },
       ],
       consentReport: [],
       exportData: [],
@@ -255,16 +299,16 @@ export default {
       parentMsisdn: "",
       status: "",
       startDate: moment().format("YYYY-MM-DD"),
-      endDate: moment().format("YYYY-MM-DD")
+      endDate: moment().format("YYYY-MM-DD"),
     };
   },
   watch: {
-    pagination: function(news, olds) {
+    pagination: function (news, olds) {
       this.navigateToSearch();
     },
-    "$route.query": function() {
+    "$route.query": function () {
       this.getReport();
-    }
+    },
   },
   methods: {
     async fetchData() {
@@ -281,10 +325,10 @@ export default {
             startDate: this.startDate,
             endDate: this.endDate,
             ...(this.parentMsisdn && { parentMsisdn: this.parentMsisdn }),
-            ...(this.status && { status: this.status })
-          }
+            ...(this.status && { status: this.status }),
+          },
         })
-        .catch(error => {
+        .catch((error) => {
           this.$router.push("/");
           this.$router.push({
             name: "report.subscription",
@@ -294,8 +338,8 @@ export default {
               startDate: this.startDate,
               endDate: this.endDate,
               ...(this.parentMsisdn && { parentMsisdn: this.parentMsisdn }),
-              ...(this.status && { status: this.status })
-            }
+              ...(this.status && { status: this.status }),
+            },
           });
         });
     },
@@ -313,16 +357,14 @@ export default {
           parentMsisdn: this.parentMsisdn,
           status: this.status,
           pageNumber: this.pagination.page,
-          pageSize: isExport ? 999999 : this.pagination.rowsPerPage
+          pageSize: isExport ? 999999 : this.pagination.rowsPerPage,
         };
         let query = utils.getQueryString(obj);
-        await this.$http
+        await Vue.$http
           .get(
-            window.ReportBaseURL +
-              "/reportdaily/subscriptionReportDaily" +
-              query
+            `${this.baseReportUrl}/reportdaily/subscriptionReportDaily${query}`
           )
-          .then(result => {
+          .then((result) => {
             if (result.errorCode == "00") {
               if (isExport) {
                 this.exportData = result.data.content;
@@ -347,20 +389,18 @@ export default {
           : this.pagination.rowsPerPage;
         this.startDate = obj.startDate
           ? obj.startDate
-          : moment()
-              .subtract(1, "months")
-              .format("YYYY-MM-DD");
+          : moment().subtract(1, "months").format("YYYY-MM-DD");
         this.endDate = obj.endDate
           ? obj.endDate
           : moment().format("YYYY-MM-DD");
         this.parentMsisdn = obj.parentMsisdn;
         this.status = obj.status;
       }
-    }
+    },
   },
   computed: {
-    tableData: function() {
-      return this.consentReport.map(data => {
+    tableData: function () {
+      return this.consentReport.map((data) => {
         data.consentSentTime = moment(
           data.consentSentTime,
           "YYYY-MM-DD HH:mm:ss"
@@ -371,9 +411,11 @@ export default {
         ).format("DD/MM/YYYY HH:mm:ss");
         return data;
       });
-    }
+    },
   },
-  mounted() {}
+  mounted() {
+    this.baseReportUrl = utils.getBaseReportUrl();
+  },
 };
 </script>
 <style>

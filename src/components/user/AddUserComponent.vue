@@ -67,7 +67,14 @@
               ></v-autocomplete>
             </v-flex>
             <v-flex xs12 px-4 py-2 class="text-right">
-              <v-btn round @click="handleSubmit" :disabled="loading" color="#3498db" dark>Add User</v-btn>
+              <v-btn
+                round
+                @click="handleSubmit"
+                :disabled="loading"
+                color="#3498db"
+                dark
+                >Add User</v-btn
+              >
             </v-flex>
           </v-layout>
         </form>
@@ -76,11 +83,13 @@
   </div>
 </template>
 <script>
-import Swal from "sweetalert2";
 import Vue from "vue";
+import utils from "../../utils";
+
 export default {
   // props: ['userId'],
   data: () => ({
+    baseUrl: "",
     company_list: [],
     roles: [],
     account: {
@@ -91,14 +100,13 @@ export default {
       rpassword: "",
       company_id: "",
       channel: "WEB",
-      role: null
+      role: null,
     },
     loading: false,
-    submitted: false
+    submitted: false,
   }),
   methods: {
     AvoidSpace(event) {
-       
       var k = event ? event.which : window.event.keyCode;
       if (k == 32) {
         event.preventDefault();
@@ -107,40 +115,44 @@ export default {
     },
     handleSubmit() {
       this.submitted = true;
-      this.$validator.validateAll().then(status => {
+      this.$validator.validateAll().then((status) => {
         if (status) {
-          Vue.$http.post("/user/addUser", this.account).then(result => {
-            if (result.errorCode == "00") {
-              this.$store.commit("notis/setAlert", {
-                type: "success",
-                title: result.errorMsg,
-                time: "4"
-              });
-              this.$router.push({ name: "user.list" });
-            } else {
-              this.$store.commit("notis/setAlert", {
-                type: "error",
-                title: result.errorMsg,
-                time: "4"
-              });
-            }
-          });
+          Vue.$http
+            .post(`${this.baseUrl}/user/addUser`, this.account)
+            .then((result) => {
+              if (result.errorCode == "00") {
+                this.$store.commit("notis/setAlert", {
+                  type: "success",
+                  title: result.errorMsg,
+                  time: "4",
+                });
+                this.$router.push({ name: "user.list" });
+              } else {
+                this.$store.commit("notis/setAlert", {
+                  type: "error",
+                  title: result.errorMsg,
+                  time: "4",
+                });
+              }
+            });
         }
       });
     },
     loadRolePermission() {
       let that = this;
-      this.$http.post("/permission/getRole", {}).then(result => {
-        if (result.errorCode == "00") {
-          that.roles = result.data;
-        }
-      });
-    }
+      Vue.$http
+        .post(`${this.baseUrl}/permission/getRole`, {})
+        .then((result) => {
+          if (result.errorCode == "00") {
+            that.roles = result.data;
+          }
+        });
+    },
   },
   mounted() {
-    //this.loadCompanyList();
     this.loadRolePermission();
-  }
+    this.baseUrl = utils.getBaseUrl();
+  },
 };
 </script>
 <style>

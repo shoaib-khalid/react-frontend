@@ -22,7 +22,9 @@
               <div
                 v-if="submitted && errors.has('email')"
                 class="invalid-feedback"
-              >{{ errors.first('email') }}</div>
+              >
+                {{ errors.first("email") }}
+              </div>
             </div>
           </div>
           <div class="form-group row">
@@ -42,13 +44,17 @@
               <div
                 v-if="submitted && errors.has('name')"
                 class="invalid-feedback"
-              >{{ errors.first('name') }}</div>
+              >
+                {{ errors.first("name") }}
+              </div>
             </div>
           </div>
           <hr />
           <div class="form-group row">
             <div class="col-sm-5 col-sm-offset-2">
-              <button :disabled="loading" class="btn btn-primary">Update</button>
+              <button :disabled="loading" class="btn btn-primary">
+                Update
+              </button>
             </div>
           </div>
         </form>
@@ -58,62 +64,70 @@
 </template>
 <script>
 import Vue from "vue";
+import utils from "../../utils";
+
 export default {
   props: ["id"],
   data: () => ({
+    baseUrl: "",
     user: {
       id: "",
       name: "",
-      email: ""
+      email: "",
     },
     loading: false,
-    submitted: false
+    submitted: false,
   }),
   methods: {
     handleSubmit(e) {
       this.submitted = true;
-      this.$validator.validate().then(valid => {
+      this.$validator.validate().then((valid) => {
         if (valid) {
           this.loading = true;
           this.submitted = true;
-          Vue.$http.post("/user/updateUser", this.user).then(result => {
-            if (result.errorCode == "00") {
-              this.$store.commit("notis/setAlert", {
-                type: "success",
-                title: result.errorMsg,
-                time: "4"
-              });
-              this.$router.push({ name: "user" });
-            } else {
-              this.$store.commit("notis/setAlert", {
-                type: "error",
-                title: result.errorMsg,
-                time: "4"
-              });
-            }
-          });
+          Vue.$http
+            .post(`${this.getBaseUrl}/user/updateUser`, this.user)
+            .then((result) => {
+              if (result.errorCode == "00") {
+                this.$store.commit("notis/setAlert", {
+                  type: "success",
+                  title: result.errorMsg,
+                  time: "4",
+                });
+                this.$router.push({ name: "user" });
+              } else {
+                this.$store.commit("notis/setAlert", {
+                  type: "error",
+                  title: result.errorMsg,
+                  time: "4",
+                });
+              }
+            });
         } else {
           console.log(valid);
         }
       });
     },
-    loadUserInfo: function() {
+    loadUserInfo: function () {
       let obj = {
-        id: this.$route.params.id
+        id: this.$route.params.id,
       };
-      Vue.$http.post("/user/getUserDetails", obj).then(result => {
-        this.user.id = result.data.id;
-        this.user.name = result.data.name;
-        this.user.email = result.data.email;
-      });
-    }
+      Vue.$http
+        .post(`${this.getBaseUrl}/user/getUserDetails`, obj)
+        .then((result) => {
+          this.user.id = result.data.id;
+          this.user.name = result.data.name;
+          this.user.email = result.data.email;
+        });
+    },
   },
   mounted() {
+    this.baseUrl = utils.getBaseUrl();
     if (this.$route.params.id) this.loadUserInfo();
     else {
       this.$router.push({ name: "user" });
     }
-  }
+  },
 };
 </script>
 <style>

@@ -4,12 +4,17 @@
       class="row"
       :key="'child' + i"
       v-for="(child, i) in childAccounts"
-      v-bind:class="{ redish: child.childProfile.status!='ACTIVE' }"
+      v-bind:class="{ redish: child.childProfile.status != 'ACTIVE' }"
     >
-      <form class="col-md-12 pl-3 pr-3" @submit.prevent="handleFpChileUser(child,i)">
+      <form
+        class="col-md-12 pl-3 pr-3"
+        @submit.prevent="handleFpChileUser(child, i)"
+      >
         <div class="row pt-2">
           <div class="col-md-12">
-            <h5 class="single-line user-heading">USER {{ ('0' + (i+1)).slice(-2)}} PROFILE</h5>
+            <h5 class="single-line user-heading">
+              USER {{ ("0" + (i + 1)).slice(-2) }} PROFILE
+            </h5>
             <span
               title="Edit"
               v-if="child.childProfile.id"
@@ -18,23 +23,28 @@
             >
               <i class="material-icons">edit</i>
             </span>
-            <span title="Delete" class="cursor-pointer pl-2" @click="DeleteChild(child)">
+            <span
+              title="Delete"
+              class="cursor-pointer pl-2"
+              @click="DeleteChild(child)"
+            >
               <i class="material-icons">delete_forever</i>
             </span>
-            <span 
-              v-if="child.childProfile.status=='ACTIVE'"
+            <span
+              v-if="child.childProfile.status == 'ACTIVE'"
               title="Unsubscribe"
               class="cursor-pointer pl-2"
               @click="UnsubscribeChild(child)"
             >
               <i class="material-icons">link_off</i>
             </span>
-            <span v-if="child.childProfile.status=='PENDING_CBS'"
+            <span
+              v-if="child.childProfile.status == 'PENDING_CBS'"
               title="terminate"
               class="cursor-pointer pl-2"
               @click="terminateChild(child)"
             >
-                <i class="material-icons">link_off</i>
+              <i class="material-icons">link_off</i>
             </span>
           </div>
           <div class="col-md-5">
@@ -54,7 +64,7 @@
                   label="MSISDN"
                 ></v-text-field>
                 <h5 class="mt-3" v-if="child.childProfile.id">
-                  MSISDN: {{child.childProfile.msisdn}}
+                  MSISDN: {{ child.childProfile.msisdn }}
                   <span
                     title="Update MSISDN"
                     class="pl-2 cursor-pointer"
@@ -70,38 +80,68 @@
               <div class="col-sm-12">
                 <template>
                   <v-expansion-panel expand v-model="child.panel1">
-                    <v-expansion-panel-content :key="'v-expansion-panel-content_1'">
+                    <v-expansion-panel-content
+                      :key="'v-expansion-panel-content_1'"
+                    >
                       <template v-slot:header>
                         <div class="font-weight-bold">
                           MONTHLY SHARING
                           <br />
-                          <span class="small">(WILL BE POSTED ON MONTHLY RENEWAL)</span>
+                          <span class="small"
+                            >(WILL BE POSTED ON MONTHLY RENEWAL)</span
+                          >
                         </div>
                       </template>
                       <v-card>
-                        <div class="row pl-2 pr-2" :key="`MONTHLY_SHARING_KEY${componentKey}`">
-                          <template v-for="(product, j) in selectedPricePlan.productList">
+                        <div
+                          class="row pl-2 pr-2"
+                          :key="`MONTHLY_SHARING_KEY${componentKey}`"
+                        >
+                          <template
+                            v-for="(
+                              product, j
+                            ) in selectedPricePlan.productList"
+                          >
                             <div
                               :key="'product' + j"
                               class="col-sm-6"
-                              v-if="product.isShareable==1"
+                              v-if="product.isShareable == 1"
                             >
                               <v-text-field
-                                :id="'child_monthly'+(child.childProfile.id ? child.childProfile.id : i)+'_'+product.productId"
+                                :id="
+                                  'child_monthly' +
+                                  (child.childProfile.id
+                                    ? child.childProfile.id
+                                    : i) +
+                                  '_' +
+                                  product.productId
+                                "
                                 v-validate="'required'"
                                 v-mask="'#########'"
-                                :value="getChildMonthlyBalance(child,product)"
-                                @keypress="IsValidValue($event,product)"
+                                :value="getChildMonthlyBalance(child, product)"
+                                @keypress="IsValidValue($event, product)"
                                 type="text"
                                 :disabled="!child.canChange"
-                                :error-messages="errors.collect(`${product.productInfo.productName+i}`)"
+                                :error-messages="
+                                  errors.collect(
+                                    `${product.productInfo.productName + i}`
+                                  )
+                                "
                                 title="Enter Value"
-                                :data-vv-name="`${product.productInfo.productName+i}`"
+                                :data-vv-name="`${
+                                  product.productInfo.productName + i
+                                }`"
                                 :data-vv-as="product.productInfo.productName"
-                                :suffix="`= ${getChildAllocationPct(product, child, i)} %`"
+                                :suffix="`= ${getChildAllocationPct(
+                                  product,
+                                  child,
+                                  i
+                                )} %`"
                               >
                                 <template slot="label">
-                                  <label style="font-size:0.8em">{{product.productInfo.productName}}</label>
+                                  <label style="font-size: 0.8em">{{
+                                    product.productInfo.productName
+                                  }}</label>
                                 </template>
                               </v-text-field>
                             </div>
@@ -113,40 +153,67 @@
                 </template>
                 <template>
                   <v-expansion-panel expand v-model="child.panel2">
-                    <v-expansion-panel-content :key="'v-expansion-panel-content_2'">
+                    <v-expansion-panel-content
+                      :key="'v-expansion-panel-content_2'"
+                    >
                       <template v-slot:header>
                         <div class="font-weight-bold">
                           ONE-TIME SHARING
                           <br />
-                          <span class="small">(WILL BE POSTED INSTANTLY AND WILL NOT BE RENEWAL)</span>
+                          <span class="small"
+                            >(WILL BE POSTED INSTANTLY AND WILL NOT BE
+                            RENEWAL)</span
+                          >
                         </div>
                       </template>
                       <v-card>
-                        <div class="row pl-2 pr-2" :key="`ONE-TIME_SHARING_kEY${componentKey}`">
-                          <template v-for="(product, j) in parentMonthlyBalance">
+                        <div
+                          class="row pl-2 pr-2"
+                          :key="`ONE-TIME_SHARING_kEY${componentKey}`"
+                        >
+                          <template
+                            v-for="(product, j) in parentMonthlyBalance"
+                          >
                             <div
                               :key="'product' + j"
                               class="col-sm-6"
-                              v-if="product.isFPService==1"
+                              v-if="product.isFPService == 1"
                             >
                               <v-text-field
-                                :id="'child_onetime'+ (child.childProfile.id ? child.childProfile.id : i) +'_'+product.parentProductId.productId"
+                                :id="
+                                  'child_onetime' +
+                                  (child.childProfile.id
+                                    ? child.childProfile.id
+                                    : i) +
+                                  '_' +
+                                  product.parentProductId.productId
+                                "
                                 v-validate="'required'"
                                 :value="0"
                                 @keypress="IsNumber($event)"
                                 pattern="^\d*"
                                 v-mask="'######'"
                                 type="text"
-                                :error-messages="errors.collect(`${product.productDetails.productName+'OT'+i}`)"
+                                :error-messages="
+                                  errors.collect(
+                                    `${
+                                      product.productDetails.productName +
+                                      'OT' +
+                                      i
+                                    }`
+                                  )
+                                "
                                 title="Enter Value"
-                                :data-vv-name="`${product.productDetails.productName+'OT'+i}`"
+                                :data-vv-name="`${
+                                  product.productDetails.productName + 'OT' + i
+                                }`"
                                 :disabled="!child.canChange"
                                 :data-vv-as="product.productDetails.productName"
                               >
                                 <template slot="label">
-                                  <label
-                                    style="font-size:0.8em"
-                                  >{{product.productDetails.productName}}</label>
+                                  <label style="font-size: 0.8em">{{
+                                    product.productDetails.productName
+                                  }}</label>
                                 </template>
                               </v-text-field>
                             </div>
@@ -162,11 +229,18 @@
           <div class="col-md-7 align-self-center" v-if="child.childProfile.id">
             <div
               class="row"
-              v-if="((child.childMonthlyBalance && child.childMonthlyBalance.length>0) || (child.childOneTimeBalance && child.childOneTimeBalance.length>0))"
+              v-if="
+                (child.childMonthlyBalance &&
+                  child.childMonthlyBalance.length > 0) ||
+                (child.childOneTimeBalance &&
+                  child.childOneTimeBalance.length > 0)
+              "
             >
               <div class="col-md-12">
                 <div class="table-responsive">
-                  <table class="table table-bordered-outside table-striped small">
+                  <table
+                    class="table table-bordered-outside table-striped small"
+                  >
                     <tbody>
                       <tr class="table-primary">
                         <th>Allocated Resource</th>
@@ -182,8 +256,8 @@
                         <td>{{ getTotalQuota(product) }}</td>
                         <td>{{ getRemainingQuota(product) }}</td>
                         <td>Monthly Sharing</td>
-                        <td>{{product.applyDate | formatDate}}</td>
-                        <td>{{product.expiryDate | formatDate}}</td>
+                        <td>{{ product.applyDate | formatDate }}</td>
+                        <td>{{ product.expiryDate | formatDate }}</td>
                       </tr>
                       <tr
                         :key="'product_rem' + i"
@@ -192,8 +266,8 @@
                         <td>{{ getTotalQuota(product) }}</td>
                         <td>{{ getRemainingQuota(product) }}</td>
                         <td>One Time Bundle Sharing</td>
-                        <td>{{product.applyDate | formatDate}}</td>
-                        <td>{{product.expiryDate | formatDate}}</td>
+                        <td>{{ product.applyDate | formatDate }}</td>
+                        <td>{{ product.expiryDate | formatDate }}</td>
                       </tr>
                     </tbody>
                   </table>
@@ -209,28 +283,38 @@
               :disabled="loading"
               color="#e74c3c"
               @click="stopEdit(child)"
-              style="width:100px"
+              style="width: 100px"
               class="mr-2"
-            >Cancel</v-btn>
+              >Cancel</v-btn
+            >
             <v-btn
               type="submit"
               round
-              :disabled="IsSaveDisabled(child,i)"
+              :disabled="IsSaveDisabled(child, i)"
               color="#3498db"
-              style="width:100px"
-            >Save</v-btn>
+              style="width: 100px"
+              >Save</v-btn
+            >
           </div>
         </div>
       </form>
-      <hr size="50" style="width:100%;border:1px solid #007bff" />
+      <hr size="50" style="width: 100%; border: 1px solid #007bff" />
     </div>
-    <div class="row pl-4" v-if="childAccounts.length < (numberOfLines-1)">
-      <i @click="addChild()" class="material-icons font-lg cursor-pointer">add_circle_outline</i>
+    <div class="row pl-4" v-if="childAccounts.length < numberOfLines - 1">
+      <i @click="addChild()" class="material-icons font-lg cursor-pointer"
+        >add_circle_outline</i
+      >
       <span class="text-uppercase pl-2 pt-3">
-        <h5>add user {{ ('0' + (childAccounts.length+1)).slice(-2)}}</h5>
+        <h5>add user {{ ("0" + (childAccounts.length + 1)).slice(-2) }}</h5>
       </span>
     </div>
-    <b-modal id="modal-updateUser" ref="modal" @ok="handleOk" size="sm" title="UPDATE USER:">
+    <b-modal
+      id="modal-updateUser"
+      ref="modal"
+      @ok="handleOk"
+      size="sm"
+      title="UPDATE USER:"
+    >
       <form ref="form" @submit.stop.prevent="updateUserMSISDN">
         <v-text-field
           v-validate="'required'"
@@ -257,7 +341,7 @@
           label="New MSISDN"
         ></v-text-field>
       </form>
-      <template v-slot:modal-footer="{cancel ,ok}">
+      <template v-slot:modal-footer="{ cancel, ok }">
         <v-btn
           type="reset"
           :small="true"
@@ -265,7 +349,8 @@
           :disabled="loading"
           @click="cancel()"
           class="my-cancel-btn"
-        >Cancel</v-btn>
+          >Cancel</v-btn
+        >
         <v-btn
           type="submit"
           :small="true"
@@ -273,7 +358,8 @@
           :disabled="loading"
           class="my-save-btn"
           @click="ok()"
-        >Save</v-btn>
+          >Save</v-btn
+        >
       </template>
     </b-modal>
   </div>
@@ -289,14 +375,14 @@ export default {
     parentId: String,
     numberOfLines: Number,
     parentMonthlyBalance: {},
-    selectedPricePlan: {}
+    selectedPricePlan: {},
   },
   data: () => ({
     componentKey: 0,
     changeChildMSISDN: {
       parentMsisdn: "",
       oldChildMsisdn: "",
-      newChildMsisdn: ""
+      newChildMsisdn: "",
     },
     childInChange: {},
     childDetail: {
@@ -305,30 +391,30 @@ export default {
       panel2: [true],
       childProfile: {
         id: "",
-        msisdn: ""
+        msisdn: "",
       },
       childMonthlyBalance: [
         {
           childProductId: {
             childId: "",
-            productId: ""
+            productId: "",
           },
           monthlyQuota: 0,
           totalQuota: 0,
-          remainingQuota: 0
-        }
+          remainingQuota: 0,
+        },
       ],
       childOneTimeBalance: [
         {
           childProductId: {
             childId: "",
-            productId: ""
+            productId: "",
           },
           monthlyQuota: 0,
           totalQuota: 0,
-          remainingQuota: 0
-        }
-      ]
+          remainingQuota: 0,
+        },
+      ],
     },
 
     childDataToPost: {
@@ -340,11 +426,11 @@ export default {
             {
               productId: "",
               quota: undefined,
-              unit: "ACTUAL"
-            }
-          ]
-        }
-      ]
+              unit: "ACTUAL",
+            },
+          ],
+        },
+      ],
     },
 
     childAccounts: [],
@@ -352,7 +438,8 @@ export default {
     monthlyQuota: [],
     OTQuota: [],
     loading: false,
-    submitted: false
+    submitted: false,
+    baseUrl: "",
   }),
   methods: {
     getTotalQuota(product) {
@@ -434,22 +521,25 @@ export default {
         customClass: "swal-wide",
         confirmButtonText: "YES",
         reverseButtons: true,
-        cancelButtonText: "NO"
-      }).then(result => {
+        cancelButtonText: "NO",
+      }).then((result) => {
         if (result.value) {
           if (child.childProfile.id) {
             let _childToDelete = {
               parentMsisdn: this.parentMsisdn,
-              childMsisdn: child.childProfile.msisdn
+              childMsisdn: child.childProfile.msisdn,
             };
             Vue.$http
-              .post("/child/deleteChildFromParent", _childToDelete)
-              .then(result => {
+              .post(
+                `${this.baseUrl}/child/deleteChildFromParent`,
+                _childToDelete
+              )
+              .then((result) => {
                 if (result.errorCode == "00") {
                   this.$store.commit("notis/setAlert", {
                     type: "success",
                     title: result.errorMsg,
-                    time: "4"
+                    time: "4",
                   });
                   this.childAccounts.splice(
                     this.childAccounts.indexOf(child),
@@ -460,7 +550,7 @@ export default {
                   this.$store.commit("notis/setAlert", {
                     type: "error",
                     title: result.errorMsg,
-                    time: "4"
+                    time: "4",
                   });
               });
           } else {
@@ -469,7 +559,7 @@ export default {
             this.$store.commit("notis/setAlert", {
               type: "success",
               title: "Successfull delete child",
-              time: "4"
+              time: "4",
             });
           }
         }
@@ -484,28 +574,30 @@ export default {
         customClass: "swal-wide",
         confirmButtonText: "YES",
         reverseButtons: true,
-        cancelButtonText: "NO"
-      }).then(result => {
+        cancelButtonText: "NO",
+      }).then((result) => {
         if (result.value) {
           if (child.childProfile.id) {
             let _childToUnsub = {
               parentMsisdn: this.parentMsisdn,
-              childMsisdn: child.childProfile.msisdn
+              childMsisdn: child.childProfile.msisdn,
             };
-            Vue.$http.post("/child/unsubChild", _childToUnsub).then(result => {
-              if (result.errorCode == "00") {
-                this.$store.commit("notis/setAlert", {
-                  type: "success",
-                  title: result.errorMsg,
-                  time: "4"
-                });
-              } else
-                this.$store.commit("notis/setAlert", {
-                  type: "error",
-                  title: result.errorMsg,
-                  time: "4"
-                });
-            });
+            Vue.$http
+              .post(`${this.baseUrl}/child/unsubChild`, _childToUnsub)
+              .then((result) => {
+                if (result.errorCode == "00") {
+                  this.$store.commit("notis/setAlert", {
+                    type: "success",
+                    title: result.errorMsg,
+                    time: "4",
+                  });
+                } else
+                  this.$store.commit("notis/setAlert", {
+                    type: "error",
+                    title: result.errorMsg,
+                    time: "4",
+                  });
+              });
           }
         }
       });
@@ -520,28 +612,33 @@ export default {
         customClass: "swal-wide",
         confirmButtonText: "YES",
         reverseButtons: true,
-        cancelButtonText: "NO"
-      }).then(result => {
+        cancelButtonText: "NO",
+      }).then((result) => {
         if (result.value) {
           if (child.childProfile.id) {
             let _childToUnsub = {
               parentMsisdn: this.parentMsisdn,
-              childMsisdn: child.childProfile.msisdn
+              childMsisdn: child.childProfile.msisdn,
             };
-            Vue.$http.post("/child/terminateCrmPendingChild", _childToUnsub).then(result => {
-              if (result.errorCode == "00") {
-                this.$store.commit("notis/setAlert", {
-                  type: "success",
-                  title: result.errorMsg,
-                  time: "4"
-                });
-              } else
-                this.$store.commit("notis/setAlert", {
-                  type: "error",
-                  title: result.errorMsg,
-                  time: "4"
-                });
-            });
+            Vue.$http
+              .post(
+                `${this.baseUrl}/child/terminateCrmPendingChild`,
+                _childToUnsub
+              )
+              .then((result) => {
+                if (result.errorCode == "00") {
+                  this.$store.commit("notis/setAlert", {
+                    type: "success",
+                    title: result.errorMsg,
+                    time: "4",
+                  });
+                } else
+                  this.$store.commit("notis/setAlert", {
+                    type: "error",
+                    title: result.errorMsg,
+                    time: "4",
+                  });
+              });
           }
         }
       });
@@ -549,7 +646,7 @@ export default {
 
     handleFpChileUser(child, index) {
       let _this = this;
-      this.validateForm(child, index).then(status => {
+      this.validateForm(child, index).then((status) => {
         if (!status.includes(false)) {
           let _childDataToPost = JSON.parse(
             JSON.stringify(this.childDataToPost)
@@ -561,21 +658,21 @@ export default {
             {
               childMsisdn: child.childProfile.msisdn,
               monthlyQuota: _monthlyQuota,
-              OTQuota: _oTQuota
-            }
+              OTQuota: _oTQuota,
+            },
           ];
           if (child.childProfile.id) {
             this.submitted = true;
             Vue.$http
-              .post("/child/updateChildQuota", _childDataToPost)
-              .then(result => {
+              .post(`${this.baseUrl}/child/updateChildQuota`, _childDataToPost)
+              .then((result) => {
                 if (result.errorCode == "00") {
                   this.$store.commit("notis/setAlert", {
                     type: "success",
                     title: result.errorMsg,
-                    time: "4"
+                    time: "4",
                   });
-                  _this.getChildProfile(child).then(_child => {
+                  _this.getChildProfile(child).then((_child) => {
                     child.childProfile = _child.childProfile;
                     child.childMonthlyBalance = _child.childMonthlyBalance;
                     child.childOneTimeBalance = _child.childOneTimeBalance;
@@ -588,25 +685,25 @@ export default {
                   this.$store.commit("notis/setAlert", {
                     type: "error",
                     title: result.errorMsg,
-                    time: "4"
+                    time: "4",
                   });
                 }
               });
           } else {
             this.submitted = true;
             Vue.$http
-              .post("/child/addChildToParent", _childDataToPost)
-              .then(result => {
+              .post(`${this.baseUrl}/child/addChildToParent`, _childDataToPost)
+              .then((result) => {
                 if (result.errorCode == "00") {
                   this.$store.commit("notis/setAlert", {
                     type: "success",
                     title: result.errorMsg,
-                    time: "4"
+                    time: "4",
                   });
                   child.canChange = false;
                   child.panel1 = [false];
                   child.panel2 = [false];
-                  _this.getChildProfile(child).then(_child => {
+                  _this.getChildProfile(child).then((_child) => {
                     child.childProfile = _child.childProfile;
                     child.childMonthlyBalance = _child.childMonthlyBalance;
                     child.childOneTimeBalance = _child.childOneTimeBalance;
@@ -616,7 +713,7 @@ export default {
                   this.$store.commit("notis/setAlert", {
                     type: "error",
                     title: result.errorMsg,
-                    time: "4"
+                    time: "4",
                   });
                 }
               });
@@ -631,7 +728,7 @@ export default {
           this.$validator.validate("MSISDN" + index, child.msisdn)
         );
       }
-      this.selectedPricePlan.productList.forEach(product => {
+      this.selectedPricePlan.productList.forEach((product) => {
         if (product.isFPService == 1) {
           let monthlyVal = "";
           let childMonthlytInput = document.getElementById(
@@ -652,7 +749,7 @@ export default {
           );
         }
       });
-      this.parentMonthlyBalance.forEach(product => {
+      this.parentMonthlyBalance.forEach((product) => {
         if (product.isFPService == 1) {
           let oneTimeVal = "";
           let childOneTimeInput = document.getElementById(
@@ -677,7 +774,7 @@ export default {
 
     updateUserMSISDN() {
       let _this = this;
-      this.$validator.validateAll().then(status => {
+      this.$validator.validateAll().then((status) => {
         if (status) {
           if (
             _this.changeChildMSISDN.oldChildMsisdn ==
@@ -687,7 +784,7 @@ export default {
               this.$store.commit("notis/setAlert", {
                 type: "error",
                 title: "New msisdns and old msisdn is same",
-                time: "4"
+                time: "4",
               });
             });
           } else {
@@ -695,13 +792,16 @@ export default {
               this.$refs.modal.hide();
             });
             Vue.$http
-              .post("/child/replaceChildOfParent", _this.changeChildMSISDN)
-              .then(result => {
+              .post(
+                `${this.baseUrl}/child/replaceChildOfParent`,
+                _this.changeChildMSISDN
+              )
+              .then((result) => {
                 if (result.errorCode == "00") {
                   this.$store.commit("notis/setAlert", {
                     type: "success",
                     title: result.errorMsg,
-                    time: "4"
+                    time: "4",
                   });
                   // _this.childInChange.childProfile.msisdn =
                   //   _this.changeChildMSISDN.newChildMsisdn;
@@ -710,7 +810,7 @@ export default {
                   this.$store.commit("notis/setAlert", {
                     type: "error",
                     title: result.errorMsg,
-                    time: "4"
+                    time: "4",
                   });
                 }
               });
@@ -730,34 +830,36 @@ export default {
     },
     getChildsOfParent(parentMsisdn) {
       let obj = { parentMsisdn };
-      Vue.$http.post("/parent/getChildsOfParent", obj).then(result => {
-        if (result.errorCode == "00") {
-          this.childAccounts = result.data.childDetails;
-          this.childAccounts.forEach(child => {
-            child.canChange = false;
-            child.panel1 = [false];
-            child.panel2 = [false];
-          });
-        }
-      });
+      Vue.$http
+        .post(`${this.baseUrl}/parent/getChildsOfParent`, obj)
+        .then((result) => {
+          if (result.errorCode == "00") {
+            this.childAccounts = result.data.childDetails;
+            this.childAccounts.forEach((child) => {
+              child.canChange = false;
+              child.panel1 = [false];
+              child.panel2 = [false];
+            });
+          }
+        });
     },
     getChildProfile(child) {
       return new Promise((resolve, reject) => {
         let obj = { childMsisdn: child.childProfile.msisdn };
-        Vue.$http.post("/child/getChildProfile", obj).then(result => {
-          if (result.errorCode == "00") {
-            resolve(result.data);
-          } else {
-            reject(result.errorMsg);
-          }
-        });
+        Vue.$http
+          .post(`${this.baseUrl}/child/getChildProfile`, obj)
+          .then((result) => {
+            if (result.errorCode == "00") {
+              resolve(result.data);
+            } else {
+              reject(result.errorMsg);
+            }
+          });
       });
     },
     getmonthlyQuota(child, index) {
-     
       this.monthlyQuota = [];
-      this.parentMonthlyBalance.forEach(product => {
-          
+      this.parentMonthlyBalance.forEach((product) => {
         if (product.isFPService == "1") {
           let value = 0;
           let childProductInput = document.getElementById(
@@ -776,7 +878,7 @@ export default {
           let childValue = 0;
           if (child.childMonthlyConfig) {
             let childProduct = child.childMonthlyConfig.find(
-              m =>
+              (m) =>
                 m.childProductId.productId == product.parentProductId.productId
             );
             if (childProduct) {
@@ -787,7 +889,7 @@ export default {
             let childMonthlyQuota = {
               productId: product.parentProductId.productId,
               quota: value,
-              unit: "ACTUAL"
+              unit: "ACTUAL",
             };
             this.monthlyQuota.push(childMonthlyQuota);
           }
@@ -797,7 +899,7 @@ export default {
     },
     getOTQuota(child, index) {
       this.OTQuota = [];
-      this.parentMonthlyBalance.forEach(product => {
+      this.parentMonthlyBalance.forEach((product) => {
         if (product.isFPService == "1") {
           let value = 0;
           let childProductInput = document.getElementById(
@@ -817,7 +919,7 @@ export default {
             let childOTQuota = {
               productId: product.parentProductId.productId,
               quota: value,
-              unit: "ACTUAL"
+              unit: "ACTUAL",
             };
             this.OTQuota.push(childOTQuota);
           }
@@ -828,7 +930,7 @@ export default {
     IsSaveDisabled(child) {
       let isDisabled = true;
       if (child.childProfile.id) {
-        this.parentMonthlyBalance.forEach(product => {
+        this.parentMonthlyBalance.forEach((product) => {
           if (product.isFPService == 1) {
             let oneTimeVal = "";
             let childOneTimeInput = document.getElementById(
@@ -846,7 +948,7 @@ export default {
           }
         });
         if (this.selectedPricePlan) {
-          this.selectedPricePlan.productList.forEach(product => {
+          this.selectedPricePlan.productList.forEach((product) => {
             let productValue = undefined;
             let childProductVal = this.getChildMonthlyBalance(child, product);
             let childProductInput = document.getElementById(
@@ -895,7 +997,7 @@ export default {
       let value = 0;
       if (child.childMonthlyConfig) {
         let childProduct = child.childMonthlyConfig.find(
-          m => m.childProductId.productId == product.productId
+          (m) => m.childProductId.productId == product.productId
         );
         if (childProduct) {
           value = this.convertToDisplayUnits(
@@ -910,7 +1012,7 @@ export default {
       this.changeChildMSISDN = {
         parentMsisdn: this.parentMsisdn,
         oldChildMsisdn: child.childProfile.msisdn,
-        newChildMsisdn: ""
+        newChildMsisdn: "",
       };
       this.childInChange = child;
     },
@@ -947,11 +1049,12 @@ export default {
     },
     formatMBsToBytes(bytes) {
       return utils.formatMBsToBytes(bytes);
-    }
+    },
   },
   mounted() {
     this.getChildsOfParent(this.parentMsisdn);
-  }
+    this.baseUrl = utils.getBaseUrl();
+  },
 };
 </script>
 <style scoped>

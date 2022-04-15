@@ -166,12 +166,14 @@
   </div>
 </template>
 <script>
+import Vue from "vue";
 import moment from "moment";
 import utils from "../../utils";
 
 export default {
   data() {
     return {
+      baseReportUrl: "",
       search: "",
       json_fields: {
         "Parent Number": {
@@ -333,10 +335,8 @@ export default {
           parentMsisdn: this.parentMsisdn,
         };
         let query = utils.getQueryString(obj);
-        await this.$http
-          .get(
-            window.ReportBaseURL + "/reportdaily/hierarchyReportDaily" + query
-          )
+        await Vue.$http
+          .get(`${this.baseReportUrl}/reportdaily/hierarchyReportDaily${query}`)
           .then((result) => {
             if (result.errorCode == "00") {
               if (isExport) {
@@ -386,7 +386,9 @@ export default {
       });
     },
   },
-  mounted() {},
+  mounted() {
+    this.baseReportUrl = utils.getBaseReportUrl();
+  },
   beforeDestroy() {},
 };
 </script>

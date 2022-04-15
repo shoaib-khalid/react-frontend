@@ -43,7 +43,11 @@
                 :error-messages="errors.first('Date From')"
               ></v-text-field>
             </template>
-            <v-date-picker :max="endDate" v-model="startDate" @input="dateMenuFrom = false"></v-date-picker>
+            <v-date-picker
+              :max="endDate"
+              v-model="startDate"
+              @input="dateMenuFrom = false"
+            ></v-date-picker>
           </v-menu>
         </div>
         <div class="col-md-3">
@@ -69,15 +73,25 @@
                 :error-messages="errors.first('Date Until')"
               ></v-text-field>
             </template>
-            <v-date-picker :min="startDate" v-model="endDate" @input="dateMenuTo = false"></v-date-picker>
+            <v-date-picker
+              :min="startDate"
+              v-model="endDate"
+              @input="dateMenuTo = false"
+            ></v-date-picker>
           </v-menu>
         </div>
 
         <div class="col-md-3">
-          <v-text-field v-model="msisdn" name="Msisdn" label="Msisdn"></v-text-field>
+          <v-text-field
+            v-model="msisdn"
+            name="Msisdn"
+            label="Msisdn"
+          ></v-text-field>
         </div>
         <div class="col-md-2">
-          <v-btn round color="#3498db" @click="navigateToSearch" dark>Search</v-btn>
+          <v-btn round color="#3498db" @click="navigateToSearch" dark
+            >Search</v-btn
+          >
         </div>
       </div>
       <div class="row pb-2">
@@ -88,7 +102,8 @@
               :fields="json_fields"
               type="csv"
               name="USSD.xls"
-            >Download Excel</download-excel>
+              >Download Excel</download-excel
+            >
           </v-btn>
         </div>
       </div>
@@ -103,25 +118,23 @@
         >
           <template v-slot:items="props">
             <td>{{ props.item.msisdn ? props.item.msisdn : "-" }}</td>
-            <td>{{ props.item.type ? props.item.type: "-" }}</td>
-            <td>{{ props.item.ussdString ? props.item.ussdString :"-" }}</td>
-            <td>{{ props.item.inputType ? props.item.inputType: "-" }}</td>
-            <td>{{ props.item.created ? props.item.created :"-" }}</td>
+            <td>{{ props.item.type ? props.item.type : "-" }}</td>
+            <td>{{ props.item.ussdString ? props.item.ussdString : "-" }}</td>
+            <td>{{ props.item.inputType ? props.item.inputType : "-" }}</td>
+            <td>{{ props.item.created ? props.item.created : "-" }}</td>
           </template>
           <template v-slot:no-results>
-            <v-alert
-              :value="true"
-              color="error"
-              icon="warning"
-            >Your search for "{{ search }}" found no results.</v-alert>
+            <v-alert :value="true" color="error" icon="warning"
+              >Your search for "{{ search }}" found no results.</v-alert
+            >
           </template>
         </v-data-table>
       </div>
     </div>
     <div v-if="errorMsg">
-      <div style="width:100%; height:100%" class="card">
+      <div style="width: 100%; height: 100%" class="card">
         <div class="card-block p-5">
-          <h3>{{errorMsg}}</h3>
+          <h3>{{ errorMsg }}</h3>
         </div>
       </div>
     </div>
@@ -130,98 +143,100 @@
 <script>
 import moment from "moment";
 import utils from "../../utils";
+import Vue from "vue";
 
 export default {
   data() {
     return {
+      baseReportUrl: "",
       search: "",
       json_fields: {
         Number: {
           field: "msisdn",
-          callback: msisdn => {
+          callback: (msisdn) => {
             if (msisdn) {
               return msisdn;
             } else {
               return "-";
             }
-          }
+          },
         },
         Type: {
           field: "type",
-          callback: type => {
+          callback: (type) => {
             if (type) {
               return type;
             } else {
               return "-";
             }
-          }
+          },
         },
         "Dialled String": {
           field: "ussdString",
-          callback: ussdString => {
+          callback: (ussdString) => {
             if (ussdString) {
               return ussdString;
             } else {
               return "-";
             }
-          }
+          },
         },
         "Input Type": {
           field: "inputType",
-          callback: inputType => {
+          callback: (inputType) => {
             if (inputType) {
               return inputType;
             } else {
               return "-";
             }
-          }
+          },
         },
         "Date & Time": {
           field: "created",
-          callback: created => {
+          callback: (created) => {
             if (created) {
               return created;
             } else {
               return "-";
             }
-          }
-        }
+          },
+        },
       },
       items: [],
       pagination: {
         page: 1,
         rowsPerPage: 10,
         totalPages: undefined,
-        totalItems: undefined
+        totalItems: undefined,
       },
       errorMsg: "",
       headers: [
         {
           text: "Number",
           value: "Number",
-          sortable: false
+          sortable: false,
         },
         {
           text: "Type",
           value: "Type",
-          sortable: false
+          sortable: false,
         },
-         {
+        {
           text: "Dialled String",
           value: "DialledString",
-          sortable: false
+          sortable: false,
         },
         {
           text: "Input Type",
           value: "inputType",
-          sortable: false
+          sortable: false,
         },
-       
+
         {
           text: "Date & Time",
           value: "DateTime",
-          sortable: false
-        }
+          sortable: false,
+        },
       ],
       consentReport: [],
       exportData: [],
@@ -229,16 +244,16 @@ export default {
       dateMenuTo: false,
       msisdn: "",
       startDate: moment().format("YYYY-MM-DD"),
-      endDate: moment().format("YYYY-MM-DD")
+      endDate: moment().format("YYYY-MM-DD"),
     };
   },
   watch: {
-    pagination: function(news, olds) {
+    pagination: function (news, olds) {
       this.navigateToSearch();
     },
-    "$route.query": function() {
+    "$route.query": function () {
       this.getReport();
-    }
+    },
   },
   methods: {
     async fetchData() {
@@ -254,10 +269,10 @@ export default {
             rowsPerPage: this.pagination.rowsPerPage,
             startDate: this.startDate,
             endDate: this.endDate,
-            ...(this.msisdn && { msisdn: this.msisdn })
-          }
+            ...(this.msisdn && { msisdn: this.msisdn }),
+          },
         })
-        .catch(error => {
+        .catch((error) => {
           this.$router.push("/");
           this.$router.push({
             name: "report.ussd",
@@ -266,8 +281,8 @@ export default {
               rowsPerPage: this.pagination.rowsPerPage,
               startDate: this.startDate,
               endDate: this.endDate,
-              ...(this.msisdn && { msisdn: this.msisdn })
-            }
+              ...(this.msisdn && { msisdn: this.msisdn }),
+            },
           });
         });
     },
@@ -284,12 +299,12 @@ export default {
           endDate: this.endDate,
           msisdn: this.msisdn,
           pageNumber: this.pagination.page,
-          pageSize: isExport ? 999999 : this.pagination.rowsPerPage
+          pageSize: isExport ? 999999 : this.pagination.rowsPerPage,
         };
         let query = utils.getQueryString(obj);
-        await this.$http
-          .get(window.ReportBaseURL + "/reportdaily/ussdLogs" + query)
-          .then(result => {
+        await Vue.$http
+          .get(`${this.baseReportUrl}/reportdaily/ussdLogs${query}`)
+          .then((result) => {
             if (result.errorCode == "00") {
               if (isExport) {
                 this.exportData = result.data.content;
@@ -314,19 +329,17 @@ export default {
           : this.pagination.rowsPerPage;
         this.startDate = obj.startDate
           ? obj.startDate
-          : moment()
-              .subtract(1, "months")
-              .format("YYYY-MM-DD");
+          : moment().subtract(1, "months").format("YYYY-MM-DD");
         this.endDate = obj.endDate
           ? obj.endDate
           : moment().format("YYYY-MM-DD");
         this.msisdn = obj.msisdn;
       }
-    }
+    },
   },
   computed: {
-    tableData: function() {
-      return this.consentReport.map(data => {
+    tableData: function () {
+      return this.consentReport.map((data) => {
         data.consentSentTime = moment(
           data.consentSentTime,
           "YYYY-MM-DD HH:mm:ss"
@@ -337,9 +350,11 @@ export default {
         ).format("DD/MM/YYYY HH:mm:ss");
         return data;
       });
-    }
+    },
   },
-  mounted() {}
+  mounted() {
+    this.baseReportUrl = utils.getBaseReportUrl();
+  },
 };
 </script>
 <style>

@@ -109,11 +109,11 @@
           :rows-per-page-items="[10]"
         >
           <template v-slot:items="props">
-            <td name="Parent Number">{{ props.item.parent }}</td>  
-            <td name="USSD">{{ props.item.userInput }}</td>  
-            <td name="Action Performed">{{ props.item.operationPerformed }}</td>  
-            <td name="Status">{{ props.item.operationStatus }}</td>  
-            <td name="Date &amp; Time">{{ props.item.operationTime }}</td>  
+            <td name="Parent Number">{{ props.item.parent }}</td>
+            <td name="USSD">{{ props.item.userInput }}</td>
+            <td name="Action Performed">{{ props.item.operationPerformed }}</td>
+            <td name="Status">{{ props.item.operationStatus }}</td>
+            <td name="Date &amp; Time">{{ props.item.operationTime }}</td>
           </template>
           <template v-slot:no-results>
             <v-alert :value="true" color="error" icon="warning"
@@ -134,8 +134,8 @@
 </template>
 
 <script>
+import Vue from "vue";
 import moment from "moment";
-import ApiUrls from "../../enums/ApiUrls";
 import utils from "../../utils";
 
 export default {
@@ -191,7 +191,7 @@ export default {
       };
       const queryParams = utils.getQueryString(queryObj);
 
-      this.$http
+      Vue.$http
         .post(`${this.basePrepaidUrl}/reports/getUssdReport${queryParams}`)
         .then((result) => {
           this.reportData = result.map((record) => {
@@ -205,7 +205,7 @@ export default {
     },
   },
   mounted() {
-    this.basePrepaidUrl = sessionStorage.getItem(ApiUrls.BASE_PREPAID_URL_KEY);
+    this.basePrepaidUrl = utils.getBasePrepaidUrl;
   },
 };
 </script>

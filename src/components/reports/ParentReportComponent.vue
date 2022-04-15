@@ -200,12 +200,14 @@
   </div>
 </template>
 <script>
+import Vue from "vue";
 import moment from "moment";
 import utils from "../../utils";
 
 export default {
   data() {
     return {
+      baseReportUrl: "",
       search: "",
       json_fields: {
         "Subscription Date": {
@@ -693,11 +695,9 @@ export default {
           parentMsisdn: this.parentMsisdn,
         };
         let query = utils.getQueryString(obj);
-        await this.$http
+        await Vue.$http
           .get(
-            window.ReportBaseURL +
-              "/transaction/getParentResourceSharingReport" +
-              query
+            `${this.baseReportUrl}/transaction/getParentResourceSharingReport${query}`
           )
           .then((result) => {
             if (result.errorCode == "00") {
@@ -752,7 +752,9 @@ export default {
       });
     },
   },
-  mounted() {},
+  mounted() {
+    this.baseReportUrl = utils.getBaseReportUrl();
+  },
   beforeDestroy() {},
 };
 </script>

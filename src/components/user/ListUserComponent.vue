@@ -10,7 +10,7 @@
             fab
             dark
             color="indigo"
-            :to="{ name: 'user.add'}"
+            :to="{ name: 'user.add' }"
             data-toggle="tooltip"
             title="Add New User"
           >
@@ -37,7 +37,8 @@
                 @click="resetPassword(props.item.id)"
                 data-toggle="tooltip"
                 title="Reset Password"
-              >vpn_key</v-icon>
+                >vpn_key</v-icon
+              >
               <!-- v-can-view="['user-edit']" -->
               <v-icon
                 small
@@ -45,14 +46,16 @@
                 @click="edit(props.item.id)"
                 data-toggle="tooltip"
                 title="Edit User"
-              >edit</v-icon>
+                >edit</v-icon
+              >
               <!-- v-can-view="['user-delete']" -->
               <v-icon
                 data-toggle="tooltip"
                 title="Delete User"
                 small
                 @click="del(props.item.id)"
-              >delete</v-icon>
+                >delete</v-icon
+              >
             </td>
             <td class="text-xs-left">{{ props.item.name }}</td>
             <td class="text-xs-left">{{ props.item.email }}</td>
@@ -62,19 +65,17 @@
             <td class="text-xs-left">{{ props.item.createdBy }}</td>
           </template>
           <template v-slot:no-results>
-            <v-alert
-              :value="true"
-              color="error"
-              icon="warning"
-            >Your search for "{{ search }}" found no results.</v-alert>
+            <v-alert :value="true" color="error" icon="warning"
+              >Your search for "{{ search }}" found no results.</v-alert
+            >
           </template>
         </v-data-table>
       </v-card>
     </div>
     <div v-if="!users">
-      <div style="width:100%; height:100%" class="card">
+      <div style="width: 100%; height: 100%" class="card">
         <div class="card-block p-5">
-          <h3>{{errorMsg}}</h3>
+          <h3>{{ errorMsg }}</h3>
         </div>
       </div>
     </div>
@@ -93,8 +94,10 @@
 import Swal from "sweetalert2";
 import moment from "moment";
 import Vue from "vue";
+import utils from "../../utils";
 export default {
   data: () => ({
+    baseUrl: "",
     search: "",
     errorMsg: "",
     headers: [
@@ -104,21 +107,22 @@ export default {
       { text: "Username", value: "username" },
       { text: "Role", value: "role" },
       { text: "Created At", value: "created" },
-      { text: "Created By", value: "createdBy" }
+      { text: "Created By", value: "createdBy" },
     ],
-    users: []
+    users: [],
   }),
   mounted() {
     this.getuserlist();
+    this.baseUrl = utils.getBaseUrl();
   },
   created() {},
   methods: {
     getuserlist() {
       let obj = {
         pageNumber: 1,
-        pageSize: Number.MAX_VALUE
+        pageSize: Number.MAX_VALUE,
       };
-      Vue.$http.post("/user/getUserList", obj).then(result => {
+      Vue.$http.post(`${this.baseUrl}/user/getUserList`, obj).then((result) => {
         if (result.errorCode == "00") {
           this.users = result.data;
         } else if (result.errorCode == "53") {
@@ -134,28 +138,29 @@ export default {
         showCancelButton: true,
         confirmButtonColor: "#3085d6",
         cancelButtonColor: "#d33",
-        confirmButtonText: "Yes, reset it!"
-      }).then(result => {
+        confirmButtonText: "Yes, reset it!",
+      }).then((result) => {
         if (result.value) {
-          
           let obj = {
-            id: id
+            id: id,
           };
-          this.$http.post("/user/resetUserPassword", obj).then(result => {
-            if (result.errorCode == "00") {
-              this.$store.commit("notis/setAlert", {
-                type: "success",
-                title: result.errorMsg,
-                time: "4"
-              });
-            } else {
-              this.$store.commit("notis/setAlert", {
-                type: "error",
-                title: result.errorMsg,
-                time: "4"
-              });
-            }
-          });
+          Vue.$http
+            .post(`${this.baseUrl}/user/resetUserPassword`, obj)
+            .then((result) => {
+              if (result.errorCode == "00") {
+                this.$store.commit("notis/setAlert", {
+                  type: "success",
+                  title: result.errorMsg,
+                  time: "4",
+                });
+              } else {
+                this.$store.commit("notis/setAlert", {
+                  type: "error",
+                  title: result.errorMsg,
+                  time: "4",
+                });
+              }
+            });
         }
       });
     },
@@ -171,48 +176,49 @@ export default {
         showCancelButton: true,
         confirmButtonColor: "#3085d6",
         cancelButtonColor: "#d33",
-        confirmButtonText: "Yes, delete it!"
-      }).then(result => {
-        
+        confirmButtonText: "Yes, delete it!",
+      }).then((result) => {
         if (result.value) {
           let obj = {
-            id: id
+            id: id,
           };
-          Vue.$http.post("user/deleteUser", obj).then(result => {
-            if (result.errorCode == "00") {
-              this.$store.commit("notis/setAlert", {
-                type: "success",
-                title: result.errorMsg,
-                time: "4"
-              });
-              this.users = this.users.filter(function(row) {
-                return row.id !== id;
-              });
-            } else {
-              this.$store.commit("notis/setAlert", {
-                type: "error",
-                title: result.errorMsg,
-                time: "4"
-              });
-            }
-          });
+          Vue.$http
+            .post(`${this.baseUrl}user/deleteUser`, obj)
+            .then((result) => {
+              if (result.errorCode == "00") {
+                this.$store.commit("notis/setAlert", {
+                  type: "success",
+                  title: result.errorMsg,
+                  time: "4",
+                });
+                this.users = this.users.filter(function (row) {
+                  return row.id !== id;
+                });
+              } else {
+                this.$store.commit("notis/setAlert", {
+                  type: "error",
+                  title: result.errorMsg,
+                  time: "4",
+                });
+              }
+            });
         }
       });
-    }
+    },
   },
   computed: {
-    tableDataNew: function() {
+    tableDataNew: function () {
       if (!this.users) {
         return this.users;
       } else {
-        return this.users.map(data => {
+        return this.users.map((data) => {
           data.created = moment(data.created, "YYYY-MM-DD HH:mm:ss").format(
             "DD/MM/YYYY"
           );
           return data;
         });
       }
-    }
-  }
+    },
+  },
 };
 </script>

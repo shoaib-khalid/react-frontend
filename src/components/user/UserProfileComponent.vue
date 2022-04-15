@@ -4,11 +4,9 @@
       <v-flex xs12 sm12>
         <v-card>
           <v-card-actions>
-            <v-btn
-              flat
-              color="orange"
-              @click="changePassword"
-            >Change Password</v-btn>
+            <v-btn flat color="orange" @click="changePassword"
+              >Change Password</v-btn
+            >
           </v-card-actions>
           <v-card-title primary-title>
             <div class="col-md-12">
@@ -22,33 +20,41 @@
                     <div class="col-md-12">
                       <div class="row">
                         <div class="col-md-2">
-                          <label style="font-weight:bold;">Name</label>
+                          <label style="font-weight: bold">Name</label>
                         </div>
-                        <div class="col-md-8 col-6">{{$store.getters.getUser.name || '-'}}</div>
+                        <div class="col-md-8 col-6">
+                          {{ $store.getters.getUser.name || "-" }}
+                        </div>
                       </div>
                       <hr />
 
                       <div class="row">
                         <div class="col-md-2">
-                          <label style="font-weight:bold;">Email</label>
+                          <label style="font-weight: bold">Email</label>
                         </div>
-                        <div class="col-md-8 col-6">{{$store.getters.getUser.email || '-'}}</div>
+                        <div class="col-md-8 col-6">
+                          {{ $store.getters.getUser.email || "-" }}
+                        </div>
                       </div>
                       <hr />
 
                       <div class="row">
                         <div class="col-md-2">
-                          <label style="font-weight:bold;">Username</label>
+                          <label style="font-weight: bold">Username</label>
                         </div>
-                        <div class="col-md-8 col-6">{{$store.getters.getUser.username || '-'}}</div>
+                        <div class="col-md-8 col-6">
+                          {{ $store.getters.getUser.username || "-" }}
+                        </div>
                       </div>
                       <hr />
 
                       <div class="row">
                         <div class="col-md-2">
-                          <label style="font-weight:bold;">Role</label>
+                          <label style="font-weight: bold">Role</label>
                         </div>
-                        <div class="col-md-8 col-6">{{$store.getters.getRole || '-'}}</div>
+                        <div class="col-md-8 col-6">
+                          {{ $store.getters.getRole || "-" }}
+                        </div>
                       </div>
                       <hr />
                     </div>
@@ -63,12 +69,20 @@
   </div>
 </template>
 <script>
+import Vue from "vue";
 import Swal from "sweetalert2";
+import utils from "../../utils";
+
 export default {
-  data: () => ({}),
+  data: () => ({
+    baseUrl: "",
+  }),
   computed: {},
+  mounted() {
+    this.baseUrl = utils.getBaseUrl();
+  },
   methods: {
-    changePassword: async function() {
+    changePassword: async function () {
       const { value: formValues } = await Swal.fire({
         title: "Change Password",
         html:
@@ -93,9 +107,7 @@ export default {
           let input2 = document.getElementById("swal-input2");
           let input3 = document.getElementById("swal-input3");
 
-          $(document)
-            .find(".error-swal-input")
-            .hide();
+          $(document).find(".error-swal-input").hide();
 
           if (
             input1.value &&
@@ -118,7 +130,6 @@ export default {
 
               count++;
               error1.html("Old password can't be empty!").show();
-            } else {
             }
 
             if (input2.value == "") {
@@ -132,7 +143,6 @@ export default {
 
               count++;
               error2.html("New password can't be empty!").show();
-            } else {
             }
 
             if (input3.value == "") {
@@ -146,7 +156,6 @@ export default {
 
               count++;
               error3.html("New password confirmation can't be empty!").show();
-            } else {
             }
 
             if (input3.value != input2.value) {
@@ -160,13 +169,12 @@ export default {
 
               count++;
               error3.html("Password and confirm password don't match!").show();
-            } else {
             }
 
             return false;
           }
         },
-        inputValidator: value => {
+        inputValidator: (value) => {
           console.log(value);
           // return new Promise((resolve) => {
           //     if (value === 'oranges') {
@@ -175,33 +183,35 @@ export default {
           //         resolve('You need to select oranges :)')
           //     }
           // })
-        }
+        },
       });
 
       if (formValues) {
         let obj = {
           currentPassword: formValues[0],
-          newPassword: formValues[2]
+          newPassword: formValues[2],
         };
 
-        this.$http.post("/user/changeUserPassword", obj).then(result => {
-          if (result.errorCode == "00") {
-            this.$store.commit("notis/setAlert", {
-              type: "success",
-              title: result.errorMsg,
-              time: "4"
-            });
-          } else {
-            this.$store.commit("notis/setAlert", {
-              type: "error",
-              title: result.errorMsg,
-              time: "4"
-            });
-          }
-        });
+        Vue.$http
+          .post(`${this.baseUrl}/user/changeUserPassword`, obj)
+          .then((result) => {
+            if (result.errorCode == "00") {
+              this.$store.commit("notis/setAlert", {
+                type: "success",
+                title: result.errorMsg,
+                time: "4",
+              });
+            } else {
+              this.$store.commit("notis/setAlert", {
+                type: "error",
+                title: result.errorMsg,
+                time: "4",
+              });
+            }
+          });
       }
-    }
-  }
+    },
+  },
 };
 </script>
 <style type="text/css">

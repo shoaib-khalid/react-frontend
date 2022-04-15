@@ -88,7 +88,7 @@
 <script>
 import Vue from "vue";
 import Swal from "sweetalert2";
-import ApiUrls from "../enums/ApiUrls";
+import utils from "../utils";
 
 export default {
   data() {
@@ -97,18 +97,20 @@ export default {
       password: "",
       submitted: false,
       error: "",
-      ApiUrls: ApiUrls,
       isTestUser: false,
+      baseUrl: "",
+      basePrepaidURL: "",
+      baseReportURL: "",
     };
   },
   mounted() {
-    // console.log("mounted");
-    // this.$store.commit('logout');
-  },
-  created() {
-    // reset login status
-    // console.log("created");
-    // this.$store.commit('logout');
+    this.baseUrl = utils.getBaseUrl();
+    this.baseReportURL = utils.getBaseReportUrl();
+    this.basePrepaidURL = utils.getBasePrepaidUrl();
+
+    console.log(`BaseUrl: ${this.baseUrl}`);
+    console.log(`BaseReportUrl: ${this.baseReportURL}`);
+    console.log(`BasePrepaidUrl: ${this.basePrepaidURL}`);
   },
   methods: {
     resetPassword: async function () {
@@ -124,8 +126,11 @@ export default {
           this.$route.path,
           "/account/password/reset/"
         );
-        this.$http
-          .post("/user/resetpassword", { domain: path, email: email })
+        Vue.$http
+          .post(`${this.baseUrl}/user/resetpassword`, {
+            domain: path,
+            email: email,
+          })
           .then((result) => {
             if (result.errorCode == "00") {
               Swal.fire(
@@ -145,55 +150,18 @@ export default {
       }
     },
     loginRequest() {
-      const testUser = "testuser";
-      let users = [
-        "Shoaib",
-        "Taufik",
-        "Babar",
-        "KSupportFP",
-        "Mirza",
-        "Wasim",
-        "Nauman",
-        "DanishIS",
-        "Amir",
-      ];
-      if (this.username === testUser) {
+      if (this.username === "testuser") {
         this.isTestUser = true;
       }
-      const baseUrl =
-        "http://" +
-        process.env.VUE_APP_CORE_IP +
-        ":" +
-        process.env.VUE_APP_CORE_PORT;
-      const baseReportURL =
-        "http://" +
-        process.env.VUE_APP_REPORT_CORE_IP +
-        ":" +
-        process.env.VUE_APP_REPORT_PORT;
-      const basePrepaidURL =
-        "http://" +
-        process.env.VUE_APP_PREPAID_CORE_IP +
-        ":" +
-        process.env.VUE_APP_PREPAID_CORE_PORT;
 
-      sessionStorage.setItem(this.ApiUrls.BASE_URL_KEY, baseUrl);
-      sessionStorage.setItem(this.ApiUrls.BASE_REPORT_URL_KEY, baseReportURL);
-      sessionStorage.setItem(this.ApiUrls.BASE_PREPAID_URL_KEY, basePrepaidURL);
-      this.$http.defaults.baseURL = baseUrl;
-      window.basePrepaidURL = basePrepaidURL;
-      window.ReportBaseURL = baseReportURL;
-
-      console.log(`BaseURL: ${baseUrl}`);
-      console.log(`BasePrepaidURL: ${basePrepaidURL}`);
-      console.log(`ReportBaseUrl: ${baseReportURL}`);
-      return this.$http.post("/user/login", {
+      return Vue.$http.post(`${this.baseUrl}/user/login`, {
         username: this.username,
         password: this.password,
       });
     },
     loadRolePermission(loginInfo) {
-      this.$http
-        .get("/permission/rolepermission")
+      Vue.$http
+        .get(`${this.baseUrl}/permission/rolepermission`)
         .then((result) => {
           if (result.errorCode == "00") {
             let role = result.data.find((val) => val.roleId == loginInfo.role);
@@ -265,14 +233,18 @@ export default {
 
                 if (loginInfo.forceChangePassword == 1) {
                   this.$router.push({ name: "changePassword" });
-                } else if (this.isTestUser) {
-                  this.$router.push({ name: "fpUserType" });
+                  // } else if (this.isTestUser) {
+                  //   this.$router.push({ name: "fpUserType" });
+                  // } else {
+                  //   // TODO: Remove for deployment
+                  //   sessionStorage.setItem(
+                  //     this.fpUserTypes.STORAGE_KEY,
+                  //     this.fpUserTypes.POSTPAID
+                  //   );
+                  //   this.$router.push({ name: "fpSearch" });
+                  // }
                 } else {
-                  sessionStorage.setItem(
-                    this.fpUserTypes.STORAGE_KEY,
-                    this.fpUserTypes.POSTPAID
-                  );
-                  this.$router.push({ name: "fpSearch" });
+                  this.$router.push({ name: "fpUserType" });
                 }
               } else {
                 this.$store.commit("notis/setAlert", {
@@ -290,7 +262,9 @@ export default {
     },
     loadCompanyAdminDetail: function (info, data) {
       Vue.$http
-        .get("/master/getmasterbycompany/" + info.user.company.id)
+        .get(
+          `${this.baseUrl}/master/getmasterbycompany/${info.user.company.id}`
+        )
         .then((result) => {
           if (result.errorCode == "00") {
             info.user.company.msisdn = null;
@@ -315,6 +289,7 @@ export default {
   },
 };
 </script>
+
 <style type="text/css" scoped>
 section.login-block {
   padding: 30px 0;

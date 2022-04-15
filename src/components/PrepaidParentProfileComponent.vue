@@ -459,9 +459,6 @@
 import Swal from "sweetalert2";
 import Vue from "vue";
 import PrepaidChildProfileComponent from "./PrepaidChildProfileComponent.vue";
-import ApiUrls from "../enums/ApiUrls";
-import UserHistoryComponent from "./UserHistoryComponent";
-
 import utils from "../utils";
 
 export default {
@@ -489,6 +486,7 @@ export default {
     loading: false,
     submitted: false,
     childAccounts: [],
+    baseUrl: "",
     basePrepaidUrl: "",
 
     // Dialogs
@@ -543,47 +541,8 @@ export default {
       let value = "";
       return value;
     },
-    Unsubscribe() {
-      Swal.fire({
-        title: "ARE YOU SURE YOU WANT TO UNSUBSCRIBE FROM FAMILY PLANS?",
-        input: "select",
-        inputOptions: this.getOtherPricePlan(),
-        inputPlaceholder: "SELECT OTHER PLAN",
-        showCancelButton: true,
-        confirmButtonColor: "#feae23",
-        cancelButtonColor: "#e74c3c",
-        customClass: "swal-wide",
-        confirmButtonText: "UNSUBSCRIBE",
-        reverseButtons: true,
-        cancelButtonText: "CANCEL",
-        inputValidator: (value) => {
-          return new Promise((resolve) => {
-            if (value) {
-              resolve();
-              this.unsubscribeParent(value);
-            } else {
-              resolve("You need to select other plan");
-            }
-          });
-        },
-      });
-    },
-    Resume() {
-      Swal.fire({
-        title: "ARE YOU SURE YOU WANT TO RESUME ?",
-        showCancelButton: true,
-        confirmButtonColor: "#feae23",
-        cancelButtonColor: "#fd2222",
-        customClass: "swal-wide",
-        confirmButtonText: "RESUME",
-        reverseButtons: true,
-        cancelButtonText: "CANCEL",
-      }).then((result) => {
-        if (result.value) {
-          this.resumeParent();
-        }
-      });
-    },
+    Unsubscribe() {},
+    Resume() {},
 
     terminate() {
       Swal.fire({
@@ -599,58 +558,6 @@ export default {
         if (result.value) {
           this.terminateParent();
         }
-      });
-    },
-
-    changePricePlan() {},
-    changeParentPP(newPPId) {
-      let obj = {
-        parentMsisdn: this.parentProfile.msisdn,
-        newFPPricePlanId: newPPId,
-      };
-      Vue.$http.post("/parent/changeParentPP", obj).then((result) => {
-        if (result.errorMsgUssdCode == "00") {
-          this.$store.commit("notis/setAlert", {
-            type: "success",
-            title: result.errorMsgUssdMsg,
-            time: "4",
-          });
-          this.getParentProfile();
-        } else {
-          this.$store.commit("notis/setAlert", {
-            type: "error",
-            title: result.errorMsgUssdMsg,
-            time: "4",
-          });
-        }
-      });
-    },
-    getFPPricePlan: function () {
-      let _this = this;
-      return new Promise((resolve) => {
-        Vue.$http.post("/general/getFPPricePlan", {}).then((result) => {
-          if (result.errorMsgUssdCode == "00") {
-            _this.pricePlans = result.data;
-            resolve();
-          }
-        });
-      });
-    },
-    getOtherPricePlan() {
-      return new Promise((resolve) => {
-        let param = {
-          parentMsisdn: this.parentMsisdn,
-          typeOfPricePlan: "PREPAID",
-        };
-        Vue.$http.post("/general/getOtherPricePlan", param).then((result) => {
-          if (result.errorMsgUssdCode == "00") {
-            var obj = {};
-            result.data.forEach((element) => {
-              obj[element.id] = element.name;
-            });
-            resolve(obj);
-          }
-        });
       });
     },
     getParentProfile: function () {
@@ -689,45 +596,24 @@ export default {
         newPricePlanId: newPricePlan,
       };
       return new Promise(() => {
-        Vue.$http.post("/parent/unsubscribeParent", obj).then((result) => {
-          if (result.errorMsgUssdCode == "00") {
-            this.$store.commit("notis/setAlert", {
-              type: "success",
-              title: result.errorMsgUssdMsg,
-              time: "4",
-            });
-            this.getParentProfile();
-          } else {
-            this.$store.commit("notis/setAlert", {
-              type: "error",
-              title: result.errorMsgUssdMsg,
-              time: "4",
-            });
-          }
-        });
-      });
-    },
-    resumeParent() {
-      let obj = {
-        parentMsisdn: this.parentMsisdn,
-      };
-      return new Promise(() => {
-        Vue.$http.post("/parent/resumeParent", obj).then((result) => {
-          if (result.errorMsgUssdCode == "00") {
-            this.$store.commit("notis/setAlert", {
-              type: "success",
-              title: result.errorMsgUssdMsg,
-              time: "4",
-            });
-            this.getParentProfile();
-          } else {
-            this.$store.commit("notis/setAlert", {
-              type: "error",
-              title: result.errorMsgUssdMsg,
-              time: "4",
-            });
-          }
-        });
+        Vue.$http
+          .post(`${this.baseUrl}/parent/unsubscribeParent`, obj)
+          .then((result) => {
+            if (result.errorMsgUssdCode == "00") {
+              this.$store.commit("notis/setAlert", {
+                type: "success",
+                title: result.errorMsgUssdMsg,
+                time: "4",
+              });
+              this.getParentProfile();
+            } else {
+              this.$store.commit("notis/setAlert", {
+                type: "error",
+                title: result.errorMsgUssdMsg,
+                time: "4",
+              });
+            }
+          });
       });
     },
 
@@ -736,22 +622,24 @@ export default {
         parentMsisdn: this.parentMsisdn,
       };
       return new Promise(() => {
-        Vue.$http.post("/parent/terminateParent", obj).then((result) => {
-          if (result.errorMsgUssdCode == "00") {
-            this.$store.commit("notis/setAlert", {
-              type: "success",
-              title: result.errorMsgUssdMsg,
-              time: "4",
-            });
-            this.getParentProfile();
-          } else {
-            this.$store.commit("notis/setAlert", {
-              type: "error",
-              title: result.errorMsgUssdMsg,
-              time: "4",
-            });
-          }
-        });
+        Vue.$http
+          .post(`${this.baseUrl}/parent/terminateParent`, obj)
+          .then((result) => {
+            if (result.errorMsgUssdCode == "00") {
+              this.$store.commit("notis/setAlert", {
+                type: "success",
+                title: result.errorMsgUssdMsg,
+                time: "4",
+              });
+              this.getParentProfile();
+            } else {
+              this.$store.commit("notis/setAlert", {
+                type: "error",
+                title: result.errorMsgUssdMsg,
+                time: "4",
+              });
+            }
+          });
       });
     },
 
@@ -1137,7 +1025,8 @@ export default {
     },
   },
   mounted() {
-    this.basePrepaidUrl = sessionStorage.getItem(ApiUrls.BASE_PREPAID_URL_KEY);
+    this.baseUrl = utils.getBaseUrl();
+    this.basePrepaidUrl = utils.getBasePrepaidUrl();
     this.parentMsisdn = sessionStorage.getItem("ParentMSISDN");
 
     if (!this.parentMsisdn) {

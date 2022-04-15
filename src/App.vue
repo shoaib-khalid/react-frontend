@@ -3,8 +3,11 @@
     <!--        <v-alert :value="$store.state.notis.alert.status" class="alert-layout" transition="scale-transition" dismissible :type="$store.state.notis.alert.type">
             {{$store.state.notis.alert.message}}
     </v-alert>-->
-    <v-toolbar v-if="$store.getters.getIsAuth" app style="background:#00bcd4">
-      <v-toolbar-title class="headline text-uppercase position-relative" style="width:100%;">
+    <v-toolbar v-if="$store.getters.getIsAuth" app style="background: #00bcd4">
+      <v-toolbar-title
+        class="headline text-uppercase position-relative"
+        style="width: 100%"
+      >
         <a href="/">
           <img src="/assets/images/logo.png" />
         </a>
@@ -17,22 +20,25 @@
 
         <div class="right-box">
           <a href="/">
-            <span style="position:relative;top:5px;">
+            <span style="position: relative; top: 5px">
               <v-icon x-large dark>home</v-icon>
             </span>
           </a>
           <span
-            style="color:white; margin:10px; cursor: pointer;"
+            style="color: white; margin: 10px; cursor: pointer"
             class="small"
             @click="goReport"
-            v-if="!$store.getters.getChangePasswordRequired && $store.getters.getRole!='CRO'"
+            v-if="
+              !$store.getters.getChangePasswordRequired &&
+              $store.getters.getRole != 'CRO'
+            "
           >
             Reports
             <span></span>
           </span>
-          <span style="color:white; margin:10px;" class="small">
+          <span style="color: white; margin: 10px" class="small">
             Welcome
-            <span>{{$store.getters.getUser.name}}</span>
+            <span>{{ $store.getters.getUser.name }}</span>
           </span>
           <v-menu bottom left>
             <template v-slot:activator="{ on }">
@@ -41,7 +47,10 @@
               </v-btn>
             </template>
             <v-list>
-              <v-list-tile @click="goProfile" v-if="!$store.getters.getChangePasswordRequired">
+              <v-list-tile
+                @click="goProfile"
+                v-if="!$store.getters.getChangePasswordRequired"
+              >
                 <v-list-tile-title>
                   <feather size="16" stroke="black" type="user"></feather>
                   <span class="pl-2">Profile</span>
@@ -49,7 +58,11 @@
               </v-list-tile>
               <v-list-tile
                 @click="goManageUser"
-                v-if="!$store.getters.getChangePasswordRequired && $store.getters.getRole!='CRO' && $store.getters.getRole!='ADMIN'"
+                v-if="
+                  !$store.getters.getChangePasswordRequired &&
+                  $store.getters.getRole != 'CRO' &&
+                  $store.getters.getRole != 'ADMIN'
+                "
               >
                 <v-list-tile-title>
                   <feather size="16" stroke="black" type="users"></feather>
@@ -75,7 +88,10 @@
         </v-flex>
         <v-flex
           key="xs2"
-          v-bind:class="{ right_content_expend: !isMenuShow,right_content: isMenuShow }"
+          v-bind:class="{
+            right_content_expend: !isMenuShow,
+            right_content: isMenuShow,
+          }"
           class="right-content pl-2 pr-2 pb-4 pt-4"
         >
           <router-view></router-view>
@@ -254,13 +270,16 @@ button.btn-toggle-menu {
 <script>
 import loading_image from "../public/assets/pie-preloader-gif.svg";
 import Vue from "vue";
+import ApiUrls from "./enums/ApiUrls";
+import utils from "./utils";
+
 export default {
   name: "App",
   components: {},
   computed: {
-    getLoading: function() {
+    getLoading: function () {
       return this.$store.state.notis.loading;
-    }
+    },
   },
   data() {
     return {
@@ -271,21 +290,24 @@ export default {
         c1: "red",
         c2: "red",
         c3: "red",
-        c4: "red"
-      }
+        c4: "red",
+      },
+      baseUrl: "",
     };
   },
-  mounted() {},
+  mounted() {
+    this.baseUrl = utils.getBaseUrl();
+  },
   methods: {
-    logout: function() {
+    logout: function () {
       let userobj = JSON.parse(sessionStorage.getItem("user"));
       let token = sessionStorage.getItem("token");
 
       let obj = {
         username: userobj.username,
-        token: token
+        token: token,
       };
-      Vue.$http.post("/user/logout", obj).then(result => {
+      Vue.$http.post(`${this.baseUrl}/user/logout`, obj).then((result) => {
         if (result.errorCode == "00") {
           this.$store.commit("logout");
           this.$router.push({ name: "login" });
@@ -293,12 +315,12 @@ export default {
           this.$store.commit("notis/setAlert", {
             type: "error",
             title: result.errorMsg,
-            time: "4"
+            time: "4",
           });
         }
       });
     },
-    toggleMenu: function() {
+    toggleMenu: function () {
       this.isMenuShow = !this.isMenuShow;
     },
     goProfile() {
@@ -309,8 +331,8 @@ export default {
     },
     goReport() {
       this.$router.push({ name: "report" });
-    }
-  }
+    },
+  },
 };
 </script>
 <style type="text/css">

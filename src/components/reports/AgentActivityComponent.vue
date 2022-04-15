@@ -281,6 +281,7 @@ import utils from "../../utils";
 export default {
   data() {
     return {
+      baseReportUrl: "",
       EventTypeList: [],
       selectedEvent: [],
       search: "",
@@ -643,11 +644,9 @@ export default {
           eventType: this.eventTypes,
         };
         let query = utils.getQueryString(obj);
-        await this.$http
+        await Vue.$http
           .get(
-            window.ReportBaseURL +
-              "/reportdaily/agentActivityReportDaily" +
-              query
+            `${this.baseReportUrl}/reportdaily/agentActivityReportDaily${query}`
           )
           .then((result) => {
             if (result.errorCode == "00") {
@@ -687,15 +686,6 @@ export default {
         }
       }
     },
-    /*  getEventTypes() {
-      Vue.$http
-        .post(window.ReportBaseURL + "/general/getReportEventTypes", {})
-        .then(result => {
-          if (result.errorCode == "00") {
-            this.EventTypeList = result.data;
-          }
-        });
-    }*/
   },
   computed: {
     tableData: function () {
@@ -713,7 +703,7 @@ export default {
     },
   },
   mounted() {
-    //this.getEventTypes();
+    this.baseReportUrl = utils.getBaseReportUrl();
   },
   beforeDestroy() {},
 };

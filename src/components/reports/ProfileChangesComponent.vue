@@ -10,7 +10,9 @@
             <router-link to="/report/list">Reports</router-link>
           </li>
           <li class="activePage">
-            <p href title="Profile Changes" class="animation">Profile Changes</p>
+            <p href title="Profile Changes" class="animation">
+              Profile Changes
+            </p>
           </li>
           <div class="clear"></div>
         </ul>
@@ -42,7 +44,11 @@
                 :error-messages="errors.first('Date From')"
               ></v-text-field>
             </template>
-            <v-date-picker :max="endDate" v-model="startDate" @input="dateMenuFrom = false"></v-date-picker>
+            <v-date-picker
+              :max="endDate"
+              v-model="startDate"
+              @input="dateMenuFrom = false"
+            ></v-date-picker>
           </v-menu>
         </div>
         <div class="col-md-3">
@@ -68,23 +74,41 @@
                 :error-messages="errors.first('Date Until')"
               ></v-text-field>
             </template>
-            <v-date-picker :min="startDate" v-model="endDate" @input="dateMenuTo = false"></v-date-picker>
+            <v-date-picker
+              :min="startDate"
+              v-model="endDate"
+              @input="dateMenuTo = false"
+            ></v-date-picker>
           </v-menu>
         </div>
       </div>
       <div class="row">
         <div class="col-md-1"></div>
         <div class="col-md-3">
-          <v-text-field v-model="parentMsisdn" name="ParentMsisdn" label="Parent Msisdn"></v-text-field>
+          <v-text-field
+            v-model="parentMsisdn"
+            name="ParentMsisdn"
+            label="Parent Msisdn"
+          ></v-text-field>
         </div>
         <div class="col-md-3">
-          <v-text-field v-model="childMsisdn" name="ChildMsisdn" label="Child Msisdn"></v-text-field>
+          <v-text-field
+            v-model="childMsisdn"
+            name="ChildMsisdn"
+            label="Child Msisdn"
+          ></v-text-field>
         </div>
         <div class="col-md-3">
-          <v-text-field v-model="agentId" name="agentId" label="Agent Id"></v-text-field>
+          <v-text-field
+            v-model="agentId"
+            name="agentId"
+            label="Agent Id"
+          ></v-text-field>
         </div>
         <div class="col-md-2">
-          <v-btn round color="#3498db" @click="navigateToSearch" dark>Search</v-btn>
+          <v-btn round color="#3498db" @click="navigateToSearch" dark
+            >Search</v-btn
+          >
         </div>
       </div>
       <div class="row pb-2">
@@ -95,7 +119,8 @@
               :fields="json_fields"
               type="csv"
               name="Profile Changes.xls"
-            >Download Excel</download-excel>
+              >Download Excel</download-excel
+            >
           </v-btn>
         </div>
       </div>
@@ -108,132 +133,150 @@
           :rows-per-page-items="[10]"
         >
           <template v-slot:items="props">
-            <td>{{ props.item.userDetails ? props.item.userDetails.username : "-" }}</td>
-            <td>{{ props.item.parentDetails ? props.item.parentDetails.msisdn : "-" }}</td>
-            <td>{{ props.item.childDetails ? props.item.childDetails.msisdn : "-" }}</td>
-            <td>{{ props.item.opcodeDetails ? props.item.opcodeDetails .description :"-" }}</td>
-            <td>{{ props.item.initiatedBy ? props.item.initiatedBy:"-" }}</td>
-            <td>{{ props.item.created ? props.item.created :"-" }}</td>
+            <td>
+              {{
+                props.item.userDetails ? props.item.userDetails.username : "-"
+              }}
+            </td>
+            <td>
+              {{
+                props.item.parentDetails ? props.item.parentDetails.msisdn : "-"
+              }}
+            </td>
+            <td>
+              {{
+                props.item.childDetails ? props.item.childDetails.msisdn : "-"
+              }}
+            </td>
+            <td>
+              {{
+                props.item.opcodeDetails
+                  ? props.item.opcodeDetails.description
+                  : "-"
+              }}
+            </td>
+            <td>{{ props.item.initiatedBy ? props.item.initiatedBy : "-" }}</td>
+            <td>{{ props.item.created ? props.item.created : "-" }}</td>
           </template>
           <template v-slot:no-results>
-            <v-alert
-              :value="true"
-              color="error"
-              icon="warning"
-            >Your search for "{{ search }}" found no results.</v-alert>
+            <v-alert :value="true" color="error" icon="warning"
+              >Your search for "{{ search }}" found no results.</v-alert
+            >
           </template>
         </v-data-table>
       </div>
     </div>
     <div v-if="errorMsg">
-      <div style="width:100%; height:100%" class="card">
+      <div style="width: 100%; height: 100%" class="card">
         <div class="card-block p-5">
-          <h3>{{errorMsg}}</h3>
+          <h3>{{ errorMsg }}</h3>
         </div>
       </div>
     </div>
   </div>
 </template>
 <script>
+import Vue from "vue";
 import moment from "moment";
 import utils from "../../utils";
 
 export default {
   data() {
     return {
+      baseReportUrl: "",
       search: "",
       json_fields: {
         AgentId: {
           field: "userDetails",
-          callback: userDetails => {
+          callback: (userDetails) => {
             if (userDetails) {
               return userDetails.username;
             } else {
               return "-";
             }
-          }
+          },
         },
         "Parent Number": {
           field: "parentDetails",
-          callback: parentDetails => {
+          callback: (parentDetails) => {
             if (parentDetails) {
               return parentDetails.msisdn;
             } else {
               return "-";
             }
-          }
+          },
         },
         "Child Number": {
           field: "childDetails",
-          callback: childDetails => {
+          callback: (childDetails) => {
             if (childDetails) {
               return childDetails.msisdn;
             } else {
               return "-";
             }
-          }
+          },
         },
         "Subscription Event": {
           field: "opcodeDetails",
-          callback: opcodeDetails => {
+          callback: (opcodeDetails) => {
             if (opcodeDetails) {
               return opcodeDetails.description;
             } else {
               return "-";
             }
-          }
+          },
         },
         "Request Initiator": {
           field: "initiatedBy",
-          callback: initiatedBy => {
+          callback: (initiatedBy) => {
             if (initiatedBy) {
               return initiatedBy;
             } else {
               return "-";
             }
-          }
+          },
         },
-        "Date & Time": "created"
+        "Date & Time": "created",
       },
       items: [],
       pagination: {
         page: 1,
         rowsPerPage: 10,
         totalPages: undefined,
-        totalItems: undefined
+        totalItems: undefined,
       },
       errorMsg: "",
       headers: [
         {
           text: "AgentId",
           value: "AgentId",
-          sortable: false
+          sortable: false,
         },
         {
           text: "Parent Number",
           value: "ParentNumber",
-          sortable: false
+          sortable: false,
         },
         {
           text: "Child Number",
           value: "ChildNumber",
-          sortable: false
+          sortable: false,
         },
         {
           text: "Subscription Event",
           value: "SubscriptionEvent",
-          sortable: false
+          sortable: false,
         },
         {
           text: "Request Initiator",
           value: "RequestInitiator",
-          sortable: false
+          sortable: false,
         },
         {
           text: "Date & Time",
           value: "DateAndTime",
-          sortable: false
-        }
+          sortable: false,
+        },
       ],
       consentReport: [],
       exportData: [],
@@ -243,16 +286,16 @@ export default {
       childMsisdn: "",
       agentId: "",
       startDate: moment().format("YYYY-MM-DD"),
-      endDate: moment().format("YYYY-MM-DD")
+      endDate: moment().format("YYYY-MM-DD"),
     };
   },
   watch: {
-    pagination: function(news, olds) {
+    pagination: function (news, olds) {
       this.navigateToSearch();
     },
-    "$route.query": function() {
+    "$route.query": function () {
       this.getReport();
-    }
+    },
   },
   methods: {
     async fetchData() {
@@ -270,10 +313,10 @@ export default {
             endDate: this.endDate,
             ...(this.parentMsisdn && { parentMsisdn: this.parentMsisdn }),
             ...(this.childMsisdn && { childMsisdn: this.childMsisdn }),
-            ...(this.agentId && { agentId: this.agentId })
-          }
+            ...(this.agentId && { agentId: this.agentId }),
+          },
         })
-        .catch(error => {
+        .catch((error) => {
           this.$router.push("/");
           this.$router.push({
             name: "report.profilechanges",
@@ -284,8 +327,8 @@ export default {
               endDate: this.endDate,
               ...(this.parentMsisdn && { parentMsisdn: this.parentMsisdn }),
               ...(this.childMsisdn && { childMsisdn: this.childMsisdn }),
-              ...(this.agentId && { agentId: this.agentId })
-            }
+              ...(this.agentId && { agentId: this.agentId }),
+            },
           });
         });
     },
@@ -304,16 +347,14 @@ export default {
           pageSize: isExport ? 999999 : this.pagination.rowsPerPage,
           childMsisdn: this.childMsisdn,
           parentMsisdn: this.parentMsisdn,
-          agentId: this.agentId
+          agentId: this.agentId,
         };
         let query = utils.getQueryString(obj);
-        await this.$http
+        await Vue.$http
           .get(
-            window.ReportBaseURL +
-              "/reportdaily/profileChangesReportDaily" +
-              query
+            `${this.baseReportUrl}/reportdaily/profileChangesReportDaily${query}`
           )
-          .then(result => {
+          .then((result) => {
             if (result.errorCode == "00") {
               if (isExport) {
                 this.exportData = result.data.content;
@@ -338,9 +379,7 @@ export default {
           : this.pagination.rowsPerPage;
         this.startDate = obj.startDate
           ? obj.startDate
-          : moment()
-              .subtract(1, "months")
-              .format("YYYY-MM-DD");
+          : moment().subtract(1, "months").format("YYYY-MM-DD");
         this.endDate = obj.endDate
           ? obj.endDate
           : moment().format("YYYY-MM-DD");
@@ -348,11 +387,11 @@ export default {
         this.childMsisdn = obj.childMsisdn;
         this.agentId = obj.agentId;
       }
-    }
+    },
   },
   computed: {
-    tableData: function() {
-      return this.consentReport.map(data => {
+    tableData: function () {
+      return this.consentReport.map((data) => {
         data.consentSentTime = moment(
           data.consentSentTime,
           "YYYY-MM-DD HH:mm:ss"
@@ -363,9 +402,11 @@ export default {
         ).format("DD/MM/YYYY HH:mm:ss");
         return data;
       });
-    }
+    },
   },
-  mounted() {}
+  mounted() {
+    this.baseReportUrl = utils.getBaseReportUrl();
+  },
 };
 </script>
 <style>

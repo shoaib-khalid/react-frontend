@@ -2,10 +2,15 @@
   <div>
     <div class="row">
       <!-- v-bind:class="{ redish: child.childProfile.status!='ACTIVE' }" -->
-      <form class="col-md-12 pl-3 pr-3" @submit.prevent="handleFpChileUser(child)">
+      <form
+        class="col-md-12 pl-3 pr-3"
+        @submit.prevent="handleFpChileUser(child)"
+      >
         <div class="row pt-2">
           <div class="col-md-12">
-            <h5 class="single-line user-heading">USER {{ childIndex }} PROFILE</h5>
+            <h5 class="single-line user-heading">
+              USER {{ childIndex }} PROFILE
+            </h5>
             <!-- <span
               title="Edit"
               class="cursor-pointer"
@@ -13,12 +18,13 @@
             >
               <i class="material-icons">edit</i>
             </span> -->
-            <span 
-              v-if="!child.parent" 
-              title="Delete" 
-              class="cursor-pointer pl-2" 
-              @click="deleteChild(child)">
-                <i class="material-icons">delete_forever</i>
+            <span
+              v-if="!child.parent"
+              title="Delete"
+              class="cursor-pointer pl-2"
+              @click="deleteChild(child)"
+            >
+              <i class="material-icons">delete_forever</i>
             </span>
             <!-- <span               title="Unsubscribe"
               class="cursor-pointer pl-2"
@@ -38,7 +44,7 @@
             <div class="row">
               <div class="col-sm-12">
                 <h5 class="mt-3">
-                  MSISDN: {{child.msisdn}}
+                  MSISDN: {{ child.msisdn }}
                   <span
                     v-if="!child.parent"
                     title="Update MSISDN"
@@ -59,8 +65,6 @@
   </div>
 </template>
 <script>
-import Swal from "sweetalert2";
-import Vue from "vue";
 import utils from "../utils";
 
 export default {
@@ -70,14 +74,14 @@ export default {
     parentId: String,
     childIndex: Number,
     parentMonthlyBalance: {},
-    selectedPricePlan: {}
+    selectedPricePlan: {},
   },
   data: () => ({
     componentKey: 0,
     changeChildMSISDN: {
       parentMsisdn: "",
       oldChildMsisdn: "",
-      newChildMsisdn: ""
+      newChildMsisdn: "",
     },
     childInChange: {},
     childDetail: {
@@ -86,30 +90,30 @@ export default {
       panel2: [true],
       childProfile: {
         id: "",
-        msisdn: ""
+        msisdn: "",
       },
       childMonthlyBalance: [
         {
           childProductId: {
             childId: "",
-            productId: ""
+            productId: "",
           },
           monthlyQuota: 0,
           totalQuota: 0,
-          remainingQuota: 0
-        }
+          remainingQuota: 0,
+        },
       ],
       childOneTimeBalance: [
         {
           childProductId: {
             childId: "",
-            productId: ""
+            productId: "",
           },
           monthlyQuota: 0,
           totalQuota: 0,
-          remainingQuota: 0
-        }
-      ]
+          remainingQuota: 0,
+        },
+      ],
     },
 
     childDataToPost: {
@@ -121,11 +125,11 @@ export default {
             {
               productId: "",
               quota: undefined,
-              unit: "ACTUAL"
-            }
-          ]
-        }
-      ]
+              unit: "ACTUAL",
+            },
+          ],
+        },
+      ],
     },
 
     childAccounts: [],
@@ -133,14 +137,14 @@ export default {
     monthlyQuota: [],
     OTQuota: [],
     loading: false,
-    submitted: false
+    submitted: false,
   }),
   methods: {
     updateMsisdn() {
-      this.$emit('updateMsisdn');
+      this.$emit("updateMsisdn");
     },
     deleteChild() {
-      this.$emit('delete');
+      this.$emit("delete");
     },
     getTotalQuota(product) {
       return "";
@@ -153,10 +157,8 @@ export default {
     forceRerender() {
       this.componentKey += 1;
     },
-    canEdit(child) {
-    },
-    stopEdit(child) {
-    },
+    canEdit(child) {},
+    stopEdit(child) {},
     IsNumber(evt) {
       return utils.isNumber(evt);
     },
@@ -170,24 +172,14 @@ export default {
       return utils.isNumber(evt, value);
     },
 
-    UnsubscribeChild(child) {
-      
-    },
+    UnsubscribeChild(child) {},
 
-    terminateChild(child) {
-     
-    },
+    terminateChild(child) {},
 
-    handleFpChileUser(child, index) {
-      
-    },
-    validateForm(child, index) {
-      
-    },
+    handleFpChileUser(child, index) {},
+    validateForm(child, index) {},
 
-    updateUserMSISDN() {
-      
-    },
+    updateUserMSISDN() {},
     handleOk(bvModalEvt) {
       bvModalEvt.preventDefault();
       this.updateUserMSISDN();
@@ -195,33 +187,7 @@ export default {
     addChild() {
       this.childAccounts.push(JSON.parse(JSON.stringify(this.childDetail)));
     },
-    getChildsOfParent(parentMsisdn) {
-      let obj = { parentMsisdn };
-      Vue.$http.post("/parent/getChildsOfParent", obj).then(result => {
-        if (result.errorCode == "00") {
-          this.childAccounts = result.data.childDetails;
-          this.childAccounts.forEach(child => {
-            child.canChange = false;
-            child.panel1 = [false];
-            child.panel2 = [false];
-          });
-        }
-      });
-    },
-    getChildProfile(child) {
-      return new Promise((resolve, reject) => {
-        let obj = { childMsisdn: child.childProfile.msisdn };
-        Vue.$http.post("/child/getChildProfile", obj).then(result => {
-          if (result.errorCode == "00") {
-            resolve(result.data);
-          } else {
-            reject(result.errorMsg);
-          }
-        });
-      });
-    },
     getmonthlyQuota(child, index) {
-     
       this.monthlyQuota = [];
       return this.monthlyQuota;
     },
@@ -241,7 +207,7 @@ export default {
       let value = 0;
       if (child.childMonthlyConfig) {
         let childProduct = child.childMonthlyConfig.find(
-          m => m.childProductId.productId == product.productId
+          (m) => m.childProductId.productId == product.productId
         );
         if (childProduct) {
           value = this.convertToDisplayUnits(
@@ -256,7 +222,7 @@ export default {
       this.changeChildMSISDN = {
         parentMsisdn: this.parentMsisdn,
         oldChildMsisdn: child.msisdn,
-        newChildMsisdn: ""
+        newChildMsisdn: "",
       };
       this.childInChange = child;
     },
@@ -290,10 +256,9 @@ export default {
     },
     formatMBsToBytes(bytes) {
       return utils.formatMBsToBytes(bytes);
-    }
+    },
   },
-  mounted() {
-  }
+  mounted() {},
 };
 </script>
 <style scoped>
