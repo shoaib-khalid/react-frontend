@@ -45,7 +45,7 @@
                 </tr>
                 <tr class="table-row" @click="goToLoginReport()">
                   <th scope="row">8</th>
-                  <td>Agent Login</td>
+                  <td>Login</td>
                 </tr>
                 <tr class="table-row" @click="goToProfileAccessReport()">
                   <th scope="row">9</th>
@@ -99,7 +99,7 @@
                 </tr>
                 <!-- <tr class="table-row" @click="goToPrepaidLoginReport()">
                   <th scope="row">4</th>
-                  <td>Agent Login</td>
+                  <td>Login</td>
                 </tr> -->
                 <!-- <tr class="table-row" @click="goToPrepaidProfileAccessReport()">
                   <th scope="row">5</th>

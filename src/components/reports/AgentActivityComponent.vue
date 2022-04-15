@@ -468,11 +468,6 @@ export default {
           sortable: false,
         },
         {
-          text: "User Type",
-          value: "User Type",
-          sortable: false,
-        },
-        {
           text: "Parent Number",
           value: "ParentNumber",
           sortable: false,

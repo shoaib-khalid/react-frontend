@@ -26,7 +26,10 @@
                   @keypress="IsNumber($event)"
                   autofocus
                 ></v-text-field>
-                <v-btn-toggle v-model="userStatus">
+                <v-btn-toggle
+                  v-if="selectedFpUserType === fpUserTypes.PREPAID"
+                  v-model="userStatus"
+                >
                   <v-btn flat value="parent">Parent</v-btn>
                   <v-btn flat value="child">Child</v-btn>
                 </v-btn-toggle>
