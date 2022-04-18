@@ -152,6 +152,7 @@ export default {
     loginRequest() {
       if (this.username === "testuser") {
         this.isTestUser = true;
+        console.log();
       }
 
       return Vue.$http.post(`${this.baseUrl}/user/login`, {
