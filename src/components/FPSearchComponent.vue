@@ -4,7 +4,7 @@
     <div class="card col-md-4 p-3">
       <div class="card-block">
         <div v-if="!createNewFF && !requestPending">
-          <div>
+          <div v-if="isTestUser">
             <v-btn @click="goBack" color="#3498db" dark id="back-button">
               <v-icon dark left>arrow_back</v-icon>
               Back
@@ -104,11 +104,9 @@
   </div>
 </template>
 <script>
-import Swal from "sweetalert2";
 import Vue from "vue";
 import utils from "../utils";
 import FPUserTypes from "../enums/FPUserTypes";
-import ApiUrls from "../enums/ApiUrls";
 
 export default {
   data: () => ({
@@ -119,11 +117,12 @@ export default {
     submitted: false,
     createNewFF: false,
     requestPending: false,
-    fpUserTypes: FPUserTypes,
     selectedFpUserType: "",
     userStatus: "parent",
     baseUrl: "",
     basePrepaidUrl: "",
+    fpUserTypes: FPUserTypes,
+    isTestUser: false,
   }),
   methods: {
     handleFpSearch() {
@@ -132,10 +131,10 @@ export default {
       this.$validator.validateAll().then((status) => {
         if (status) {
           switch (this.selectedFpUserType) {
-            case _this.fpUserTypes.PREPAID:
+            case this.fpUserTypes.PREPAID:
               this.resolveMsisdnPrepaid(_this);
               break;
-            case _this.fpUserTypes.POSTPAID:
+            case this.fpUserTypes.POSTPAID:
               console.log("Querying postpaid user");
               this.resolveMsisdnPostpaid(_this);
               break;
@@ -299,6 +298,7 @@ export default {
     if (!this.selectedFpUserType) {
       this.goBack();
     }
+    this.isTestUser = sessionStorage.getItem("isTestUser");
   },
   beforeDestroy() {},
 };

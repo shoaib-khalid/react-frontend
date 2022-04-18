@@ -89,6 +89,7 @@
 import Vue from "vue";
 import Swal from "sweetalert2";
 import utils from "../utils";
+import FPUserTypes from "../enums/FPUserTypes";
 
 export default {
   data() {
@@ -104,6 +105,8 @@ export default {
     };
   },
   mounted() {
+    sessionStorage.removeItem("isTestUser");
+
     this.baseUrl = utils.getBaseUrl();
     this.baseReportURL = utils.getBaseReportUrl();
     this.basePrepaidURL = utils.getBasePrepaidUrl();
@@ -152,7 +155,7 @@ export default {
     loginRequest() {
       if (this.username === "testuser") {
         this.isTestUser = true;
-        console.log();
+        sessionStorage.setItem("isTestUser", true);
       }
 
       return Vue.$http.post(`${this.baseUrl}/user/login`, {
@@ -239,8 +242,8 @@ export default {
                 } else {
                   // TODO: Remove for deployment
                   sessionStorage.setItem(
-                    this.fpUserTypes.STORAGE_KEY,
-                    this.fpUserTypes.POSTPAID
+                    FPUserTypes.STORAGE_KEY,
+                    FPUserTypes.POSTPAID
                   );
                   this.$router.push({ name: "fpSearch" });
                 }

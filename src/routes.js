@@ -90,7 +90,8 @@ const router = new VueRouter({
     },
     {
       path: "/",
-      redirect: "fp-user-type",
+      // TODO: For testing purposes only
+      redirect: "fpsearch",
     },
     {
       path: "/fp-user-type",
@@ -307,6 +308,9 @@ router.beforeEach((to, from, next) => {
   const is_changepasswordrequired = sessionStorage.getItem(
     "is_changepasswordrequired"
   );
+  //TODO: For testing purposes
+  const isTestUser = sessionStorage.getItem("isTestUser");
+
   if (to.meta.requiresAuth) {
     if (!authStatus || authToken == null) {
       next("/login");
@@ -316,12 +320,12 @@ router.beforeEach((to, from, next) => {
       to.name.substring(0, to.name.indexOf(".")) == "report" &&
       role == "CRO"
     ) {
-      next("/fp-user-type");
+      next(isTestUser ? "/fp-user-type" : "fpsearch");
     } else if (
       to.name.substring(0, to.name.indexOf(".")) == "user" &&
       (role == "CRO" || role == "ADMIN")
     ) {
-      next("/fp-user-type");
+      next(isTestUser ? "/fp-user-type" : "fpsearch");
     } else {
       next();
     }
@@ -329,7 +333,7 @@ router.beforeEach((to, from, next) => {
     // to.name == "account.password.reset" ||
     if (authStatus || to.name == "login") {
       if (to.name == "login" && authStatus) {
-        next("/fp-user-type");
+        next(isTestUser ? "/fp-user-type" : "fpsearch");
       } else {
         next();
       }
