@@ -270,7 +270,6 @@ button.btn-toggle-menu {
 <script>
 import loading_image from "../public/assets/pie-preloader-gif.svg";
 import Vue from "vue";
-import ApiUrls from "./enums/ApiUrls";
 import utils from "./utils";
 
 export default {
@@ -292,11 +291,8 @@ export default {
         c3: "red",
         c4: "red",
       },
-      baseUrl: "",
+      baseUrl: utils.getBaseUrl(),
     };
-  },
-  mounted() {
-    this.baseUrl = utils.getBaseUrl();
   },
   methods: {
     logout: function () {

@@ -141,7 +141,7 @@ import utils from "../../utils";
 export default {
   data() {
     return {
-      basePrepaidUrl: "",
+      basePrepaidUrl: utils.getBasePrepaidUrl(),
       tableData: [],
       headers: [
         {
@@ -200,12 +200,8 @@ export default {
             record.channel = record.channel ? record.channel : "";
             return record;
           });
-          this.filterData();
         });
     },
-  },
-  mounted() {
-    this.basePrepaidUrl = utils.getBasePrepaidUrl;
   },
 };
 </script>

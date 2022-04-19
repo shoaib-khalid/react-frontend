@@ -302,7 +302,7 @@ import utils from "../../utils";
 export default {
   data() {
     return {
-      baseReportUrl: "",
+      baseReportUrl: utils.getBaseReportUrl(),
       search: "",
       json_fields: {
         Date: {
@@ -842,10 +842,6 @@ export default {
       });
     },
   },
-  mounted() {
-    this.baseReportUrl = utils.getBaseReportUrl();
-  },
-  beforeDestroy() {},
 };
 </script>
 <style>

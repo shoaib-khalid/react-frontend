@@ -101,7 +101,7 @@ export default {
     familyPlans: [],
     loading: false,
     submitted: false,
-    baseUrl: "",
+    baseUrl: utils.getBaseUrl(),
   }),
   methods: {
     handleFpCreateUser() {
@@ -162,7 +162,6 @@ export default {
       : undefined;
     this.getFPPricePlan();
     this.$nextTick(() => this.$refs.refTosubmit.$el.focus());
-    this.baseUrl = utils.getBaseUrl();
   },
 };
 </script>

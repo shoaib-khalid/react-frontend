@@ -97,7 +97,7 @@ import Vue from "vue";
 import utils from "../../utils";
 export default {
   data: () => ({
-    baseUrl: "",
+    baseUrl: utils.getBaseUrl(),
     search: "",
     errorMsg: "",
     headers: [
@@ -113,7 +113,6 @@ export default {
   }),
   mounted() {
     this.getuserlist();
-    this.baseUrl = utils.getBaseUrl();
   },
   created() {},
   methods: {

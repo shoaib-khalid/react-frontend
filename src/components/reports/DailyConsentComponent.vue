@@ -196,6 +196,7 @@ import utils from "../../utils";
 export default {
   data() {
     return {
+      baseReportUrl: utils.getBaseReportUrl(),
       json_fields: {
         "Transaction Id": {
           field: "transactionDetails",
@@ -348,9 +349,7 @@ export default {
         let query = utils.getQueryString(obj);
         await Vue.$http
           .get(
-            window.ReportBaseURL +
-              "/reportdaily/consentEventReportDaily" +
-              query
+            `${this.baseReportUrl}/reportdaily/consentEventReportDaily${query}`
           )
           .then((result) => {
             if (result.errorCode == "00") {

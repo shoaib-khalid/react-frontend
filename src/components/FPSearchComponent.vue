@@ -120,8 +120,8 @@ export default {
     requestPending: false,
     selectedFpUserType: "",
     userStatus: "parent",
-    baseUrl: "",
-    basePrepaidUrl: "",
+    baseUrl: utils.getBaseUrl(),
+    basePrepaidUrl: utils.getBasePrepaidUrl(),
     fpUserTypes: FPUserTypes,
     isTestUser: false,
   }),
@@ -178,49 +178,7 @@ export default {
         );
     },
     resolveMsisdnPostpaid(_this) {
-      // this.$http
-      //   .post(`${this.baseUrl}/parent/getMsisdnStatus`, _this.fpSearch)
-      //   .then((result) => {
-      //     if (result.errorCode == "00") {
-      //       if (result.data.status == "NEW") {
-      //         sessionStorage.setItem("ParentMSISDN", this.fpSearch.userMsisdn);
-      //         _this.createNewFF = true;
-      //         _this.requestPending = false;
-      //         _this.$nextTick(() => _this.$refs.refToCreateNew.$el.focus());
-      //       } else if (result.data.status == "PENDING") {
-      //         _this.createNewFF = false;
-      //         _this.requestPending = true;
-      //         _this.$nextTick(() =>
-      //           _this.$refs.refToSubscriptionRequestSent.$el.focus()
-      //         );
-      //       } else if (
-      //         result.data.status == "SUSPENDED" ||
-      //         result.data.status == "BLOCKED" ||
-      //         result.data.status == "PP_BLACKLISTED"
-      //       ) {
-      //         this.$store.commit("notis/setAlert", {
-      //           type: "error",
-      //           title: "Nmber is " + result.data.status.replace("PP_", ""),
-      //           time: "4",
-      //         });
-      //       } else if (result.data.type == "PARENT") {
-      //         sessionStorage.setItem("ParentMSISDN", this.fpSearch.userMsisdn);
-      //         _this.$router.push({ name: "parentProfile" });
-      //       } else if (result.data.type == "CHILD") {
-      //         sessionStorage.setItem("ParentMSISDN", result.data.parentMsisdn);
-      //         sessionStorage.setItem("ChildMSISDN", this.fpSearch.userMsisdn);
-      //         _this.$router.push({ name: "childProfile" });
-      //       }
-      //     } else {
-      //       this.$store.commit("notis/setAlert", {
-      //         type: "error",
-      //         title: result.errorMsg,
-      //         time: "4",
-      //       });
-      //     }
-      //   });
-
-      axios
+      this.$http
         .post(`${this.baseUrl}/parent/getMsisdnStatus`, _this.fpSearch)
         .then((result) => {
           if (result.errorCode == "00") {
@@ -333,8 +291,6 @@ export default {
     },
   },
   mounted() {
-    this.baseURL = utils.getBaseUrl();
-    this.basePrepaidURL = utils.getBasePrepaidUrl();
     this.selectedFpUserType = sessionStorage.getItem(
       this.fpUserTypes.STORAGE_KEY
     );

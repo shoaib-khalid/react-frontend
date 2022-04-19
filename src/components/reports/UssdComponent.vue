@@ -148,7 +148,7 @@ import Vue from "vue";
 export default {
   data() {
     return {
-      baseReportUrl: "",
+      baseReportUrl: utils.getBaseReportUrl(),
       search: "",
       json_fields: {
         Number: {
@@ -351,9 +351,6 @@ export default {
         return data;
       });
     },
-  },
-  mounted() {
-    this.baseReportUrl = utils.getBaseReportUrl();
   },
 };
 </script>

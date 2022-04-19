@@ -261,7 +261,7 @@ import utils from "../../utils";
 export default {
   data() {
     return {
-      baseReportUrl: "",
+      baseReportUrl: utils.getBaseReportUrl(),
       OpcodeList: [],
       SelectedOpcode: [],
       search: "",
@@ -631,11 +631,6 @@ export default {
       });
     },
   },
-  mounted() {
-    this.getOpcode();
-    this.baseReportUrl = utils.getBaseReportUrl();
-  },
-  beforeDestroy() {},
 };
 </script>
 <style>

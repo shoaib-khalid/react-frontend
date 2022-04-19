@@ -227,7 +227,7 @@ import Vue from "vue";
 export default {
   data() {
     return {
-      baseReportUrl: "",
+      baseReportUrl: utils.getBaseReportUrl(),
       search: "",
       json_fields: {
         TransactionId: {
@@ -520,10 +520,6 @@ export default {
       });
     },
   },
-  mounted() {
-    this.baseReportUrl = utils.getBaseReportUrl();
-  },
-  beforeDestroy() {},
 };
 </script>
 <style>

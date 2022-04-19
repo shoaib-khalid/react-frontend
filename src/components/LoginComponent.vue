@@ -99,17 +99,13 @@ export default {
       submitted: false,
       error: "",
       isTestUser: false,
-      baseUrl: "",
-      basePrepaidURL: "",
-      baseReportURL: "",
+      baseUrl: utils.getBaseUrl(),
+      basePrepaidURL: utils.getBasePrepaidUrl(),
+      baseReportURL: utils.getBaseReportUrl(),
     };
   },
   mounted() {
     sessionStorage.removeItem("isTestUser");
-
-    this.baseUrl = utils.getBaseUrl();
-    this.baseReportURL = utils.getBaseReportUrl();
-    this.basePrepaidURL = utils.getBasePrepaidUrl();
 
     console.log(`BaseUrl: ${this.baseUrl}`);
     console.log(`BaseReportUrl: ${this.baseReportURL}`);

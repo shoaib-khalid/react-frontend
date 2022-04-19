@@ -75,12 +75,8 @@ import utils from "../../utils";
 
 export default {
   data: () => ({
-    baseUrl: "",
+    baseUrl: utils.getBaseUrl(),
   }),
-  computed: {},
-  mounted() {
-    this.baseUrl = utils.getBaseUrl();
-  },
   methods: {
     changePassword: async function () {
       const { value: formValues } = await Swal.fire({

@@ -439,7 +439,7 @@ export default {
     OTQuota: [],
     loading: false,
     submitted: false,
-    baseUrl: "",
+    baseUrl: utils.getBaseUrl(),
   }),
   methods: {
     getTotalQuota(product) {
@@ -1053,7 +1053,6 @@ export default {
   },
   mounted() {
     this.getChildsOfParent(this.parentMsisdn);
-    this.baseUrl = utils.getBaseUrl();
   },
 };
 </script>

@@ -69,7 +69,7 @@ import utils from "../../utils";
 export default {
   props: ["id"],
   data: () => ({
-    baseUrl: "",
+    baseUrl: utils.getBaseUrl(),
     user: {
       id: "",
       name: "",
@@ -122,7 +122,6 @@ export default {
     },
   },
   mounted() {
-    this.baseUrl = utils.getBaseUrl();
     if (this.$route.params.id) this.loadUserInfo();
     else {
       this.$router.push({ name: "user" });

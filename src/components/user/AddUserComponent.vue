@@ -89,7 +89,7 @@ import utils from "../../utils";
 export default {
   // props: ['userId'],
   data: () => ({
-    baseUrl: "",
+    baseUrl: utils.getBaseUrl(),
     company_list: [],
     roles: [],
     account: {
@@ -151,7 +151,6 @@ export default {
   },
   mounted() {
     this.loadRolePermission();
-    this.baseUrl = utils.getBaseUrl();
   },
 };
 </script>

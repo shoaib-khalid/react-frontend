@@ -408,7 +408,7 @@ export default {
     childAccounts: [],
     parentTransactionDetails: [],
     childTransactionDetails: [],
-    baseUrl: "",
+    baseUrl: utils.getBaseUrl(),
   }),
   methods: {
     resendConsent(id) {
@@ -606,7 +606,6 @@ export default {
     this.getConsentList();
     this.getChildsOfParent();
     this.getParentTransactionDetails();
-    this.baseUrl = utils.getBaseUrl();
   },
 };
 </script>

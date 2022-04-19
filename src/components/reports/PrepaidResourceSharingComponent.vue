@@ -148,7 +148,7 @@ import utils from "../../utils";
 export default {
   data() {
     return {
-      basePrepaidUrl: "",
+      basePrepaidUrl: utils.getBasePrepaidUrl(),
       tableData: [],
       headers: [
         {
@@ -224,9 +224,6 @@ export default {
           });
         });
     },
-  },
-  mounted() {
-    this.basePrepaidUrl = utils.getBasePrepaidUrl();
   },
 };
 </script>

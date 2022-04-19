@@ -462,7 +462,7 @@ export default {
     loading: false,
     submitted: false,
     childAccounts: [],
-    baseUrl: "",
+    baseUrl: utils.getBaseUrl(),
   }),
   methods: {
     forceRerender() {
@@ -985,8 +985,6 @@ export default {
       this.getParentProfile();
       this.getChildsOfParent(this.parentMsisdn);
     });
-
-    this.baseUrl = utils.getBaseUrl();
   },
 };
 </script>

@@ -78,15 +78,9 @@ export default {
       submitted: false,
       error: "",
       changing: false,
-      baseUrl: "",
+      baseUrl: utils.getBaseUrl(),
     };
   },
-  computed: {},
-  watch: {},
-  mounted() {
-    this.baseUrl = utils.getBaseUrl();
-  },
-  created() {},
   methods: {
     handleSubmit(e) {
       this.$validator.validateAll().then((status) => {

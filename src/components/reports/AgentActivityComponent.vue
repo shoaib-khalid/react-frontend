@@ -281,7 +281,7 @@ import utils from "../../utils";
 export default {
   data() {
     return {
-      baseReportUrl: "",
+      baseReportUrl: utils.getBaseReportUrl(),
       EventTypeList: [],
       selectedEvent: [],
       search: "",
@@ -697,10 +697,6 @@ export default {
       });
     },
   },
-  mounted() {
-    this.baseReportUrl = utils.getBaseReportUrl();
-  },
-  beforeDestroy() {},
 };
 </script>
 <style>

@@ -188,7 +188,7 @@ export default {
         { text: "FAILED", value: "FAILED" },
         { text: "CANCELLED", value: "CANCELLED" },
       ],
-      baseReportUrl: "",
+      baseReportUrl: utils.getBaseReportUrl(),
       search: "",
       json_fields: {
         Number: {
@@ -412,9 +412,6 @@ export default {
         return data;
       });
     },
-  },
-  mounted() {
-    this.baseReportUrl = utils.getBaseReportUrl();
   },
 };
 </script>

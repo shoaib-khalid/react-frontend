@@ -73,20 +73,14 @@ export default {
   },
 
   getBaseUrl() {
-    const baseUrl = `http://${process.env.VUE_APP_CORE_IP}:${process.env.VUE_APP_CORE_PORT}`;
-    console.log(`baseUrl: ${baseUrl}`);
-    return baseUrl;
+    return `http://${process.env.VUE_APP_CORE_IP}:${process.env.VUE_APP_CORE_PORT}`;
   },
 
   getBaseReportUrl() {
-    const baseReportUrl = `http://${process.env.VUE_APP_REPORT_CORE_IP}:${process.env.VUE_APP_REPORT_PORT}`;
-    console.log(`baseReportUrl: ${baseReportUrl}`);
-    return baseReportUrl;
+    return `http://${process.env.VUE_APP_REPORT_CORE_IP}:${process.env.VUE_APP_REPORT_PORT}`;
   },
 
   getBasePrepaidUrl() {
-    const basePrepaidUrl = `http://${process.env.VUE_APP_PREPAID_CORE_IP}:${process.env.VUE_APP_PREPAID_CORE_PORT}`;
-    console.log(`basePrepaidUrl: ${basePrepaidUrl}`);
-    return basePrepaidUrl;
+    return `http://${process.env.VUE_APP_PREPAID_CORE_IP}:${process.env.VUE_APP_PREPAID_CORE_PORT}`;
   },
 };

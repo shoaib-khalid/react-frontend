@@ -289,7 +289,7 @@ export default {
     loading: false,
     submitted: false,
     childTransactionDetails: [],
-    baseUrl: "",
+    baseUrl: utils.getBaseUrl(),
   }),
   methods: {
     getTotalQuota(product) {
@@ -544,7 +544,6 @@ export default {
       this.getChildTransactionDetails();
     });
     this.getMainProfile();
-    this.baseUrl = utils.getBaseUrl();
   },
 };
 </script>

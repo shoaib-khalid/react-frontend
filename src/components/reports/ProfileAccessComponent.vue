@@ -156,7 +156,7 @@ import utils from "../../utils";
 export default {
   data() {
     return {
-      baseReportUrl: "",
+      baseReportUrl: utils.getBaseReportUrl(),
       search: "",
       json_fields: {
         "Agent ID": {
@@ -346,9 +346,6 @@ export default {
         return data;
       });
     },
-  },
-  mounted() {
-    this.baseReportUrl = utils.getBaseReportUrl();
   },
 };
 </script>

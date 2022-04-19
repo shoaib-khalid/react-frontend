@@ -486,8 +486,8 @@ export default {
     loading: false,
     submitted: false,
     childAccounts: [],
-    baseUrl: "",
-    basePrepaidUrl: "",
+    baseUrl: utils.getBaseUrl(),
+    basePrepaidUrl: utils.getBasePrepaidUrl(),
 
     // Dialogs
     valid: true,
@@ -1025,8 +1025,6 @@ export default {
     },
   },
   mounted() {
-    this.baseUrl = utils.getBaseUrl();
-    this.basePrepaidUrl = utils.getBasePrepaidUrl();
     this.parentMsisdn = sessionStorage.getItem("ParentMSISDN");
 
     if (!this.parentMsisdn) {

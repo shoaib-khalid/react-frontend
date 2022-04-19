@@ -3,17 +3,13 @@ import Axios from "axios";
 import { store } from "../_stores/index";
 import router from "../routes";
 
-const token = sessionStorage.getItem("token");
-
-// Set config defaults when creating the instance
-
 window.axiosInstance = Axios.create({
-  // baseURL: baseURL, // api URL
   headers: { Accept: "application/json" }, // default headers
 });
 
 window.loading = false;
 
+const token = sessionStorage.getItem("token");
 if (token) {
   axiosInstance.defaults.headers.common["Authorization"] = `Bearer ${token}`;
 }
