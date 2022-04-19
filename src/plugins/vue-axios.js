@@ -5,38 +5,6 @@ import router from "../routes";
 
 const token = sessionStorage.getItem("token");
 
-// window.baseApiURL =
-//   "http:" +
-//   window.location.origin.split(":")[1] +
-//   ":" +
-//   process.env.VUE_APP_CORE_PORT; //" http://10.13.60.191:8090";
-// window.ReportBaseURL_CONST =
-//   "http:" +
-//   window.location.origin.split(":")[1] +
-//   ":" +
-//   process.env.VUE_APP_REPORT_PORT; //"http://10.13.60.191:9090";
-
-// let baseURL = window.baseApiURL;
-// if (sessionStorage.getItem("baseURL")) {
-//   baseURL = sessionStorage.getItem("baseURL").toString();
-// }
-// if (sessionStorage.getItem("ReportBaseURL")) {
-//   window.ReportBaseURL = sessionStorage.getItem("ReportBaseURL").toString();
-// } else {
-//   window.ReportBaseURL = window.ReportBaseURL_CONST;
-// }
-
-// if (process.env.NODE_ENV == "development") {
-//   baseURL =
-//     "http:" +
-//     window.location.origin.split(":")[1] +
-//     ":" +
-//     process.env.VUE_APP_CORE_PORT; //"http://10.13.60.191:8090/";
-//   window.baseApiURL = baseURL;
-// }
-
-//https://209.58.160.107:8056/
-
 // Set config defaults when creating the instance
 
 window.axiosInstance = Axios.create({
@@ -46,8 +14,9 @@ window.axiosInstance = Axios.create({
 
 window.loading = false;
 
-if (token)
+if (token) {
   axiosInstance.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+}
 
 // Add a request interceptor
 axiosInstance.interceptors.request.use(
