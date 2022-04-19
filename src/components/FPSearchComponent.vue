@@ -104,6 +104,7 @@
   </div>
 </template>
 <script>
+import axios from "axios";
 import Vue from "vue";
 import utils from "../utils";
 import FPUserTypes from "../enums/FPUserTypes";
@@ -148,7 +149,7 @@ export default {
       // TODO: Uncomment
       const parentMsisdn = _this.fpSearch.userMsisdn;
       // const parentMsisdn = "03005438062";
-      Vue.$http
+      this.$http
         .get(
           `${this.basePrepaidURL}/user/getSubscriberType?parentMsisdn=${parentMsisdn}`
         )
@@ -177,7 +178,49 @@ export default {
         );
     },
     resolveMsisdnPostpaid(_this) {
-      Vue.$http
+      // this.$http
+      //   .post(`${this.baseUrl}/parent/getMsisdnStatus`, _this.fpSearch)
+      //   .then((result) => {
+      //     if (result.errorCode == "00") {
+      //       if (result.data.status == "NEW") {
+      //         sessionStorage.setItem("ParentMSISDN", this.fpSearch.userMsisdn);
+      //         _this.createNewFF = true;
+      //         _this.requestPending = false;
+      //         _this.$nextTick(() => _this.$refs.refToCreateNew.$el.focus());
+      //       } else if (result.data.status == "PENDING") {
+      //         _this.createNewFF = false;
+      //         _this.requestPending = true;
+      //         _this.$nextTick(() =>
+      //           _this.$refs.refToSubscriptionRequestSent.$el.focus()
+      //         );
+      //       } else if (
+      //         result.data.status == "SUSPENDED" ||
+      //         result.data.status == "BLOCKED" ||
+      //         result.data.status == "PP_BLACKLISTED"
+      //       ) {
+      //         this.$store.commit("notis/setAlert", {
+      //           type: "error",
+      //           title: "Nmber is " + result.data.status.replace("PP_", ""),
+      //           time: "4",
+      //         });
+      //       } else if (result.data.type == "PARENT") {
+      //         sessionStorage.setItem("ParentMSISDN", this.fpSearch.userMsisdn);
+      //         _this.$router.push({ name: "parentProfile" });
+      //       } else if (result.data.type == "CHILD") {
+      //         sessionStorage.setItem("ParentMSISDN", result.data.parentMsisdn);
+      //         sessionStorage.setItem("ChildMSISDN", this.fpSearch.userMsisdn);
+      //         _this.$router.push({ name: "childProfile" });
+      //       }
+      //     } else {
+      //       this.$store.commit("notis/setAlert", {
+      //         type: "error",
+      //         title: result.errorMsg,
+      //         time: "4",
+      //       });
+      //     }
+      //   });
+
+      axios
         .post(`${this.baseUrl}/parent/getMsisdnStatus`, _this.fpSearch)
         .then((result) => {
           if (result.errorCode == "00") {
@@ -225,7 +268,7 @@ export default {
         let obj = {
           parentMsisdn: msisdn,
         };
-        Vue.$http
+        this.$http
           .post(`${this.baseUrl}/parent/isMsisdnEligibleForFP`, obj)
           .then((result) => {
             if (result.errorCode == "00") {
@@ -252,7 +295,7 @@ export default {
         parentMsisdn: msisdn,
         pricePlanId: "",
       };
-      Vue.$http
+      this.$http
         .post(`${this.baseUrl}/parent/provisionParent`, obj)
         .then((result) => {
           if (result.errorCode == "00") {
