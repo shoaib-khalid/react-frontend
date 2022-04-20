@@ -352,7 +352,9 @@ export default {
         let query = utils.getQueryString(obj);
         await Vue.$http
           .get(
-            `${this.baseReportUrl}/reportdaily/profileChangesReportDaily${query}`
+            this.baseReportUrl +
+              "/reportdaily/profileChangesReportDaily" +
+              query
           )
           .then((result) => {
             if (result.errorCode == "00") {

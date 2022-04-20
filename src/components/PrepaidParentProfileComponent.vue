@@ -563,7 +563,7 @@ export default {
     getParentProfile: function () {
       let _this = this;
       const obj = { parentMsisdn: _this.parentMsisdn };
-      Vue.$http.post(`${this.basePrepaidUrl}/groups/get`, obj).then(
+      Vue.$http.post(this.basePrepaidUrl + "/groups/get", obj).then(
         (result) => {
           if (!result.errorMsgUssd) {
             _this.parentProfile = result;
@@ -579,7 +579,7 @@ export default {
     },
     getBundles: function () {
       let _this = this;
-      Vue.$http.post(`${this.basePrepaidUrl}/bundles/get`).then(
+      Vue.$http.post(this.basePrepaidUrl + "/bundles/get").then(
         (result) => {
           if (result.data) {
             _this.bundles = result.data;
@@ -597,7 +597,7 @@ export default {
       };
       return new Promise(() => {
         Vue.$http
-          .post(`${this.baseUrl}/parent/unsubscribeParent`, obj)
+          .post(this.baseUrl + "/parent/unsubscribeParent", obj)
           .then((result) => {
             if (result.errorMsgUssdCode == "00") {
               this.$store.commit("notis/setAlert", {
@@ -623,7 +623,7 @@ export default {
       };
       return new Promise(() => {
         Vue.$http
-          .post(`${this.baseUrl}/parent/terminateParent`, obj)
+          .post(this.baseUrl + "/parent/terminateParent", obj)
           .then((result) => {
             if (result.errorMsgUssdCode == "00") {
               this.$store.commit("notis/setAlert", {
@@ -797,7 +797,7 @@ export default {
         groupName: this.newGroupName,
       };
       this.closeAddGroupDialog();
-      Vue.$http.post(`${this.basePrepaidUrl}/groups/create`, obj).then(
+      Vue.$http.post(this.basePrepaidUrl + "/groups/create", obj).then(
         (result) => {
           if (!result.errorMsgUssd) {
             this.parentProfile = result;
@@ -829,7 +829,7 @@ export default {
       this.groupEditRequest.newGroupName = this.newGroupName;
       this.closeEditGroupDialog();
       Vue.$http
-        .post(`${this.basePrepaidUrl}/groups/update`, this.groupEditRequest)
+        .post(this.basePrepaidUrl + "/groups/update", this.groupEditRequest)
         .then(
           (result) => {
             if (!result.errorMsgUssd) {
@@ -854,7 +854,7 @@ export default {
     },
     showDeleteGroupDialog(groupName) {
       Swal.fire({
-        title: `ARE YOU SURE YOU WANT TO DELETE ${groupName}?`,
+        title: "ARE YOU SURE YOU WANT TO DELETE " + groupName + "?",
         showCancelButton: true,
         confirmButtonColor: "#feae23",
         cancelButtonColor: "#fd2222",
@@ -874,7 +874,7 @@ export default {
         parentMsisdn: this.parentProfile.msisdn,
       };
       Vue.$http
-        .post(`${this.basePrepaidUrl}/groups/delete`, groupDeleteRequest)
+        .post(this.basePrepaidUrl + "/groups/delete", groupDeleteRequest)
         .then(
           (result) => {
             if (!result.errorMsgUssd) {
@@ -907,7 +907,7 @@ export default {
       this.closeAddUserDialog();
       console.log("Sending new user request.", this.newUserRequest);
       Vue.$http
-        .post(`${this.basePrepaidUrl}/groups/addMember`, this.newUserRequest)
+        .post(this.basePrepaidUrl + "/groups/addMember", this.newUserRequest)
         .then(
           (result) => {
             this.newUserRequest = {};
@@ -948,7 +948,7 @@ export default {
       );
       Vue.$http
         .post(
-          `${this.basePrepaidUrl}/groups/updateMember`,
+          this.basePrepaidUrl + "/groups/updateMember",
           this.updateChildMsisdnRequest
         )
         .then(
@@ -970,7 +970,7 @@ export default {
     },
     showDeleteChildDialog(groupNumber, msisdn) {
       Swal.fire({
-        title: `ARE YOU SURE YOU WANT TO DELETE ${msisdn}?`,
+        title: "ARE YOU SURE YOU WANT TO DELETE " + msisdn + "?",
         showCancelButton: true,
         confirmButtonColor: "#feae23",
         cancelButtonColor: "#fd2222",
@@ -991,7 +991,7 @@ export default {
         parentMsisdn: this.parentProfile.msisdn,
       };
       Vue.$http
-        .post(`${this.basePrepaidUrl}/groups/deleteMember`, childDeleteRequest)
+        .post(this.basePrepaidUrl + "/groups/deleteMember", childDeleteRequest)
         .then(
           (result) => {
             if (!result.errorMsgUssd) {

@@ -73,14 +73,29 @@ export default {
   },
 
   getBaseUrl() {
-    return `http://${process.env.VUE_APP_CORE_IP}:${process.env.VUE_APP_CORE_PORT}`;
+    return (
+      "http://" +
+      process.env.VUE_APP_CORE_IP +
+      ":" +
+      process.env.VUE_APP_CORE_PORT
+    );
   },
 
   getBaseReportUrl() {
-    return `http://${process.env.VUE_APP_REPORT_CORE_IP}:${process.env.VUE_APP_REPORT_PORT}`;
+    return (
+      "http://" +
+      process.env.VUE_APP_REPORT_CORE_IP +
+      ":" +
+      process.env.VUE_APP_REPORT_CORE_PORT
+    );
   },
 
   getBasePrepaidUrl() {
-    return `http://${process.env.VUE_APP_PREPAID_CORE_IP}:${process.env.VUE_APP_PREPAID_CORE_PORT}`;
+    return (
+      "http://" +
+      process.env.VUE_APP_PREPAID_CORE_IP +
+      ":" +
+      process.env.VUE_APP_PREPAID_CORE_PORT
+    );
   },
 };

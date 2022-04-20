@@ -416,7 +416,7 @@ export default {
         id: id,
       };
       Vue.$http
-        .post(`${this.baseUrl}/parent/resendConsent`, obj)
+        .post(this.baseUrl + "/parent/resendConsent", obj)
         .then((result) => {
           if (result.errorCode == "00") {
             this.$store.commit("notis/setAlert", {
@@ -438,7 +438,7 @@ export default {
         id: id,
       };
       Vue.$http
-        .post(`${this.baseUrl}/parent/cancelConsent`, obj)
+        .post(this.baseUrl + "/parent/cancelConsent", obj)
         .then((result) => {
           if (result.errorCode == "00") {
             this.$store.commit("notis/setAlert", {
@@ -466,7 +466,7 @@ export default {
         childMsisdn: "",
       };
       Vue.$http
-        .post(`${this.baseUrl}/parent/getConsentList`, obj)
+        .post(this.baseUrl + "/parent/getConsentList", obj)
         .then((result) => {
           if (result.errorCode == "00") {
             this.consentList = result.data;
@@ -492,7 +492,7 @@ export default {
       let _this = this;
       let obj = { parentMsisdn: this.parentMsisdn };
       Vue.$http
-        .post(`${this.baseUrl}/parent/getChildsOfParent`, obj)
+        .post(this.baseUrl + "/parent/getChildsOfParent", obj)
         .then((result) => {
           if (result.errorCode == "00") {
             _this.childAccounts = result.data.childDetails;
@@ -508,7 +508,7 @@ export default {
       };
       // /transaction/getParentTransactionDetails
       Vue.$http
-        .post(`${this.baseUrl}/transaction/getParentEventDetails`, obj)
+        .post(this.baseUrl + "/transaction/getParentEventDetails", obj)
         .then((result) => {
           if (result.errorCode == "00") {
             this.parentTransactionDetails = result.data;
@@ -526,7 +526,7 @@ export default {
         };
         // /transaction/getChildTransactionDetails
         Vue.$http
-          .post(`${this.baseUrl}/transaction/getChildEventDetails`, obj)
+          .post(this.baseUrl + "/transaction/getChildEventDetails", obj)
           .then((result) => {
             if (result.errorCode == "00") {
               _this.childTransactionDetails = result.data;
@@ -542,7 +542,7 @@ export default {
         parentMsisdn: this.parentMsisdn,
       };
       Vue.$http
-        .post(`${this.baseUrl}/parent/activateParent`, obj)
+        .post(this.baseUrl + "/parent/activateParent", obj)
         .then((result) => {
           if (result.errorCode == "00") {
             this.$store.commit("notis/setAlert", {
@@ -565,7 +565,7 @@ export default {
         parentMsisdn: this.parentMsisdn,
       };
       Vue.$http
-        .post(`${this.baseUrl}/parent/reinitiateRenewal`, obj)
+        .post(this.baseUrl + "/parent/reinitiateRenewal", obj)
         .then((result) => {
           if (result.errorCode == "00") {
             this.$store.commit("notis/setAlert", {

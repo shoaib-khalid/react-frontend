@@ -331,7 +331,7 @@ export default {
       return new Promise((resolve) => {
         let obj = { childMsisdn: this.childMsisdn };
         Vue.$http
-          .post(`${this.baseUrl}/child/getChildProfile`, obj)
+          .post(this.baseUrl + "/child/getChildProfile", obj)
           .then((result) => {
             if (result.errorCode == "00") {
               this.childAccount = result.data;
@@ -344,7 +344,7 @@ export default {
       let _this = this;
       let obj = { parentMsisdn: this.parentMsisdn };
       Vue.$http
-        .post(`${this.baseUrl}/parent/getParentProfile`, obj)
+        .post(this.baseUrl + "/parent/getParentProfile", obj)
         .then((result) => {
           if (result.errorCode == "00") {
             _this.mainAccount = result.data;
@@ -383,7 +383,7 @@ export default {
           };
           Vue.$http
             .post(
-              `${this.baseUrl}/child/terminateCrmPendingChild`,
+              this.baseUrl + "/child/terminateCrmPendingChild",
               _childToUnsub
             )
             .then((result) => {
@@ -421,7 +421,7 @@ export default {
             childMsisdn: this.childMsisdn,
           };
           Vue.$http
-            .post(`${this.baseUrl}/child/unsubChild`, _childToUnsub)
+            .post(this.baseUrl + "/child/unsubChild", _childToUnsub)
             .then((result) => {
               if (result.errorCode == "00") {
                 this.$store.commit("notis/setAlert", {
@@ -468,7 +468,7 @@ export default {
               };
             }
             Vue.$http
-              .post(`${this.baseUrl}/child/unsubChild`, _childToUnsub)
+              .post(this.baseUrl + "/child/unsubChild", _childToUnsub)
               .then((result) => {
                 if (result.errorCode == "00") {
                   this.$store.commit("notis/setAlert", {
@@ -495,7 +495,7 @@ export default {
           typeOfPricePlan: "PREPAID",
         };
         Vue.$http
-          .post(`${this.baseUrl}/general/getOtherPricePlan`, param)
+          .post(this.baseUrl + "/general/getOtherPricePlan", param)
           .then((result) => {
             if (result.errorCode == "00") {
               var obj = {};
@@ -515,7 +515,7 @@ export default {
         opcodeId: "",
       };
       Vue.$http
-        .post(`${this.baseUrl}/transaction/getChildEventDetails`, obj)
+        .post(this.baseUrl + "/transaction/getChildEventDetails", obj)
         .then((result) => {
           if (result.errorCode == "00") {
             this.childTransactionDetails = result.data;

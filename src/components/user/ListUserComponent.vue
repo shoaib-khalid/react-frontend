@@ -121,7 +121,7 @@ export default {
         pageNumber: 1,
         pageSize: Number.MAX_VALUE,
       };
-      Vue.$http.post(`${this.baseUrl}/user/getUserList`, obj).then((result) => {
+      Vue.$http.post(this.baseUrl + "/user/getUserList", obj).then((result) => {
         if (result.errorCode == "00") {
           this.users = result.data;
         } else if (result.errorCode == "53") {
@@ -144,7 +144,7 @@ export default {
             id: id,
           };
           Vue.$http
-            .post(`${this.baseUrl}/user/resetUserPassword`, obj)
+            .post(this.baseUrl + "/user/resetUserPassword", obj)
             .then((result) => {
               if (result.errorCode == "00") {
                 this.$store.commit("notis/setAlert", {
@@ -182,7 +182,7 @@ export default {
             id: id,
           };
           Vue.$http
-            .post(`${this.baseUrl}user/deleteUser`, obj)
+            .post(this.baseUrl + "user/deleteUser", obj)
             .then((result) => {
               if (result.errorCode == "00") {
                 this.$store.commit("notis/setAlert", {

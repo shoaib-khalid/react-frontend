@@ -531,7 +531,7 @@ export default {
             };
             Vue.$http
               .post(
-                `${this.baseUrl}/child/deleteChildFromParent`,
+                this.baseUrl + "/child/deleteChildFromParent",
                 _childToDelete
               )
               .then((result) => {
@@ -583,7 +583,7 @@ export default {
               childMsisdn: child.childProfile.msisdn,
             };
             Vue.$http
-              .post(`${this.baseUrl}/child/unsubChild`, _childToUnsub)
+              .post(this.baseUrl + "/child/unsubChild", _childToUnsub)
               .then((result) => {
                 if (result.errorCode == "00") {
                   this.$store.commit("notis/setAlert", {
@@ -622,7 +622,7 @@ export default {
             };
             Vue.$http
               .post(
-                `${this.baseUrl}/child/terminateCrmPendingChild`,
+                this.baseUrl + "/child/terminateCrmPendingChild",
                 _childToUnsub
               )
               .then((result) => {
@@ -664,7 +664,7 @@ export default {
           if (child.childProfile.id) {
             this.submitted = true;
             Vue.$http
-              .post(`${this.baseUrl}/child/updateChildQuota`, _childDataToPost)
+              .post(this.baseUrl + "/child/updateChildQuota", _childDataToPost)
               .then((result) => {
                 if (result.errorCode == "00") {
                   this.$store.commit("notis/setAlert", {
@@ -692,7 +692,7 @@ export default {
           } else {
             this.submitted = true;
             Vue.$http
-              .post(`${this.baseUrl}/child/addChildToParent`, _childDataToPost)
+              .post(this.baseUrl + "/child/addChildToParent", _childDataToPost)
               .then((result) => {
                 if (result.errorCode == "00") {
                   this.$store.commit("notis/setAlert", {
@@ -793,7 +793,7 @@ export default {
             });
             Vue.$http
               .post(
-                `${this.baseUrl}/child/replaceChildOfParent`,
+                this.baseUrl + "/child/replaceChildOfParent",
                 _this.changeChildMSISDN
               )
               .then((result) => {
@@ -831,7 +831,7 @@ export default {
     getChildsOfParent(parentMsisdn) {
       let obj = { parentMsisdn };
       Vue.$http
-        .post(`${this.baseUrl}/parent/getChildsOfParent`, obj)
+        .post(this.baseUrl + "/parent/getChildsOfParent", obj)
         .then((result) => {
           if (result.errorCode == "00") {
             this.childAccounts = result.data.childDetails;
@@ -847,7 +847,7 @@ export default {
       return new Promise((resolve, reject) => {
         let obj = { childMsisdn: child.childProfile.msisdn };
         Vue.$http
-          .post(`${this.baseUrl}/child/getChildProfile`, obj)
+          .post(this.baseUrl + "/child/getChildProfile", obj)
           .then((result) => {
             if (result.errorCode == "00") {
               resolve(result.data);

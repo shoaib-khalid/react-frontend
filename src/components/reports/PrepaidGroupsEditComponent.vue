@@ -214,7 +214,7 @@ export default {
       const queryParams = utils.getQueryString(queryObj);
 
       Vue.$http
-        .post(`${this.basePrepaidUrl}/reports/getGroupReport${queryParams}`)
+        .post(this.basePrepaidUrl + "/reports/getGroupReport" + queryParams)
         .then((result) => {
           this.reportData = result.map((record) => {
             const date = new Date(record.operationDate);

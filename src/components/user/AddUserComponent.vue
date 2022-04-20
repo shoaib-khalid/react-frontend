@@ -118,7 +118,7 @@ export default {
       this.$validator.validateAll().then((status) => {
         if (status) {
           Vue.$http
-            .post(`${this.baseUrl}/user/addUser`, this.account)
+            .post(this.baseUrl + "/user/addUser", this.account)
             .then((result) => {
               if (result.errorCode == "00") {
                 this.$store.commit("notis/setAlert", {
@@ -141,7 +141,7 @@ export default {
     loadRolePermission() {
       let that = this;
       Vue.$http
-        .post(`${this.baseUrl}/permission/getRole`, {})
+        .post(this.baseUrl + "/permission/getRole", {})
         .then((result) => {
           if (result.errorCode == "00") {
             that.roles = result.data;

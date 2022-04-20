@@ -697,7 +697,9 @@ export default {
         let query = utils.getQueryString(obj);
         await Vue.$http
           .get(
-            `${this.baseReportUrl}/transaction/getParentResourceSharingReport${query}`
+            this.baseReportUrl +
+              "/transaction/getParentResourceSharingReport" +
+              query
           )
           .then((result) => {
             if (result.errorCode == "00") {

@@ -189,7 +189,7 @@ export default {
         };
 
         Vue.$http
-          .post(`${this.baseUrl}/user/changeUserPassword`, obj)
+          .post(this.baseUrl + "/user/changeUserPassword", obj)
           .then((result) => {
             if (result.errorCode == "00") {
               this.$store.commit("notis/setAlert", {

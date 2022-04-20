@@ -303,7 +303,7 @@ export default {
         };
         let query = utils.getQueryString(obj);
         await Vue.$http
-          .get(`${this.baseReportUrl}/reportdaily/ussdLogs${query}`)
+          .get(this.baseReportUrl + "/reportdaily/ussdLogs" + query)
           .then((result) => {
             if (result.errorCode == "00") {
               if (isExport) {

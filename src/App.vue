@@ -303,7 +303,7 @@ export default {
         username: userobj.username,
         token: token,
       };
-      Vue.$http.post(`${this.baseUrl}/user/logout`, obj).then((result) => {
+      Vue.$http.post(this.baseUrl + "/user/logout", obj).then((result) => {
         if (result.errorCode == "00") {
           this.$store.commit("logout");
           this.$router.push({ name: "login" });
@@ -328,6 +328,47 @@ export default {
     goReport() {
       this.$router.push({ name: "report" });
     },
+  },
+  mounted() {
+    console.log(
+      "baseUrl: http://" +
+        process.env.VUE_APP_CORE_IP +
+        ":" +
+        process.env.VUE_APP_CORE_PORT
+    );
+    console.log(
+      "basePrepaidUrl: http://" +
+        process.env.VUE_APP_PREPAID_CORE_IP +
+        ":" +
+        process.env.VUE_APP_PREPAID_CORE_PORT
+    );
+    console.log(
+      "baseReportUrl: http://" +
+        process.env.VUE_APP_REPORT_CORE_IP +
+        ":" +
+        process.env.VUE_APP_REPORT_CORE_PORT
+    );
+    sessionStorage.setItem(
+      "baseUrl",
+      "http://" +
+        process.env.VUE_APP_CORE_IP +
+        ":" +
+        process.env.VUE_APP_CORE_PORT
+    );
+    sessionStorage.setItem(
+      "basePrepaidUrl",
+      "http://" +
+        process.env.VUE_APP_PREPAID_CORE_IP +
+        ":" +
+        process.env.VUE_APP_PREPAID_CORE_PORT
+    );
+    sessionStorage.setItem(
+      "baseReportUrl",
+      "http://" +
+        process.env.VUE_APP_REPORT_CORE_IP +
+        ":" +
+        process.env.VUE_APP_REPORT_CORE_PORT
+    );
   },
 };
 </script>

@@ -111,7 +111,7 @@ export default {
       this.$validator.validateAll().then((status) => {
         if (status) {
           Vue.$http
-            .post(`${this.baseUrl}/parent/provisionParent`, this.fpAccount)
+            .post(this.baseUrl + "/parent/provisionParent", this.fpAccount)
             .then((result) => {
               if (result.errorCode == "00") {
                 this.$store.commit("notis/setAlert", {
@@ -133,7 +133,7 @@ export default {
     },
     getFPPricePlan: function () {
       Vue.$http
-        .post(`${this.baseUrl}/general/getFPPricePlan`, {})
+        .post(this.baseUrl + "/general/getFPPricePlan", {})
         .then((result) => {
           if (result.errorCode == "00") {
             this.familyPlans = result.data;

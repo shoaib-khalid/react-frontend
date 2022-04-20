@@ -201,7 +201,9 @@ export default {
 
       Vue.$http
         .post(
-          `${this.basePrepaidUrl}/reports/getHeirarchyAndSubReport${queryParams}`
+          this.basePrepaidUrl +
+            "/reports/getHeirarchyAndSubReport" +
+            queryParams
         )
         .then((result) => {
           this.tableData = result.map((record) => {

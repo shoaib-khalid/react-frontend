@@ -567,7 +567,9 @@ export default {
         let query = utils.getQueryString(obj);
         await Vue.$http
           .get(
-            `${this.baseReportUrl}/reportdaily/transactionEventReportDaily${query}`
+            this.baseReportUrl +
+              "/reportdaily/transactionEventReportDaily" +
+              query
           )
           .then((result) => {
             if (result.errorCode == "00") {
@@ -608,7 +610,7 @@ export default {
     },
     getOpcode() {
       Vue.$http
-        .post(`${this.baseReportUrl}/general/getReportOpcode`, {})
+        .post(this.baseReportUrl + "/general/getReportOpcode", {})
         .then((result) => {
           if (result.errorCode == "00") {
             this.OpcodeList = result.data;

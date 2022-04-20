@@ -789,7 +789,7 @@ export default {
         };
         let query = utils.getQueryString(obj);
         await Vue.$http
-          .get(`${this.baseReportUrl}/transaction/getSummaryReport${query}`)
+          .get(this.baseReportUrl + "/transaction/getSummaryReport" + query)
           .then((result) => {
             if (result.errorCode == "00") {
               if (isExport) {

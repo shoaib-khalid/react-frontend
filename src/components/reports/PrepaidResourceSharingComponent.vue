@@ -214,7 +214,9 @@ export default {
       const queryParams = utils.getQueryString(queryObj);
       Vue.$http
         .post(
-          `${this.basePrepaidUrl}/reports/getResourceSharingReport${queryParams}`
+          this.basePrepaidUrl +
+            "/reports/getResourceSharingReport" +
+            queryParams
         )
         .then((result) => {
           this.tableData = result.map((record) => {

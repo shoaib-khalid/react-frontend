@@ -618,7 +618,7 @@ export default {
         newFPPricePlanId: newPPId,
       };
       Vue.$http
-        .post(`${this.baseUrl}/parent/changeParentPP`, obj)
+        .post(this.baseUrl+"/parent/changeParentPP", obj)
         .then((result) => {
           if (result.errorCode == "00") {
             this.$store.commit("notis/setAlert", {
@@ -640,7 +640,7 @@ export default {
       let _this = this;
       return new Promise((resolve) => {
         Vue.$http
-          .post(`${this.baseUrl}/general/getFPPricePlan`, {})
+          .post(this.baseUrl+"/general/getFPPricePlan", {})
           .then((result) => {
             if (result.errorCode == "00") {
               _this.pricePlans = result.data;
@@ -656,7 +656,7 @@ export default {
           typeOfPricePlan: "PREPAID",
         };
         Vue.$http
-          .post(`${this.baseUrl}/general/getOtherPricePlan`, param)
+          .post(this.baseUrl+"/general/getOtherPricePlan", param)
           .then((result) => {
             if (result.errorCode == "00") {
               var obj = {};
@@ -673,7 +673,7 @@ export default {
       let products = [];
       let obj = { parentMsisdn: _this.parentMsisdn };
       Vue.$http
-        .post(`${this.baseUrl}/parent/getParentProfile`, obj)
+        .post(this.baseUrl+"/parent/getParentProfile", obj)
         .then((result) => {
           if (result.errorCode == "00") {
             _this.parentProfile = result.data.parentProfile;
@@ -731,7 +731,7 @@ export default {
       };
       return new Promise(() => {
         Vue.$http
-          .post(`${this.baseUrl}/parent/unsubscribeParent`, obj)
+          .post(this.baseUrl+"/parent/unsubscribeParent", obj)
           .then((result) => {
             if (result.errorCode == "00") {
               this.$store.commit("notis/setAlert", {
@@ -756,7 +756,7 @@ export default {
       };
       return new Promise(() => {
         Vue.$http
-          .post(`${this.baseUrl}/parent/resumeParent`, obj)
+          .post(this.baseUrl+"/parent/resumeParent", obj)
           .then((result) => {
             if (result.errorCode == "00") {
               this.$store.commit("notis/setAlert", {
@@ -782,7 +782,7 @@ export default {
       };
       return new Promise(() => {
         Vue.$http
-          .post(`${this.baseUrl}/parent/terminateParent`, obj)
+          .post(this.baseUrl+"/parent/terminateParent", obj)
           .then((result) => {
             if (result.errorCode == "00") {
               this.$store.commit("notis/setAlert", {
@@ -957,7 +957,7 @@ export default {
     getChildsOfParent(parentMsisdn) {
       let obj = { parentMsisdn };
       Vue.$http
-        .post(`${this.baseUrl}/parent/getChildsOfParent`, obj)
+        .post(this.baseUrl+"/parent/getChildsOfParent`, obj)
         .then((result) => {
           if (result.errorCode == "00") {
             this.childAccounts = result.data.childDetails;

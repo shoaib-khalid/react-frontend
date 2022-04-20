@@ -106,10 +106,6 @@ export default {
   },
   mounted() {
     sessionStorage.removeItem("isTestUser");
-
-    console.log(`BaseUrl: ${this.baseUrl}`);
-    console.log(`BaseReportUrl: ${this.baseReportURL}`);
-    console.log(`BasePrepaidUrl: ${this.basePrepaidURL}`);
   },
   methods: {
     resetPassword: async function () {
@@ -126,7 +122,7 @@ export default {
           "/account/password/reset/"
         );
         Vue.$http
-          .post(`${this.baseUrl}/user/resetpassword`, {
+          .post(this.baseUrl + "/user/resetpassword", {
             domain: path,
             email: email,
           })
@@ -154,14 +150,14 @@ export default {
         sessionStorage.setItem("isTestUser", true);
       }
 
-      return Vue.$http.post(`${this.baseUrl}/user/login`, {
+      return Vue.$http.post(this.baseUrl + "/user/login", {
         username: this.username,
         password: this.password,
       });
     },
     loadRolePermission(loginInfo) {
       Vue.$http
-        .get(`${this.baseUrl}/permission/rolepermission`)
+        .get(this.baseUrl + "/permission/rolepermission")
         .then((result) => {
           if (result.errorCode == "00") {
             let role = result.data.find((val) => val.roleId == loginInfo.role);
@@ -260,7 +256,7 @@ export default {
     loadCompanyAdminDetail: function (info, data) {
       Vue.$http
         .get(
-          `${this.baseUrl}/master/getmasterbycompany/${info.user.company.id}`
+          this.baseUrl + "/master/getmasterbycompany/" + info.user.company.id
         )
         .then((result) => {
           if (result.errorCode == "00") {

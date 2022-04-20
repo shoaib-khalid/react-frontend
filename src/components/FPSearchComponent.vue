@@ -104,8 +104,6 @@
   </div>
 </template>
 <script>
-import axios from "axios";
-import Vue from "vue";
 import utils from "../utils";
 import FPUserTypes from "../enums/FPUserTypes";
 
@@ -146,12 +144,12 @@ export default {
       });
     },
     resolveMsisdnPrepaid(_this) {
-      // TODO: Uncomment
       const parentMsisdn = _this.fpSearch.userMsisdn;
-      // const parentMsisdn = "03005438062";
       this.$http
         .get(
-          `${this.basePrepaidURL}/user/getSubscriberType?parentMsisdn=${parentMsisdn}`
+          this.basePrepaidUrl +
+            "/user/getSubscriberType?parentMsisdn=" +
+            parentMsisdn
         )
         .then(
           (result) => {
@@ -179,7 +177,7 @@ export default {
     },
     resolveMsisdnPostpaid(_this) {
       this.$http
-        .post(`${this.baseUrl}/parent/getMsisdnStatus`, _this.fpSearch)
+        .post(this.baseUrl + "/parent/getMsisdnStatus", _this.fpSearch)
         .then((result) => {
           if (result.errorCode == "00") {
             if (result.data.status == "NEW") {
@@ -227,7 +225,7 @@ export default {
           parentMsisdn: msisdn,
         };
         this.$http
-          .post(`${this.baseUrl}/parent/isMsisdnEligibleForFP`, obj)
+          .post(this.baseUrl + "/parent/isMsisdnEligibleForFP", obj)
           .then((result) => {
             if (result.errorCode == "00") {
               if (result.data.isSubscribed) {
@@ -254,7 +252,7 @@ export default {
         pricePlanId: "",
       };
       this.$http
-        .post(`${this.baseUrl}/parent/provisionParent`, obj)
+        .post(this.baseUrl + "/parent/provisionParent", obj)
         .then((result) => {
           if (result.errorCode == "00") {
             this.$store.commit("notis/setAlert", {
@@ -291,6 +289,9 @@ export default {
     },
   },
   mounted() {
+    this.baseUrl = utils.getBaseUrl();
+    this.basePrepaidUrl = utils.getBasePrepaidUrl();
+
     this.selectedFpUserType = sessionStorage.getItem(
       this.fpUserTypes.STORAGE_KEY
     );
