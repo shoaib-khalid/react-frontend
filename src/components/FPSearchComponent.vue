@@ -145,69 +145,92 @@ export default {
     },
     resolveMsisdnPrepaid(_this) {
       const parentMsisdn = _this.fpSearch.userMsisdn;
-      this.$http
-        .get(
-          this.basePrepaidUrl +
-            "/user/getSubscriberType?parentMsisdn=" +
-            parentMsisdn
-        )
-        .then(
-          (result) => {
-            console.log(result);
-            if (result === "Prepaid") {
-              sessionStorage.setItem("ParentMSISDN", parentMsisdn);
-              _this.$router.push({ name: "prepaidParentProfile" });
-            } else {
-              // TODO: Give option to create prepaid subscriber
-              this.$store.commit("notis/setAlert", {
-                type: "error",
-                title: "Not a subscriber",
-                time: "4",
-              });
-            }
-          },
-          (error) => {
+      const requestUrl =
+        this.basePrepaidUrl +
+        "/user/getSubscriberType?parentMsisdn=" +
+        parentMsisdn;
+      console.log("Sending request to " + requestUrl);
+      this.$http.get(requestUrl).then(
+        (result) => {
+          console.log(result);
+          if (result === "Prepaid") {
+            sessionStorage.setItem("ParentMSISDN", parentMsisdn);
+            _this.$router.push({ name: "prepaidParentProfile" });
+          } else {
+            // TODO: Give option to create prepaid subscriber
             this.$store.commit("notis/setAlert", {
               type: "error",
-              title: error,
+              title: "Not a subscriber",
               time: "4",
             });
           }
-        );
+        },
+        (error) => {
+          this.$store.commit("notis/setAlert", {
+            type: "error",
+            title: error,
+            time: "4",
+          });
+        }
+      );
     },
     resolveMsisdnPostpaid(_this) {
-      this.$http
-        .post(this.baseUrl + "/parent/getMsisdnStatus", _this.fpSearch)
-        .then((result) => {
+      const requestUrl = this.baseUrl + "/parent/getMsisdnStatus";
+      console.log("Sending request to " + requestUrl);
+      this.$http.post(requestUrl, _this.fpSearch).then((result) => {
+        if (result.errorCode == "00") {
+          if (result.data.status == "NEW") {
+            sessionStorage.setItem("ParentMSISDN", this.fpSearch.userMsisdn);
+            _this.createNewFF = true;
+            _this.requestPending = false;
+            _this.$nextTick(() => _this.$refs.refToCreateNew.$el.focus());
+          } else if (result.data.status == "PENDING") {
+            _this.createNewFF = false;
+            _this.requestPending = true;
+            _this.$nextTick(() =>
+              _this.$refs.refToSubscriptionRequestSent.$el.focus()
+            );
+          } else if (
+            result.data.status == "SUSPENDED" ||
+            result.data.status == "BLOCKED" ||
+            result.data.status == "PP_BLACKLISTED"
+          ) {
+            this.$store.commit("notis/setAlert", {
+              type: "error",
+              title: "Nmber is " + result.data.status.replace("PP_", ""),
+              time: "4",
+            });
+          } else if (result.data.type == "PARENT") {
+            sessionStorage.setItem("ParentMSISDN", this.fpSearch.userMsisdn);
+            _this.$router.push({ name: "parentProfile" });
+          } else if (result.data.type == "CHILD") {
+            sessionStorage.setItem("ParentMSISDN", result.data.parentMsisdn);
+            sessionStorage.setItem("ChildMSISDN", this.fpSearch.userMsisdn);
+            _this.$router.push({ name: "childProfile" });
+          }
+        } else {
+          this.$store.commit("notis/setAlert", {
+            type: "error",
+            title: result.errorMsg,
+            time: "4",
+          });
+        }
+      });
+    },
+    handleCreateNewFPU() {
+      if (this.selectedFpUserType === this.fpUserTypes.POSTPAID) {
+        const requestUrl = this.baseUrl + "/parent/isMsisdnEligibleForFP";
+        console.log("Sending request to " + requestUrl);
+        let msisdn = sessionStorage.getItem("ParentMSISDN");
+        let obj = {
+          parentMsisdn: msisdn,
+        };
+        this.$http.post(requestUrl, obj).then((result) => {
           if (result.errorCode == "00") {
-            if (result.data.status == "NEW") {
-              sessionStorage.setItem("ParentMSISDN", this.fpSearch.userMsisdn);
-              _this.createNewFF = true;
-              _this.requestPending = false;
-              _this.$nextTick(() => _this.$refs.refToCreateNew.$el.focus());
-            } else if (result.data.status == "PENDING") {
-              _this.createNewFF = false;
-              _this.requestPending = true;
-              _this.$nextTick(() =>
-                _this.$refs.refToSubscriptionRequestSent.$el.focus()
-              );
-            } else if (
-              result.data.status == "SUSPENDED" ||
-              result.data.status == "BLOCKED" ||
-              result.data.status == "PP_BLACKLISTED"
-            ) {
-              this.$store.commit("notis/setAlert", {
-                type: "error",
-                title: "Nmber is " + result.data.status.replace("PP_", ""),
-                time: "4",
-              });
-            } else if (result.data.type == "PARENT") {
-              sessionStorage.setItem("ParentMSISDN", this.fpSearch.userMsisdn);
-              _this.$router.push({ name: "parentProfile" });
-            } else if (result.data.type == "CHILD") {
-              sessionStorage.setItem("ParentMSISDN", result.data.parentMsisdn);
-              sessionStorage.setItem("ChildMSISDN", this.fpSearch.userMsisdn);
-              _this.$router.push({ name: "childProfile" });
+            if (result.data.isSubscribed) {
+              this.provisionParent();
+            } else {
+              this.$router.push({ name: "createfpuser" });
             }
           } else {
             this.$store.commit("notis/setAlert", {
@@ -217,58 +240,34 @@ export default {
             });
           }
         });
-    },
-    handleCreateNewFPU() {
-      if (this.selectedFpUserType === this.fpUserTypes.POSTPAID) {
-        let msisdn = sessionStorage.getItem("ParentMSISDN");
-        let obj = {
-          parentMsisdn: msisdn,
-        };
-        this.$http
-          .post(this.baseUrl + "/parent/isMsisdnEligibleForFP", obj)
-          .then((result) => {
-            if (result.errorCode == "00") {
-              if (result.data.isSubscribed) {
-                this.provisionParent();
-              } else {
-                this.$router.push({ name: "createfpuser" });
-              }
-            } else {
-              this.$store.commit("notis/setAlert", {
-                type: "error",
-                title: result.errorMsg,
-                time: "4",
-              });
-            }
-          });
       } else {
         // TODO: Implement logic for creating Prepaid FP User
       }
     },
     provisionParent() {
+      const requestUrl = this.baseUrl + "/parent/provisionParent";
+      console.log("Sending request to " + requestUrl);
       let msisdn = sessionStorage.getItem("ParentMSISDN");
       let obj = {
         parentMsisdn: msisdn,
         pricePlanId: "",
       };
-      this.$http
-        .post(this.baseUrl + "/parent/provisionParent", obj)
-        .then((result) => {
-          if (result.errorCode == "00") {
-            this.$store.commit("notis/setAlert", {
-              type: "success",
-              title: result.errorMsg,
-              time: "4",
-            });
-            this.$router.push({ name: "parentProfile" });
-          } else {
-            this.$store.commit("notis/setAlert", {
-              type: "error",
-              title: result.errorMsg,
-              time: "4",
-            });
-          }
-        });
+      this.$http.post(requestUrl, obj).then((result) => {
+        if (result.errorCode == "00") {
+          this.$store.commit("notis/setAlert", {
+            type: "success",
+            title: result.errorMsg,
+            time: "4",
+          });
+          this.$router.push({ name: "parentProfile" });
+        } else {
+          this.$store.commit("notis/setAlert", {
+            type: "error",
+            title: result.errorMsg,
+            time: "4",
+          });
+        }
+      });
     },
     handleSubscriptionRequestSent() {
       this.fpSearch.userMsisdn = "";

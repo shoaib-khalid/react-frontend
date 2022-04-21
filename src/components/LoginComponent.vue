@@ -121,8 +121,10 @@ export default {
           this.$route.path,
           "/account/password/reset/"
         );
+        const requestUrl = this.baseUrl + "/user/resetpassword";
+        console.log("Sending request to " + requestUrl);
         Vue.$http
-          .post(this.baseUrl + "/user/resetpassword", {
+          .post(requestUrl, {
             domain: path,
             email: email,
           })
@@ -150,14 +152,18 @@ export default {
         sessionStorage.setItem("isTestUser", true);
       }
 
-      return Vue.$http.post(this.baseUrl + "/user/login", {
+      const requestUrl = this.baseUrl + "/user/login";
+      console.log("Sending request to " + requestUrl);
+      return Vue.$http.post(requestUrl, {
         username: this.username,
         password: this.password,
       });
     },
     loadRolePermission(loginInfo) {
+      const requestUrl = this.baseUrl + "/permission/rolepermission";
+      console.log("Sending request to " + requestUrl);
       Vue.$http
-        .get(this.baseUrl + "/permission/rolepermission")
+        .get(requestUrl)
         .then((result) => {
           if (result.errorCode == "00") {
             let role = result.data.find((val) => val.roleId == loginInfo.role);
@@ -254,30 +260,29 @@ export default {
       });
     },
     loadCompanyAdminDetail: function (info, data) {
-      Vue.$http
-        .get(
-          this.baseUrl + "/master/getmasterbycompany/" + info.user.company.id
-        )
-        .then((result) => {
-          if (result.errorCode == "00") {
-            info.user.company.msisdn = null;
-            info.user.company.totalBalance = 0;
+      const requestUrl =
+        this.baseUrl + "/master/getmasterbycompany/" + info.user.company.id;
+      console.log("Sending request to " + requestUrl);
+      Vue.$http.get(requestUrl).then((result) => {
+        if (result.errorCode == "00") {
+          info.user.company.msisdn = null;
+          info.user.company.totalBalance = 0;
 
-            if (result.data.length > 0) {
-              info.user.company.msisdn = result.data[0].msisdn;
-              info.user.company.totalBalance = result.data[0].totalBalance;
-            }
-
-            this.$store.commit("updateCompany", {
-              msisdn: info.user.company.msisdn,
-              totalBalance: info.user.company.totalBalance,
-            });
-
-            this.$store.commit("updateRolePermission", data);
-
-            this.$router.push({ name: "fpUserType" });
+          if (result.data.length > 0) {
+            info.user.company.msisdn = result.data[0].msisdn;
+            info.user.company.totalBalance = result.data[0].totalBalance;
           }
-        });
+
+          this.$store.commit("updateCompany", {
+            msisdn: info.user.company.msisdn,
+            totalBalance: info.user.company.totalBalance,
+          });
+
+          this.$store.commit("updateRolePermission", data);
+
+          this.$router.push({ name: "fpUserType" });
+        }
+      });
     },
   },
 };
