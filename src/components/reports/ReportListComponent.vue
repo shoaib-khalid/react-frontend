@@ -72,7 +72,7 @@
           </div>
         </div>
 
-        <div class="card-block">
+        <div v-if="isTestUser" class="card-block">
           <div class="list-title">
             <h5>Prepaid Reports</h5>
           </div>
@@ -131,6 +131,9 @@
 </template>
 <script>
 export default {
+  data: () => ({
+    isTestUser: sessionStorage.getItem("isTestUser"),
+  }),
   methods: {
     goToConsentReport() {
       this.$router.push({ name: "report.consent" });
